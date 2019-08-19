@@ -8,20 +8,62 @@
         <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
         <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
         <result column="USER_TYPE" property="userType" jdbcType="VARCHAR" />
-        <result column="STATUE" property="statue" jdbcType="VARCHAR" />
+        <result column="STATUE" property="status" jdbcType="VARCHAR" />
         <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
         <result column="USER_NAME_BAK" property="userNameBak" jdbcType="VARCHAR" />
         <result column="USER_PHOTO_URL" property="userPhotoUrl" jdbcType="VARCHAR" />
         <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
         <result column="SEX" property="sex" jdbcType="VARCHAR" />
-        <result column="CRT_TIME" property="crtTime" jdbcType="DATE" />
-        <result column="ALT_TIME" property="altTime" jdbcType="DATE" />
+        <result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+        <result column="ALT_TIME" property="altTime" jdbcType="VARCHAR" />
     </resultMap>
 
 
     <select id="queryUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select * from
+        (select tab.*,ROWNUM AS RN FROM
+        (select * from "USER"
+        where 1=1
+        <if test="nameOrMobile!=null and nameOrMobile!=''">
+            and    (NAME LIKE #{nameOrMobile,jdbcType=VARCHAR}
+            or  NAME_BAK LIKE #{nameOrMobile,jdbcType=VARCHAR}
+            or  MOBILE LIKE #{nameOrMobile,jdbcType=VARCHAR})
+        </if>
+        <if test="status!=null and status!=''">
+            and STATUE= #{status,jdbcType=NUMERIC}
+        </if>
+        order by ALT_TIME DESC
+        ) tab) tab1
+        where
+
+        tab1.RN  BETWEEN #{start} AND #{end}
+
+    </select>
+    <insert id="insertUser" parameterType="com.zuer.movieprojectuser.entity.User">
+
+        insert into "USER"
+        (USER_ID, USER_CODE, PASSWORD, USER_TYPE, STATUE, USER_NAME, USER_NAME_BAK, USER_PHOTO_URL, MOBILE, SEX, CRT_TIME, ALT_TIME)
+        values (
+        #{userId,jdbcType=VARCHAR},
+        #{userCode,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},
+        #{userType,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{userName,jdbcType=VARCHAR},
+        #{userNameBak,jdbcType=VARCHAR},
+        #{userPhotoUrl,jdbcType=VARCHAR},
+        #{mobile,jdbcType=VARCHAR},
+        #{sex,jdbcType=VARCHAR},
+        #{crtTime,jdbcType=VARCHAR},
+        #{altTime,jdbcType=VARCHAR}
+        )
+
+    </insert>
+
+    <select id="queryUserByUserCode" parameterType="String" resultMap="BaseResultMap">
 
         select * from "USER"
+        where USER_CODE=#{userCode,jdbcType=VARCHAR}
 
     </select>
 </mapper>

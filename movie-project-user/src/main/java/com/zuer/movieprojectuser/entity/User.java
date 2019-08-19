@@ -3,22 +3,21 @@ package com.zuer.movieprojectuser.entity;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public class User implements Serializable {
+public class User  {
 
 
     private String userId;
     private String userCode;
     private String password;
     private String userType;
-    private String statue;
+    private String status;
     private String userName;
     private String userNameBak;
     private String mobile;
     private String userPhotoUrl;
     private String sex;
+
     private String crtTime;
     private String altTime;
 
