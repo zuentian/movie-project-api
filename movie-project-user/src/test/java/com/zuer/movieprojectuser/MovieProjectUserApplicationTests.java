@@ -1,6 +1,8 @@
 package com.zuer.movieprojectuser;
 
+import com.zuer.movieprojectcommon.entity.DictValue;
 import com.zuer.movieprojectuser.entity.User;
+import com.zuer.movieprojectuser.feignConfig.CommonFeignClient;
 import com.zuer.movieprojectuser.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,12 +31,12 @@ public class MovieProjectUserApplicationTests {
     @Resource
     private UserService userService;
 
+    @Autowired
+    private CommonFeignClient commonFeignClient;
 
     @Test
     public void test1(){
-        Map<String ,Object> map=new HashMap<>();
-        map.put("userCode","");
-        List<User> userList=userService.queryUser(map);
-        System.out.println(userList);
+        List<DictValue> dictValueList=commonFeignClient.queryDictByDictType("0");
+
     }
 }
