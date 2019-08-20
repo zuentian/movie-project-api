@@ -19,5 +19,5 @@ public interface CommonFeignClient {
     public List<DictValue> queryDictByDictType(@PathVariable("dictType")String dictType);
 
     @RequestMapping(value = "/queryDict",method = RequestMethod.POST)
-    public List<Dict> queryDict(@RequestBody Map<String,Object> map);
+    public List<Dict> queryDict();
 }

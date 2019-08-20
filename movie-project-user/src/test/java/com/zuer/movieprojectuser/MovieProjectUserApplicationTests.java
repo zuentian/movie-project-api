@@ -1,5 +1,6 @@
 package com.zuer.movieprojectuser;
 
+import com.zuer.movieprojectcommon.entity.Dict;
 import com.zuer.movieprojectcommon.entity.DictValue;
 import com.zuer.movieprojectuser.entity.User;
 import com.zuer.movieprojectuser.feignConfig.CommonFeignClient;
@@ -36,7 +37,7 @@ public class MovieProjectUserApplicationTests {
 
     @Test
     public void test1(){
-        List<DictValue> dictValueList=commonFeignClient.queryDictByDictType("0");
+        List<Dict> dictValueList=commonFeignClient.queryDict();
 
     }
 }

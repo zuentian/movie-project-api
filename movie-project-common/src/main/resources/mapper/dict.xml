@@ -24,4 +24,7 @@
 
     </select>
 
+    <select id="queryDict" resultMap="BaseResultMapDictValue">
+        SELECT * FROM DICT
+    </select>
 </mapper>
