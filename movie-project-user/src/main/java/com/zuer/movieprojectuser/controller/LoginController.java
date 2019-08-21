@@ -53,13 +53,14 @@ public class LoginController {
             System.out.println("UserLoginController token="+token.getCredentials()+" " +token.getPrincipal());
             SecurityUtils.getSubject().login(token);
         }catch (UnknownAccountException e) {
-            throw new HippoServiceException(401, "账号不存在");
+            throw new Exception("账号不存在");
         }catch (IncorrectCredentialsException e) {
-            throw new HippoServiceException(402, "账号或密码错误");
+            throw new Exception("账号或密码错误");
         }catch (LockedAccountException e) {
-            throw new HippoServiceException(403, "该账号被锁定，请联系管理员");
+            throw new Exception("该账号被锁定，请联系管理员");
         }catch (AuthenticationException e) {
-            throw new HippoServiceException(404, "账号认证失败");
+            throw new Exception("账号认证失败");
+            //throw new HippoServiceException(404, "账号认证失败");
         }
         return (User)SecurityUtils.getSubject().getPrincipal();
     }
@@ -68,7 +69,7 @@ public class LoginController {
 
         List<User> userList=userFeignClient.queryUserByUserCode(userCode);
         if(userList==null||userList.size()<=0){
-            throw new IllegalArgumentException("cannot find user by userCode=" + userCode);
+            throw new AuthenticationException("cannot find user by userCode=" + userCode);
         }
         return userList.get(0);
 
