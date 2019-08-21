@@ -2,10 +2,10 @@ package com.zuer.movieprojectuser.controller;
 
 
 import com.google.common.base.Preconditions;
-import com.zuer.movieprojectuser.entity.Status;
-import com.zuer.movieprojectuser.entity.User;
+import com.zuer.movieprojectcommon.entity.Status;
+import com.zuer.movieprojectcommon.entity.User;
 import com.zuer.movieprojectuser.err.HippoServiceException;
-import com.zuer.movieprojectuser.service.UserService;
+import com.zuer.movieprojectuser.feignConfig.UserFeignClient;
 import com.zuer.movieprojectuser.utils.DateUtils;
 import com.zuer.movieprojectuser.utils.JWTUtil;
 import org.apache.shiro.SecurityUtils;
@@ -19,15 +19,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 @RestController
 @EnableAutoConfiguration
-@RequestMapping(value="/Login")
+@RequestMapping(value="/LoginController")
 public class LoginController {
 
+
     @Autowired
-    UserService userService;
+    UserFeignClient userFeignClient;
 
 
     @Transactional(rollbackFor = {Exception.class})
@@ -62,7 +66,7 @@ public class LoginController {
 
     public User obtainByPrincipal(String userCode) {
 
-        List<User> userList=userService.queryUserByUserCode(userCode);
+        List<User> userList=userFeignClient.queryUserByUserCode(userCode);
         if(userList==null||userList.size()<=0){
             throw new IllegalArgumentException("cannot find user by userCode=" + userCode);
         }
@@ -77,7 +81,7 @@ public class LoginController {
         String token=(String)param.get("token");
         Preconditions.checkArgument(token != null&&!"".equals(token), "token cannot be null!");
 
-        List<User> userList=userService.queryUserByUserCode(JWTUtil.getUsername(token));
+        List<User> userList=userFeignClient.queryUserByUserCode(JWTUtil.getUsername(token));
         if(userList==null||userList.size()<=0){
             throw new IllegalArgumentException("cannot find user by userCode=" + JWTUtil.getUsername(token));
         }
@@ -103,7 +107,7 @@ public class LoginController {
         String password=(String)param.get("password");
         Preconditions.checkArgument(userCode != null&&!"".equals(userCode), "请输入用户名");
         Preconditions.checkArgument(password != null&&!"".equals(password), "请输入密码");
-        List<User> userList=userService.queryUserByUserCode(userCode);
+        List<User> userList=userFeignClient.queryUserByUserCode(userCode);
         if(userList!=null&&userList.size()>0){
             throw new IllegalArgumentException("该用户已注册！");
         }
@@ -118,7 +122,7 @@ public class LoginController {
         user.setCrtTime(DateUtils.getCurrentDateTime());
         user.setAltTime(DateUtils.getCurrentDateTime());
         try{
-            userService.insertUser(user);
+            userFeignClient.insertUser(user);
         }catch (Exception e){
             throw  new Exception("用户注册失败！");
         }

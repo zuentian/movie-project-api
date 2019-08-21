@@ -1,8 +1,8 @@
 package com.zuer.movieprojectuser.config;
 
+import com.zuer.movieprojectcommon.entity.Status;
+import com.zuer.movieprojectcommon.entity.User;
 import com.zuer.movieprojectuser.controller.LoginController;
-import com.zuer.movieprojectuser.entity.Status;
-import com.zuer.movieprojectuser.entity.User;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authz.AuthorizationInfo;

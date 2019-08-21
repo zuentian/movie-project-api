@@ -1,19 +1,24 @@
 package com.zuer.movieprojectcommon.service;
 
-import com.zuer.movieprojectcommon.entity.Dict;
+
 import com.zuer.movieprojectcommon.entity.DictValue;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @Mapper
+@EnableFeignClients
+@RestController
+@EnableAutoConfiguration
+@RequestMapping(value = "/Dict")
 public interface DictService {
 
-
-    List<DictValue> queryDictByDictType(@Param("dictType")String dictType);
-    @PostMapping("/queryDict")
-    List<Dict> queryDict();
+    @RequestMapping(value = "/queryDictByDictType",method = RequestMethod.GET)
+    List<DictValue> queryDictByDictType(@RequestParam("dictType") String dictType);
 }

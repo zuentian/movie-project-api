@@ -1,4 +1,4 @@
-package com.zuer.movieprojectuser.entity;
+package com.zuer.movieprojectcommon.entity;
 
 
 import lombok.Getter;

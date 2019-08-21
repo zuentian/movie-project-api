@@ -1,8 +1,8 @@
 package com.zuer.movieprojectuser.controller;
 
 
-import com.zuer.movieprojectuser.entity.User;
-import com.zuer.movieprojectuser.service.UserService;
+import com.zuer.movieprojectcommon.entity.User;
+import com.zuer.movieprojectuser.feignConfig.UserFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 @EnableAutoConfiguration
-@RequestMapping(value = "/User")
+@RequestMapping(value = "/UserInfoController")
 @RestController
-public class UserController {
+public class UserInfoController {
 
 
     @Autowired
-    UserService userService;
+    UserFeignClient userFeignClient;
 
 
     @RequestMapping(value = "/search")
@@ -40,7 +40,7 @@ public class UserController {
             map.put("start",start);
             map.put("end",end);
             map.put("status",status);
-            List<User> userList=userService.queryUser(map);
+            List<User> userList=userFeignClient.queryUser(map);
             if(userList==null){
                 throw new Exception("查无数据");
             }
@@ -53,6 +53,7 @@ public class UserController {
             throw new Exception(e.getMessage()) ;
         }
     }
+
 
 
 }

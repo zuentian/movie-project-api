@@ -12,8 +12,8 @@
         <result column="ALT_TIME" property="altTime" jdbcType="VARCHAR" />
     </resultMap>
     <resultMap id="BaseResultMapDictValue" type="com.zuer.movieprojectcommon.entity.DictValue" >
-         <result column="DICT_CODE" property="value" jdbcType="VARCHAR" />
-         <result column="DICT_VALUE" property="label" jdbcType="VARCHAR" />
+        <result column="DICT_CODE" property="value" jdbcType="VARCHAR" />
+        <result column="DICT_VALUE" property="label" jdbcType="VARCHAR" />
     </resultMap>
 
 
