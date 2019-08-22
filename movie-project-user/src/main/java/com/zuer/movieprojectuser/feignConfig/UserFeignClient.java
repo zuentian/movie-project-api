@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Map;
 
+//这里面的所有方法必须要加上method类型，也得加，不然启动报错
 @FeignClient("movie-project-common")
 public interface UserFeignClient {
 

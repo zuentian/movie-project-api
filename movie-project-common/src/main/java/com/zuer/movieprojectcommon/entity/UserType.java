@@ -6,7 +6,10 @@ import lombok.Getter;
 @Getter
 public enum UserType {
 
-    MOBILE("0", "手机号");
+    MOBILE("0", "手机号"),
+    EMAIL("1","邮箱"),
+    OTHEREAMIL("2","其他邮箱"),
+    OTHER("3","其他");
 
     private String code;
 

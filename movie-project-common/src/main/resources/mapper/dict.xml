@@ -23,8 +23,21 @@
         WHERE DICT_TYPE=#{dictType,jdbcType=VARCHAR}
 
     </select>
-
-    <select id="queryDict" resultMap="BaseResultMapDictValue">
-        SELECT * FROM DICT
+    <select id="queryDict" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select * from DICT
+        <where>
+            <if test="dictType!=null and dictType!=''">
+                DICT_TYPE=#{dictType,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by DICT_TYPE
     </select>
+
+    <select id="queryDictTypeNameByDictType" parameterType="String" resultMap="BaseResultMap">
+
+        select * from DICT
+        WHERE DICT_TYPE=#{dictType,jdbcType=VARCHAR}
+
+    </select>
+
 </mapper>

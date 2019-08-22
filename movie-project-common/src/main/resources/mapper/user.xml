@@ -25,9 +25,12 @@
         (select * from "USER"
         where 1=1
         <if test="nameOrMobile!=null and nameOrMobile!=''">
-            and    (USER_NAME LIKE #{nameOrMobile,jdbcType=VARCHAR}
-            or  USER_NAME_BAK LIKE #{nameOrMobile,jdbcType=VARCHAR}
-            or  MOBILE LIKE #{nameOrMobile,jdbcType=VARCHAR})
+            and    (
+                USER_CODE = #{nameOrMobile,jdbcType=VARCHAR}
+            or  USER_NAME = #{nameOrMobile,jdbcType=VARCHAR}
+            or  USER_NAME_BAK = #{nameOrMobile,jdbcType=VARCHAR}
+            or  MOBILE = #{nameOrMobile,jdbcType=VARCHAR}
+            )
         </if>
         <if test="status!=null and status!=''">
             and STATUE= #{status,jdbcType=NUMERIC}
