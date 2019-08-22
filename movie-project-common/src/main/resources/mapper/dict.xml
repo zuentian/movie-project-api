@@ -24,13 +24,28 @@
 
     </select>
     <select id="queryDict" parameterType="java.util.Map" resultMap="BaseResultMap">
-        select * from DICT
+        select * from
+        (select tab.*,ROWNUM AS RN FROM
+        (select * from DICT
         <where>
             <if test="dictType!=null and dictType!=''">
                 DICT_TYPE=#{dictType,jdbcType=VARCHAR}
             </if>
         </where>
         order by DICT_TYPE
+        ) tab) tab1
+        where
+        tab1.RN  BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="queryDictCount" parameterType="java.util.Map" resultType="Integer">
+
+        select count(*) from DICT
+        <where>
+            <if test="dictType!=null and dictType!=''">
+                DICT_TYPE=#{dictType,jdbcType=VARCHAR}
+            </if>
+        </where>
     </select>
 
     <select id="queryDictTypeNameByDictType" parameterType="String" resultMap="BaseResultMap">
@@ -39,5 +54,18 @@
         WHERE DICT_TYPE=#{dictType,jdbcType=VARCHAR}
 
     </select>
+
+    <insert id="addDict" parameterType="com.zuer.movieprojectcommon.entity.Dict">
+        insert into DICT (DICT_ID, DICT_TYPE, DICT_TYPE_NAME, DICT_CODE, DICT_VALUE, CRT_TIME, ALT_TIME)
+        values (
+        #{dictId,jdbcType=VARCHAR},
+        #{dictType,jdbcType=VARCHAR},
+        #{dictTypeName,jdbcType=VARCHAR},
+        #{dictCode,jdbcType=VARCHAR},
+        #{dictValue,jdbcType=VARCHAR},
+        #{crtTime,jdbcType=VARCHAR},
+        #{altTime,jdbcType=VARCHAR}
+        )
+    </insert>
 
 </mapper>

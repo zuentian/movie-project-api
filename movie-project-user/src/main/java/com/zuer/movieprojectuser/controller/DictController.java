@@ -1,10 +1,12 @@
 package com.zuer.movieprojectuser.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zuer.movieprojectcommon.entity.Dict;
 import com.zuer.movieprojectcommon.entity.DictValue;
 import com.zuer.movieprojectuser.feignConfig.DictFeignClient;
+import com.zuer.movieprojectuser.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/DictController")
@@ -35,19 +38,29 @@ public class DictController {
 
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/queryDict",method = RequestMethod.POST)
-    public PageInfo<Dict> queryDict(@RequestBody Map<String,Object> param) throws Exception{
+    public Map<String,Object> queryDict(@RequestBody Map<String,Object> param) throws Exception{
         try {
+            Map<String,Object> resultMap=new HashMap<>();
 
             int pageSize=(Integer)param.get("pageSize");
             int currentPage=(Integer)param.get("currentPage");
+
+            int start=(currentPage-1)*pageSize+1;
+            int end=currentPage*pageSize;
             String dictType=(String)param.get("dictType");
-            PageHelper.startPage(currentPage,pageSize);
-            //PageHelper.orderBy("DICT_TYPE desc");//此处使用排序会让数据出现重复，暂时无法找到原因
             Map<String,Object> map=new HashMap<String,Object>();
             map.put("dictType",dictType);
-            List<Dict> dictInfoList = dictFeignClient.queryDict(map);
-            PageInfo<Dict> pageInfo=new PageInfo<>(dictInfoList);
-            return pageInfo;
+            map.put("start",start);
+            map.put("end",end);
+
+            int dictInfoCount=dictFeignClient.queryDictCount(map);
+            List<Dict> dictInfoList=null;
+            if(dictInfoCount>0){
+                dictInfoList = dictFeignClient.queryDict(map);
+            }
+            resultMap.put("list",dictInfoList);
+            resultMap.put("count",dictInfoCount);
+            return resultMap;
 
         }catch (Exception e){
             throw new Exception("查询数据字典失败！");
@@ -65,6 +78,25 @@ public class DictController {
         }else {
             return "";
         }
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/addDict",method = RequestMethod.POST)
+    public void addDict(@RequestBody Map<String,Object> param) throws Exception{
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Dict dict= mapper.convertValue(param.get("dictInfoAdd"), Dict.class);
+
+            String dictId = UUID.randomUUID().toString();
+            dict.setDictId(dictId);
+            dict.setCrtTime(DateUtils.getCurrentDateTime());
+            dict.setAltTime(DateUtils.getCurrentDateTime());
+            int i=dictFeignClient.addDict(dict);
+        }catch (Exception e){
+            throw new Exception("增加数据字典失败！");
+        }
+
+
     }
 
 

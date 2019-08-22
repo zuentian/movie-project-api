@@ -3,6 +3,7 @@ package com.zuer.movieprojectcommon.service;
 
 import com.zuer.movieprojectcommon.entity.Dict;
 import com.zuer.movieprojectcommon.entity.DictValue;
+import com.zuer.movieprojectcommon.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
@@ -26,4 +27,10 @@ public interface DictService {
 
     @RequestMapping(value = "/queryDictTypeNameByDictType",method = RequestMethod.GET)
     List<Dict> queryDictTypeNameByDictType(@RequestParam("dictType") String dictType);
+
+    @RequestMapping(value = "/addDict",method = RequestMethod.POST)
+    int addDict(@RequestBody Dict dict);
+
+    @RequestMapping(value = "/queryDictCount",method = RequestMethod.POST)
+    int queryDictCount(@RequestBody Map<String,Object> map);
 }

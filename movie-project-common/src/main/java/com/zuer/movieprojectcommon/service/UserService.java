@@ -24,5 +24,6 @@ public interface UserService {
     List<User> queryUserByUserCode(@RequestParam("userCode") String userCode);
 
     @RequestMapping(value = "/insertUser",method = RequestMethod.POST)
-    void insertUser(@RequestBody User user);
+    int insertUser(@RequestBody User user);
+
 }

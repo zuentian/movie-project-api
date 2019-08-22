@@ -25,4 +25,10 @@ public interface DictFeignClient {
 
     @RequestMapping(value = "/Dict/queryDictTypeNameByDictType",method = RequestMethod.GET)
     List<Dict> queryDictTypeNameByDictType(@RequestParam("dictType") String dictType) ;
+
+    @RequestMapping(value = "/Dict/addDict",method = RequestMethod.POST)
+    int addDict(@RequestBody Dict dict) throws Exception;;
+
+    @RequestMapping(value = "/Dict/queryDictCount",method = RequestMethod.POST)
+    int queryDictCount(@RequestBody Map<String,Object> map);
 }

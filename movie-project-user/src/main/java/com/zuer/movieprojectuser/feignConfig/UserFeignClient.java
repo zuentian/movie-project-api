@@ -22,5 +22,5 @@ public interface UserFeignClient {
     List<User> queryUserByUserCode(@RequestParam("userCode") String userCode);
 
     @RequestMapping(value = "/User/insertUser",method = RequestMethod.POST)
-    void insertUser(User user);
+    int insertUser(User user);
 }
