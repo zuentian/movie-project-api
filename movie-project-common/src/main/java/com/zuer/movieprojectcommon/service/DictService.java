@@ -33,4 +33,13 @@ public interface DictService {
 
     @RequestMapping(value = "/queryDictCount",method = RequestMethod.POST)
     int queryDictCount(@RequestBody Map<String,Object> map);
+
+    @RequestMapping(value = "/queryDictByDictId",method = RequestMethod.GET)
+    Dict queryDictByDictId(@RequestParam("dictType") String dictId);
+
+    @RequestMapping(value = "/editDictByDictId",method = RequestMethod.POST)
+    void editDictByDictId(@RequestBody Dict dict);
+
+    @RequestMapping(value = "/deleteDictByDictId",method = RequestMethod.GET)
+    void deleteDictByDictId(@RequestParam("dictType") String dictId);
 }

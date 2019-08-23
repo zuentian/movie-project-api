@@ -21,6 +21,7 @@
 
         SELECT * FROM DICT
         WHERE DICT_TYPE=#{dictType,jdbcType=VARCHAR}
+        ORDER BY DICT_CODE
 
     </select>
     <select id="queryDict" parameterType="java.util.Map" resultMap="BaseResultMap">
@@ -37,6 +38,7 @@
         where
         tab1.RN  BETWEEN #{start} AND #{end}
     </select>
+
 
     <select id="queryDictCount" parameterType="java.util.Map" resultType="Integer">
 
@@ -67,5 +69,31 @@
         #{altTime,jdbcType=VARCHAR}
         )
     </insert>
+
+    <select id="queryDictByDictId" parameterType="String" resultMap="BaseResultMap">
+        select * from DICT
+        where DICT_ID=#{dictId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="editDictByDictId" parameterType="com.zuer.movieprojectcommon.entity.Dict">
+        update DICT
+        set
+            DICT_TYPE = #{dictType,jdbcType=VARCHAR},
+            DICT_TYPE_NAME = #{dictTypeName,jdbcType=VARCHAR},
+            DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            DICT_VALUE = #{dictValue,jdbcType=VARCHAR},
+            CRT_TIME = #{crtTime,jdbcType=VARCHAR},
+            ALT_TIME = #{altTime,jdbcType=VARCHAR}
+
+        where
+        DICT_ID=#{dictId,jdbcType=VARCHAR}
+
+    </update>
+
+    <delete id="deleteDictByDictId" parameterType="String">
+        delete from DICT
+        where
+        DICT_ID=#{dictId,jdbcType=VARCHAR}
+    </delete>
 
 </mapper>

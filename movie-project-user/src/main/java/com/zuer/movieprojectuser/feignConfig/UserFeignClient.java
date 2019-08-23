@@ -23,4 +23,7 @@ public interface UserFeignClient {
 
     @RequestMapping(value = "/User/insertUser",method = RequestMethod.POST)
     int insertUser(User user);
+
+    @RequestMapping(value = "/User/queryUserCount",method = RequestMethod.POST)
+    int queryUserCount(@RequestBody Map<String, Object> map);
 }

@@ -26,4 +26,7 @@ public interface UserService {
     @RequestMapping(value = "/insertUser",method = RequestMethod.POST)
     int insertUser(@RequestBody User user);
 
+    @RequestMapping(value = "/queryUserCount",method = RequestMethod.POST)
+    int queryUserCount(@RequestBody Map<String,Object> map);
+
 }

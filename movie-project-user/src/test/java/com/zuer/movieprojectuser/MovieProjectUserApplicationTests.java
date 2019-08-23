@@ -22,6 +22,7 @@ public class MovieProjectUserApplicationTests {
 
     @Test
     public void test1(){
-
+        String s="zuentian";
+        System.out.println("zuentian".indexOf(s));
     }
 }

@@ -99,5 +99,46 @@ public class DictController {
 
     }
 
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/queryDictByDictId",method = RequestMethod.POST)
+    public Dict queryDictByDictId(@RequestBody Map<String ,Object> param) throws Exception{
+        try {
+            String dictId=(String)param.get("dictId");
+            Dict dict=dictFeignClient.queryDictByDictId(dictId);
+            return dict;
+        }catch (Exception e){
+            throw new Exception("数字字典查询失败！");
+        }
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/editDictByDictId",method = RequestMethod.POST)
+    public void editDictByDictId(@RequestBody Map<String,Object> param )throws Exception{
+        try{
+            ObjectMapper obj=new ObjectMapper();
+            Dict dict = obj.convertValue(param.get("dictInfoEdit"),Dict.class);
+            dict.setAltTime(DateUtils.getCurrentDateTime());
+            dictFeignClient.editDictByDictId(dict);
+        }catch (Exception e){
+            throw new Exception("更新数据字典失败");
+        }
+
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/deleteDictByDictId",method = RequestMethod.POST)
+    public void deleteDictByDictId(@RequestBody Map<String,Object>param ) throws Exception{
+
+        try{
+
+            String dictId=(String)param.get("dictId");
+            dictFeignClient.deleteDictByDictId(dictId);
+
+        }catch (Exception e){
+            throw new Exception("删除数据字典失败！");
+        }
+
+
+    }
 
 }

@@ -1,7 +1,6 @@
 package com.zuer.movieprojectuser.controller;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuer.movieprojectcommon.entity.DictValue;
 import com.zuer.movieprojectcommon.entity.User;
 import com.zuer.movieprojectcommon.entity.UserType;
@@ -50,13 +49,18 @@ public class UserInfoController {
             map.put("start",start);
             map.put("end",end);
             map.put("status",status);
-            List<User> userList=userFeignClient.queryUser(map);
-            if(userList==null){
-                throw new Exception("查无数据");
+
+            int count=userFeignClient.queryUserCount(map);
+            List<User> userList=null;
+            if(count>0){
+                userList=userFeignClient.queryUser(map);
+                if(userList==null){
+                    throw new Exception("查无数据");
+                }
             }
             Map<String,Object> resultMap =new HashMap<String,Object>();
             resultMap.put("list",userList);
-            resultMap.put("count",userList.size());
+            resultMap.put("count",count);
             return resultMap;
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,7 +75,6 @@ public class UserInfoController {
 
         try {
 
-            System.out.println(param);
             String userCode=param.get("userCode")==null?null:(String)param.get("userCode");
 
             String userName=param.get("userName")==null?null:(String)param.get("userName");
@@ -85,7 +88,6 @@ public class UserInfoController {
             String passwordEncrypt = defaultPasswordService.encryptPassword(password);
 
             String status=param.get("status")==null?null:(String)param.get("status");
-
             String sex=param.get("sex")==null?null:(String)param.get("sex");
 
             User user =new User();
@@ -112,7 +114,7 @@ public class UserInfoController {
                 user.setUserType(UserType.OTHER.getCode());
             }
 
-            String userPhotoUrl=getSysPhotoUrl();//获取系统头像URL
+            String userPhotoUrl=getSysPhotoUrl(sex);//获取系统头像URL
             user.setUserPhotoUrl(userPhotoUrl);
 
             user.setCrtTime(DateUtils.getCurrentDateTime());
@@ -128,17 +130,22 @@ public class UserInfoController {
 
     }
 
-    private String getSysPhotoUrl() throws Exception{
-
+    private String getSysPhotoUrl(String sex) throws Exception{
+        String url="";
         List<DictValue> dictValueList=dictFeignClient.queryDictByDictType("SYSPHOTOURL");
         if(dictValueList!=null&&dictValueList.size()>0){
-            int size=dictValueList.size();
-            Random rdm = new Random();
-            int index=rdm.nextInt(size);
-            return dictValueList.get(index).getLabel();
+            for(DictValue dictValue:dictValueList){
+                if(sex.equals(dictValue.getValue())){
+                    url = dictValue.getLabel();
+                }
+            }
+            if("".equals(url)){
+                Random rd=new Random();
+                int index=rd.nextInt(dictValueList.size());
+                url=dictValueList.get(index).getValue();
+            }
         }
-
-        return "";
+        return url;
     }
 
     private boolean isEmail(String userCode) throws Exception{

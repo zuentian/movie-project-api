@@ -31,4 +31,12 @@ public interface DictFeignClient {
 
     @RequestMapping(value = "/Dict/queryDictCount",method = RequestMethod.POST)
     int queryDictCount(@RequestBody Map<String,Object> map);
+
+    @RequestMapping(value = "/Dict/queryDictByDictId",method = RequestMethod.GET)
+    Dict queryDictByDictId(@RequestParam("dictType") String dictId);
+
+    @RequestMapping(value = "/Dict/editDictByDictId",method = RequestMethod.POST)
+    void editDictByDictId(@RequestBody Dict dict);
+    @RequestMapping(value = "/Dict/deleteDictByDictId",method = RequestMethod.GET)
+    void deleteDictByDictId(@RequestParam("dictType") String dictId);
 }
