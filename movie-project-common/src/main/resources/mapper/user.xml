@@ -83,8 +83,29 @@
 
     <select id="queryUserByUserCode" parameterType="String" resultMap="BaseResultMap">
 
-        select * from "USER"
+        SELECT * FROM "USER"
         where USER_CODE=#{userCode,jdbcType=VARCHAR}
 
     </select>
+
+    <select id="queryUserByUserId" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM "USER"
+        WHERE USER_ID = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateUserByUserId" parameterType="com.zuer.movieprojectcommon.entity.User">
+        UPDATE "USER"
+        SET
+        USER_CODE = #{userCode,jdbcType=VARCHAR},
+        PASSWORD = #{password,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=VARCHAR},
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+        USER_NAME_BAK = #{userNameBak,jdbcType=VARCHAR},
+        MOBILE = #{mobile,jdbcType=VARCHAR},
+        SEX = #{sex,jdbcType=VARCHAR},
+        ALT_TIME = #{altTime,jdbcType=VARCHAR}
+        WHERE
+        USER_ID = #{userId,jdbcType=VARCHAR}
+
+    </update>
 </mapper>

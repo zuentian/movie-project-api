@@ -1,6 +1,8 @@
 package com.zuer.movieprojectuser.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zuer.movieprojectcommon.entity.Dict;
 import com.zuer.movieprojectcommon.entity.DictValue;
 import com.zuer.movieprojectcommon.entity.User;
 import com.zuer.movieprojectcommon.entity.UserType;
@@ -130,19 +132,41 @@ public class UserInfoController {
 
     }
 
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/queryUserByUserId",method = RequestMethod.POST)
+    public User queryUserByUserId(@RequestBody Map<String,Object> param){
+        String userId=(String)param.get("userId");
+
+        return userFeignClient.queryUserByUserId(userId);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/updateUserByUserId",method = RequestMethod.POST)
+    public void updateUserByUserId(@RequestBody Map<String ,Object>param){
+        ObjectMapper mapper = new ObjectMapper();
+        User user= mapper.convertValue(param.get("user"), User.class);
+        user.setAltTime(DateUtils.getCurrentDateTime());
+        String password= user.getPassword();
+        DefaultPasswordService defaultPasswordService=new DefaultPasswordService();
+        String passwordEncrypt = defaultPasswordService.encryptPassword(password);
+        user.setPassword(passwordEncrypt);
+        System.out.println(user);
+        userFeignClient.updateUserByUserId(user);
+    }
+
     private String getSysPhotoUrl(String sex) throws Exception{
         String url="";
         List<DictValue> dictValueList=dictFeignClient.queryDictByDictType("SYSPHOTOURL");
         if(dictValueList!=null&&dictValueList.size()>0){
             for(DictValue dictValue:dictValueList){
-                if(sex.equals(dictValue.getValue())){
+                if(sex!=null&&sex.equals(dictValue.getValue())){
                     url = dictValue.getLabel();
                 }
             }
             if("".equals(url)){
                 Random rd=new Random();
                 int index=rd.nextInt(dictValueList.size());
-                url=dictValueList.get(index).getValue();
+                url=dictValueList.get(index).getLabel();
             }
         }
         return url;

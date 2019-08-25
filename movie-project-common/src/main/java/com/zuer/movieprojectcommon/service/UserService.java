@@ -29,4 +29,9 @@ public interface UserService {
     @RequestMapping(value = "/queryUserCount",method = RequestMethod.POST)
     int queryUserCount(@RequestBody Map<String,Object> map);
 
+    @RequestMapping(value = "/queryUserByUserId",method = RequestMethod.GET)
+    User queryUserByUserId(@RequestParam("userId") String userId);
+
+    @RequestMapping(value = "/updateUserByUserId",method = RequestMethod.POST)
+    void updateUserByUserId(@RequestBody User user);
 }

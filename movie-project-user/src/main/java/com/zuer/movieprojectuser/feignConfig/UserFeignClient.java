@@ -22,8 +22,14 @@ public interface UserFeignClient {
     List<User> queryUserByUserCode(@RequestParam("userCode") String userCode);
 
     @RequestMapping(value = "/User/insertUser",method = RequestMethod.POST)
-    int insertUser(User user);
+    int insertUser(@RequestBody User user);
 
     @RequestMapping(value = "/User/queryUserCount",method = RequestMethod.POST)
     int queryUserCount(@RequestBody Map<String, Object> map);
+
+    @RequestMapping(value = "/User/queryUserByUserId",method = RequestMethod.GET)
+    User queryUserByUserId(@RequestParam("userId") String userId);
+
+    @RequestMapping(value = "/User/updateUserByUserId",method = RequestMethod.POST)
+    void updateUserByUserId(@RequestBody User user);
 }
