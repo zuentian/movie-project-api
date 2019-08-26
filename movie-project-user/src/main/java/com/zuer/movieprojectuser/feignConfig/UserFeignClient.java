@@ -32,4 +32,10 @@ public interface UserFeignClient {
 
     @RequestMapping(value = "/User/updateUserByUserId",method = RequestMethod.POST)
     void updateUserByUserId(@RequestBody User user);
+
+    @RequestMapping(value = "/User/deleteUserByUserId",method = RequestMethod.GET)
+    void deleteUserByUserId(@RequestParam("userId") String userId);
+
+    @RequestMapping(value ="/User/updateUserToStatusByUserId",method = RequestMethod.POST)
+    void updateUserToStatusByUserId(@RequestBody Map<String, String> map);
 }

@@ -34,4 +34,10 @@ public interface UserService {
 
     @RequestMapping(value = "/updateUserByUserId",method = RequestMethod.POST)
     void updateUserByUserId(@RequestBody User user);
+
+    @RequestMapping(value = "/deleteUserByUserId",method = RequestMethod.GET)
+    void deleteUserByUserId(@RequestParam("userId") String userId);
+
+    @RequestMapping(value = "/updateUserToStatusByUserId",method = RequestMethod.POST)
+    void updateUserToStatusByUserId(@RequestBody Map<String,Object> map);
 }

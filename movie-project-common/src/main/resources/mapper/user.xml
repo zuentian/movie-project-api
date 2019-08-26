@@ -108,4 +108,22 @@
         USER_ID = #{userId,jdbcType=VARCHAR}
 
     </update>
+
+    <select id="deleteUserByUserId" parameterType="String">
+
+        DELETE FROM "USER"
+        WHERE
+        USER_ID = #{userId,jdbcType=VARCHAR}
+
+    </select>
+
+    <update id="updateUserToStatusByUserId"  parameterType="java.util.Map">
+
+        UPDATE "USER" SET
+        STATUS =#{status,jdbcType=VARCHAR},
+        ALT_TIME = #{altTime,jdbcType=VARCHAR}
+        WHERE
+        USER_ID = #{userId,jdbcType=VARCHAR}
+
+    </update>
 </mapper>

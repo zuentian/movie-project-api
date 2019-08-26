@@ -79,6 +79,11 @@ public class UserInfoController {
 
             String userCode=param.get("userCode")==null?null:(String)param.get("userCode");
 
+            List<User> userOld=userFeignClient.queryUserByUserCode(userCode);
+            if(userOld!=null&&userOld.size()>0){
+                throw new Exception("该用户已被创建!");
+            }
+
             String userName=param.get("userName")==null?null:(String)param.get("userName");
 
             String userNameBak=param.get("userNameBak")==null?null:(String)param.get("userNameBak");
@@ -142,9 +147,10 @@ public class UserInfoController {
 
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/updateUserByUserId",method = RequestMethod.POST)
-    public void updateUserByUserId(@RequestBody Map<String ,Object>param){
+    public void updateUserByUserId(@RequestBody Map<String ,Object>param) throws Exception{
         ObjectMapper mapper = new ObjectMapper();
         User user= mapper.convertValue(param.get("user"), User.class);
+
         user.setAltTime(DateUtils.getCurrentDateTime());
         String password= user.getPassword();
         DefaultPasswordService defaultPasswordService=new DefaultPasswordService();
@@ -152,6 +158,28 @@ public class UserInfoController {
         user.setPassword(passwordEncrypt);
         System.out.println(user);
         userFeignClient.updateUserByUserId(user);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/deleteUserByUserId",method = RequestMethod.POST)
+    public void deleteUserByUserId(@RequestBody Map<String ,Object> param)throws Exception{
+        String userId=(String)param.get("userId");
+        userFeignClient.deleteUserByUserId(userId);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/updateUserToStatusByUserId",method = RequestMethod.POST)
+    public void updateUserToStatusByUserId(@RequestBody Map<String,Object> param) throws Exception{
+
+        String userId=(String)param.get("userId");
+        String status=(String)param.get("status");
+        Map<String,String> map=new HashMap<>();
+        map.put("userId",userId);
+        map.put("status",status);
+        map.put("altTime",DateUtils.getCurrentDateTime());
+        userFeignClient.updateUserToStatusByUserId(map);
+
+
     }
 
     private String getSysPhotoUrl(String sex) throws Exception{
