@@ -1,0 +1,16 @@
+-- auto-generated definition
+create table ROLE
+(
+  ROLE_ID   VARCHAR2(36) not null
+    primary key,
+  ROLE_NAME VARCHAR2(20),
+  STATUS    VARCHAR2(2),
+  CRT_TIME  VARCHAR2(30),
+  ALT_TIME  VARCHAR2(30)
+)
+/
+
+COMMENT ON COLUMN ROLE.ROLE_ID IS '角色ID';
+COMMENT ON COLUMN ROLE.ROLE_NAME IS '角色名字';
+COMMENT ON COLUMN ROLE.STATUS IS '角色状态';
+COMMENT ON TABLE ROLE IS '角色表';
