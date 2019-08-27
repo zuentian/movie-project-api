@@ -29,4 +29,10 @@ public interface RoleService {
 
     @RequestMapping(value = "/queryRoleByRoleName",method = RequestMethod.GET)
     List<Role> queryRoleByRoleName(@RequestParam("roleName") String roleName);
+
+    @RequestMapping(value = "/queryRoleByRoleId",method = RequestMethod.GET)
+    Role queryRoleByRoleId(@RequestParam("roleId") String roleId);
+
+    @RequestMapping(value = "/updateRoleByRoleId",method = RequestMethod.POST)
+    void updateRoleByRoleId(@RequestBody Role role);
 }

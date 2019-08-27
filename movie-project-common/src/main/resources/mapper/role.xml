@@ -34,7 +34,7 @@
         <if test="status!=null and status!=''">
             and STATUS = #{status,jdbcType=VARCHAR}
         </if>
-        ORDER BY ALT_TIME
+        ORDER BY ALT_TIME DESC 
         ) TAB ) TAB1
         WHERE
         TAB1.RN BETWEEN #{start} AND #{end}
@@ -62,4 +62,22 @@
         ROLE_NAME=#{roleName,jdbcType=VARCHAR}
 
     </select>
+
+    <select id="queryRoleByRoleId" parameterType="String" resultMap="BaseResultMap">
+
+        SELECT * FROM ROLE
+        WHERE
+        ROLE_ID=#{roleId,jdbcType=VARCHAR}
+
+    </select>
+
+    <update id="updateRoleByRoleId" parameterType="com.zuer.movieprojectcommon.entity.Role">
+
+        UPDATE ROLE SET
+        STATUS = #{status,jdbcType=VARCHAR},
+        ALT_TIME = #{altTime,jdbcType=VARCHAR}
+        WHERE
+        ROLE_ID=#{roleId,jdbcType=VARCHAR}
+
+    </update>
 </mapper>

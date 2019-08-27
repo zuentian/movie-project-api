@@ -7,11 +7,9 @@ import com.zuer.movieprojectuser.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.*;
 
 @RestController
@@ -69,5 +67,26 @@ public class RoleController {
         roleFeginClient.createRole(role);
     }
 
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/queryRoleByRoleId",method = RequestMethod.POST)
+    public Role queryRoleByRoleId(@RequestBody Map<String,Object> param){
+        String roleId=(String)param.get("roleId");
+        return roleFeginClient.queryRoleByRoleId(roleId);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/updateRoleByRoleId",method = RequestMethod.POST)
+    public void updateRoleByRoleId(@RequestBody Map<String,Object> param){
+
+
+        String roleId=(String)param.get("roleId");
+        String status=(String)param.get("status");
+        Role role=new Role();
+        role.setRoleId(roleId);
+        role.setStatus(status);
+        role.setAltTime(DateUtils.getCurrentDateTime());
+        roleFeginClient.updateRoleByRoleId(role);
+
+    }
 
 }
