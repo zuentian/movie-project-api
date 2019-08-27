@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zuer.movieprojectcommon.service.RoleService" >
+
+
+    <resultMap id="BaseResultMap" type="com.zuer.movieprojectcommon.entity.Role">
+        <id column="ROLE_ID" property="roleId" jdbcType="VARCHAR"/>
+        <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+        <result column="ALT_TIME" property="altTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="queryRoleCount" parameterType="java.util.Map" resultType="Integer">
+
+        SELECT count(*) FROM ROLE
+        WHERE 1=1
+        <if test="roleName!=null and roleName!=''">
+            and ROLE_NAME = #{roleName,jdbcType=VARCHAR}
+        </if>
+        <if test="status!=null and status!=''">
+            and STATUS = #{status,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+    <select id="queryRole" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT * FROM (
+        SELECT TAB.*,ROWNUM AS RN FROM (
+        SELECT * FROM ROLE
+        WHERE 1=1
+        <if test="roleName!=null and roleName!=''">
+            and ROLE_NAME = #{roleName,jdbcType=VARCHAR}
+        </if>
+        <if test="status!=null and status!=''">
+            and STATUS = #{status,jdbcType=VARCHAR}
+        </if>
+        ORDER BY ALT_TIME
+        ) TAB ) TAB1
+        WHERE
+        TAB1.RN BETWEEN #{start} AND #{end}
+
+    </select>
+
+    <insert id="createRole" parameterType="com.zuer.movieprojectcommon.entity.Role">
+
+        INSERT INTO ROLE
+        (ROLE_ID, ROLE_NAME, STATUS, CRT_TIME, ALT_TIME)
+        VALUES (
+        #{roleId,jdbcType=VARCHAR},
+        #{roleName,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{crtTime,jdbcType=VARCHAR},
+        #{altTime,jdbcType=VARCHAR}
+        )
+
+    </insert>
+
+    <select id="queryRoleByRoleName" parameterType="String" resultMap="BaseResultMap">
+
+        SELECT * FROM ROLE
+        WHERE
+        ROLE_NAME=#{roleName,jdbcType=VARCHAR}
+
+    </select>
+</mapper>
