@@ -2,22 +2,20 @@ package com.zuer.movieprojectuser.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuer.movieprojectcommon.entity.Dict;
 import com.zuer.movieprojectcommon.entity.DictValue;
 import com.zuer.movieprojectcommon.entity.User;
+import com.zuer.movieprojectcommon.entity.UserRole;
 import com.zuer.movieprojectcommon.entity.UserType;
 import com.zuer.movieprojectuser.feignConfig.DictFeignClient;
 import com.zuer.movieprojectuser.feignConfig.UserFeignClient;
+import com.zuer.movieprojectuser.feignConfig.UserRoleFeignClient;
 import com.zuer.movieprojectuser.utils.DateUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -31,6 +29,8 @@ public class UserInfoController {
     UserFeignClient userFeignClient;
     @Autowired
     DictFeignClient dictFeignClient;
+    @Autowired
+    UserRoleFeignClient userRoleFeignClient;
 
 
     @Transactional(rollbackFor = {Exception.class})
@@ -73,42 +73,27 @@ public class UserInfoController {
 
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/create",method = RequestMethod.POST)
+    @ResponseBody
     public void create(@RequestBody Map<String ,Object> param)throws Exception{
 
         try {
-
-            String userCode=param.get("userCode")==null?null:(String)param.get("userCode");
-
+            ObjectMapper mapper = new ObjectMapper();
+            User user= mapper.convertValue(param.get("user"), User.class);
+            String userCode=user.getUserCode();
             List<User> userOld=userFeignClient.queryUserByUserCode(userCode);
             if(userOld!=null&&userOld.size()>0){
                 throw new Exception("该用户已被创建!");
             }
-
-            String userName=param.get("userName")==null?null:(String)param.get("userName");
-
-            String userNameBak=param.get("userNameBak")==null?null:(String)param.get("userNameBak");
-
-            String mobile=param.get("mobile")==null?null:(String)param.get("mobile");
-
-            String password=param.get("password")==null?null:(String)param.get("password");
+            String password=user.getPassword();
             DefaultPasswordService defaultPasswordService=new DefaultPasswordService();
             String passwordEncrypt = defaultPasswordService.encryptPassword(password);
 
-            String status=param.get("status")==null?null:(String)param.get("status");
-            String sex=param.get("sex")==null?null:(String)param.get("sex");
-
-            User user =new User();
 
             String uuid=UUID.randomUUID().toString();
             user.setUserId(uuid);
-            user.setUserCode(userCode);
-            user.setUserName(userName);
-            user.setUserNameBak(userNameBak);
-            user.setSex(sex);
             user.setPassword(passwordEncrypt);
-            user.setStatus(status);
-            user.setMobile(mobile);
 
+            String mobile=user.getMobile();
             boolean isEmail=isEmail(userCode);//检验是否是邮箱
 
             if(userCode.equals(mobile)){
@@ -121,13 +106,23 @@ public class UserInfoController {
                 user.setUserType(UserType.OTHER.getCode());
             }
 
+            String sex=user.getSex();
             String userPhotoUrl=getSysPhotoUrl(sex);//获取系统头像URL
             user.setUserPhotoUrl(userPhotoUrl);
 
             user.setCrtTime(DateUtils.getCurrentDateTime());
             user.setAltTime(DateUtils.getCurrentDateTime());
             userFeignClient.insertUser(user);
-
+            for (String roleId:user.getRoleIds()) {
+                String id=UUID.randomUUID().toString();
+                UserRole userRole=new UserRole();
+                userRole.setId(id);
+                userRole.setRoleId(roleId);
+                userRole.setUserId(uuid);
+                userRole.setCrtTime(DateUtils.getCurrentDateTime());
+                userRole.setAltTime(DateUtils.getCurrentDateTime());
+                userRoleFeignClient.insertUserRole(userRole);
+            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -139,7 +134,7 @@ public class UserInfoController {
 
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/queryUserByUserId",method = RequestMethod.POST)
-    public User queryUserByUserId(@RequestBody Map<String,Object> param){
+    public User queryUserByUserId(@RequestBody Map<String,Object> param) throws Exception{
         String userId=(String)param.get("userId");
 
         return userFeignClient.queryUserByUserId(userId);
@@ -163,8 +158,17 @@ public class UserInfoController {
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/deleteUserByUserId",method = RequestMethod.POST)
     public void deleteUserByUserId(@RequestBody Map<String ,Object> param)throws Exception{
-        String userId=(String)param.get("userId");
-        userFeignClient.deleteUserByUserId(userId);
+        try{
+            String userId=(String)param.get("userId");
+            userFeignClient.deleteUserByUserId(userId);
+            userRoleFeignClient.deleteUserRoleByUserId(userId);
+        }catch (Exception e){
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new Exception("删除用户失败！");
+        }
+
+
     }
 
     @Transactional(rollbackFor = {Exception.class})

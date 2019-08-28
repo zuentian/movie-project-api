@@ -35,4 +35,13 @@ public interface RoleService {
 
     @RequestMapping(value = "/updateRoleByRoleId",method = RequestMethod.POST)
     void updateRoleByRoleId(@RequestBody Role role);
+
+    @RequestMapping(value = "/deleteRoleByRoleId",method = RequestMethod.GET)
+    void deleteRoleByRoleId(@RequestParam("roleId") String roleId);
+
+    @RequestMapping(value = "/updateRoleToStatusByRoleId",method = RequestMethod.POST)
+    void updateRoleToStatusByRoleId(@RequestBody Role role);
+
+    @RequestMapping(value = "/queryRoleByStatusAndRoleName",method = RequestMethod.POST)
+    List<Role> queryRoleByStatusAndRoleName(@RequestBody Map<String, Object> map);
 }

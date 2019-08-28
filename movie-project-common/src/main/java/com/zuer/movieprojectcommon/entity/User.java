@@ -3,6 +3,8 @@ package com.zuer.movieprojectcommon.entity;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class User  {
 
@@ -17,7 +19,7 @@ public class User  {
     private String mobile;
     private String userPhotoUrl;
     private String sex;
-
+    private List<String> roleIds;
     private String crtTime;
     private String altTime;
 

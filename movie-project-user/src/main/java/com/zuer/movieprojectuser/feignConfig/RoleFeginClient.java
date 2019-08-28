@@ -32,4 +32,13 @@ public interface RoleFeginClient {
 
     @RequestMapping(value = "/Role/updateRoleByRoleId",method = RequestMethod.POST)
     void updateRoleByRoleId(@RequestBody Role role);
+
+    @RequestMapping(value = "/Role/deleteRoleByRoleId",method = RequestMethod.GET)
+    void deleteRoleByRoleId(@RequestParam("roleId") String roleId);
+
+    @RequestMapping(value = "/Role/updateRoleToStatusByRoleId",method = RequestMethod.POST)
+    void updateRoleToStatusByRoleId(@RequestBody Role role);
+
+    @RequestMapping(value = "/Role/queryRoleByStatusAndRoleName",method = RequestMethod.POST)
+    List<Role> queryRoleByStatusAndRoleName(@RequestBody Map<String, Object> map);
 }

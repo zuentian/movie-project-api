@@ -16,26 +16,26 @@ public interface UserFeignClient {
 
 
     @RequestMapping(value = "/User/queryUser",method = RequestMethod.POST)
-    List<User> queryUser(@RequestBody Map<String, Object> map);
+    List<User> queryUser(@RequestBody Map<String, Object> map)throws Exception;
 
     @RequestMapping(value = "/User/queryUserByUserCode",method = RequestMethod.GET)
     List<User> queryUserByUserCode(@RequestParam("userCode") String userCode);
 
     @RequestMapping(value = "/User/insertUser",method = RequestMethod.POST)
-    int insertUser(@RequestBody User user);
+    int insertUser(@RequestBody User user) throws Exception;
 
     @RequestMapping(value = "/User/queryUserCount",method = RequestMethod.POST)
-    int queryUserCount(@RequestBody Map<String, Object> map);
+    int queryUserCount(@RequestBody Map<String, Object> map)throws Exception;
 
     @RequestMapping(value = "/User/queryUserByUserId",method = RequestMethod.GET)
-    User queryUserByUserId(@RequestParam("userId") String userId);
+    User queryUserByUserId(@RequestParam("userId") String userId)throws Exception;
 
     @RequestMapping(value = "/User/updateUserByUserId",method = RequestMethod.POST)
-    void updateUserByUserId(@RequestBody User user);
+    void updateUserByUserId(@RequestBody User user)throws Exception;
 
     @RequestMapping(value = "/User/deleteUserByUserId",method = RequestMethod.GET)
-    void deleteUserByUserId(@RequestParam("userId") String userId);
+    void deleteUserByUserId(@RequestParam("userId") String userId)throws Exception;
 
     @RequestMapping(value ="/User/updateUserToStatusByUserId",method = RequestMethod.POST)
-    void updateUserToStatusByUserId(@RequestBody Map<String, String> map);
+    void updateUserToStatusByUserId(@RequestBody Map<String, String> map)throws Exception;
 }

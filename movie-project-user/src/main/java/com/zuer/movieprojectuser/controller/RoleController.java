@@ -89,4 +89,39 @@ public class RoleController {
 
     }
 
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/deleteRoleByRoleId",method = RequestMethod.POST)
+    public void deleteRoleByRoleId(@RequestBody Map<String,Object> param){
+        String roleId=(String)param.get("roleId");
+
+        roleFeginClient.deleteRoleByRoleId(roleId);
+
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/updateRoleToStatusByRoleId",method = RequestMethod.POST)
+    public void updateRoleToStatusByRoleId(@RequestBody Map<String,Object> param){
+
+        String roleId=(String)param.get("roleId");
+        String status=(String)param.get("status");
+        Role role=new Role();
+        role.setRoleId(roleId);
+        role.setStatus(status);
+        role.setAltTime(DateUtils.getCurrentDateTime());
+        roleFeginClient.updateRoleToStatusByRoleId(role);
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    @RequestMapping(value = "/queryRoleByStatusAndRoleName",method = RequestMethod.POST)
+    public List<Role> queryRoleByStatusAndRoleName(@RequestBody Map<String,Object> param){
+        String roleName=(String)param.get("roleName");
+        String status=(String)param.get("status");
+        Map<String ,Object> map=new HashMap<>();
+        map.put("roleName",roleName);
+        map.put("status",status);
+        List<Role> roleList=roleFeginClient.queryRoleByStatusAndRoleName(map);
+        return roleList;
+
+    }
+
 }
