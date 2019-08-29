@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Mapper
 @RequestMapping(value = "/UserRole")
 @RestController
@@ -18,4 +20,8 @@ public interface UserRoleService {
 
     @RequestMapping(value = "/deleteUserRoleByUserId",method = RequestMethod.GET)
     void deleteUserRoleByUserId(@RequestParam("userId") String userId);
+
+
+    @RequestMapping(value = "/queryUserRoleByUserId",method = RequestMethod.GET)
+    List<UserRole> queryUserRoleByUserId(@RequestParam("userId") String userId);
 }

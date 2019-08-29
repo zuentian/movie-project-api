@@ -112,14 +112,12 @@ public class RoleController {
     }
 
     @Transactional(rollbackFor = {Exception.class})
-    @RequestMapping(value = "/queryRoleByStatusAndRoleName",method = RequestMethod.POST)
-    public List<Role> queryRoleByStatusAndRoleName(@RequestBody Map<String,Object> param){
+    @RequestMapping(value = "/queryRoleByRoleNameConfuse",method = RequestMethod.POST)
+    public List<Role> queryRoleByRoleNameConfuse(@RequestBody Map<String,Object> param){
         String roleName=(String)param.get("roleName");
-        String status=(String)param.get("status");
-        Map<String ,Object> map=new HashMap<>();
+        Map<String,Object> map=new HashMap<>();
         map.put("roleName",roleName);
-        map.put("status",status);
-        List<Role> roleList=roleFeginClient.queryRoleByStatusAndRoleName(map);
+        List<Role> roleList=roleFeginClient.queryRoleByRoleNameConfuse(map);
         return roleList;
 
     }

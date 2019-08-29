@@ -59,7 +59,7 @@
 
         SELECT * FROM ROLE
         WHERE
-        ROLE_NAME=#{roleName,jdbcType=VARCHAR}
+        ROLE_NAME = #{roleName,jdbcType=VARCHAR}
 
     </select>
 
@@ -80,4 +80,30 @@
         ROLE_ID=#{roleId,jdbcType=VARCHAR}
 
     </update>
+
+    <delete id="deleteRoleByRoleId" parameterType="String">
+
+        DELETE FROM ROLE
+        WHERE
+        ROLE_ID=#{roleId,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="updateRoleToStatusByRoleId" parameterType="com.zuer.movieprojectcommon.entity.Role">
+        UPDATE ROLE SET
+        STATUS = #{status,jdbcType=VARCHAR},
+        ALT_TIME = #{altTime,jdbcType=VARCHAR}
+        WHERE
+        ROLE_ID=#{roleId,jdbcType=VARCHAR}
+    </update>
+
+    <!--根据角色名称模糊查询-->
+    <select id="queryRoleByRoleNameConfuse" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT * FROM ROLE
+        <where>
+            <if test="roleName!=null and roleName!=''">
+                AND  ROLE_NAME like '%'||#{roleName,jdbcType=VARCHAR}||'%'
+            </if>
+        </where>
+    </select>
+
 </mapper>

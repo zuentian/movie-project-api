@@ -39,6 +39,6 @@ public interface RoleFeginClient {
     @RequestMapping(value = "/Role/updateRoleToStatusByRoleId",method = RequestMethod.POST)
     void updateRoleToStatusByRoleId(@RequestBody Role role);
 
-    @RequestMapping(value = "/Role/queryRoleByStatusAndRoleName",method = RequestMethod.POST)
-    List<Role> queryRoleByStatusAndRoleName(@RequestBody Map<String, Object> map);
+    @RequestMapping(value = "/Role/queryRoleByRoleNameConfuse",method = RequestMethod.POST)
+    List<Role> queryRoleByRoleNameConfuse(@RequestBody  Map<String,Object> map);
 }

@@ -114,14 +114,7 @@ public class UserInfoController {
             user.setAltTime(DateUtils.getCurrentDateTime());
             userFeignClient.insertUser(user);
             for (String roleId:user.getRoleIds()) {
-                String id=UUID.randomUUID().toString();
-                UserRole userRole=new UserRole();
-                userRole.setId(id);
-                userRole.setRoleId(roleId);
-                userRole.setUserId(uuid);
-                userRole.setCrtTime(DateUtils.getCurrentDateTime());
-                userRole.setAltTime(DateUtils.getCurrentDateTime());
-                userRoleFeignClient.insertUserRole(userRole);
+                insertUserRole(roleId, uuid);
             }
 
         }catch (Exception e){
@@ -136,23 +129,54 @@ public class UserInfoController {
     @RequestMapping(value = "/queryUserByUserId",method = RequestMethod.POST)
     public User queryUserByUserId(@RequestBody Map<String,Object> param) throws Exception{
         String userId=(String)param.get("userId");
+        User user=userFeignClient.queryUserByUserId(userId);
 
-        return userFeignClient.queryUserByUserId(userId);
+        List<UserRole> userRoleList=userRoleFeignClient.queryUserRoleByUserId(userId);
+        List<String> roleIds=new ArrayList<>();
+        if(userRoleList!=null){
+            for (UserRole userRole:userRoleList) {
+                roleIds.add(userRole.getRoleId());
+            }
+        }
+        user.setRoleIds(roleIds);
+        return user;
     }
 
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/updateUserByUserId",method = RequestMethod.POST)
     public void updateUserByUserId(@RequestBody Map<String ,Object>param) throws Exception{
-        ObjectMapper mapper = new ObjectMapper();
-        User user= mapper.convertValue(param.get("user"), User.class);
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            User user= mapper.convertValue(param.get("user"), User.class);
 
-        user.setAltTime(DateUtils.getCurrentDateTime());
-        String password= user.getPassword();
-        DefaultPasswordService defaultPasswordService=new DefaultPasswordService();
-        String passwordEncrypt = defaultPasswordService.encryptPassword(password);
-        user.setPassword(passwordEncrypt);
-        System.out.println(user);
-        userFeignClient.updateUserByUserId(user);
+            user.setAltTime(DateUtils.getCurrentDateTime());
+            String password= user.getPassword();
+            DefaultPasswordService defaultPasswordService=new DefaultPasswordService();
+            String passwordEncrypt = defaultPasswordService.encryptPassword(password);
+            user.setPassword(passwordEncrypt);
+            userFeignClient.updateUserByUserId(user);
+            userRoleFeignClient.deleteUserRoleByUserId(user.getUserId());
+            for (String roleId:user.getRoleIds()) {
+                insertUserRole(roleId, user.getUserId());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new Exception("创建用户失败！");
+        }
+
+
+    }
+
+    private void insertUserRole(String roleId, String userId) throws Exception{
+        String id= UUID.randomUUID().toString();
+        UserRole userRole=new UserRole();
+        userRole.setId(id);
+        userRole.setRoleId(roleId);
+        userRole.setUserId(userId);
+        userRole.setCrtTime(DateUtils.getCurrentDateTime());
+        userRole.setAltTime(DateUtils.getCurrentDateTime());
+        userRoleFeignClient.insertUserRole(userRole);
     }
 
     @Transactional(rollbackFor = {Exception.class})

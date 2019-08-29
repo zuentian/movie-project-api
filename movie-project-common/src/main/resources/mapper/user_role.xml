@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zuer.movieprojectcommon.service.UserRoleService" >
+
+
+    <resultMap id="BaseResultMap" type="com.zuer.movieprojectcommon.entity.UserRole">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+        <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+        <result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR" />
+        <result column="ALT_TIME" property="altTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="insertUserRole" parameterType="com.zuer.movieprojectcommon.entity.UserRole">
+        INSERT INTO USER_ROLE (ID, USER_ID, ROLE_ID,CRT_TIME,ALT_TIME)
+        VALUES (
+        #{id,jdbcType=VARCHAR},
+        #{userId,jdbcType=VARCHAR},
+        #{roleId,jdbcType=VARCHAR},
+        #{crtTime,jdbcType=VARCHAR},
+        #{altTime,jdbcType=VARCHAR}
+        )
+
+    </insert>
+
+    <delete id="deleteUserRoleByUserId" parameterType="String">
+        DELETE FROM USER_ROLE
+        WHERE
+        USER_ID = #{userId,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="queryUserRoleByUserId" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM USER_ROLE
+        WHERE
+        USER_ID = #{userId,jdbcType=VARCHAR}
+    </select>
+</mapper>

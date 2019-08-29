@@ -42,6 +42,6 @@ public interface RoleService {
     @RequestMapping(value = "/updateRoleToStatusByRoleId",method = RequestMethod.POST)
     void updateRoleToStatusByRoleId(@RequestBody Role role);
 
-    @RequestMapping(value = "/queryRoleByStatusAndRoleName",method = RequestMethod.POST)
-    List<Role> queryRoleByStatusAndRoleName(@RequestBody Map<String, Object> map);
+    @RequestMapping(value = "/queryRoleByRoleNameConfuse",method = RequestMethod.POST)
+    List<Role> queryRoleByRoleNameConfuse(@RequestBody  Map<String,Object> map);
 }
