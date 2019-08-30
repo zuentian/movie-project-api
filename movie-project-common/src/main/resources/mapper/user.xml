@@ -22,7 +22,7 @@
     <select id="queryUser" parameterType="java.util.Map" resultMap="BaseResultMap">
         select * from
         (select tab.*,ROWNUM AS RN FROM
-        (select * from "USER"
+        (select * from USER_INFO
         where 1=1
         <if test="nameOrMobile!=null and nameOrMobile!=''">
             and    (
@@ -45,7 +45,7 @@
 
     <select id="queryUserCount" parameterType="java.util.Map" resultType="Integer">
 
-        select count(*) from "USER"
+        select count(*) from USER_INFO
         where 1=1
         <if test="nameOrMobile!=null and nameOrMobile!=''">
             and    (
@@ -62,7 +62,7 @@
     </select>
     <insert id="insertUser" parameterType="com.zuer.movieprojectcommon.entity.User">
 
-        insert into "USER"
+        insert into USER_INFO
         (USER_ID, USER_CODE, PASSWORD, USER_TYPE, STATUS, USER_NAME, USER_NAME_BAK, USER_PHOTO_URL, MOBILE, SEX, CRT_TIME, ALT_TIME)
         values (
         #{userId,jdbcType=VARCHAR},
@@ -83,18 +83,18 @@
 
     <select id="queryUserByUserCode" parameterType="String" resultMap="BaseResultMap">
 
-        SELECT * FROM "USER"
+        SELECT * FROM USER_INFO
         where USER_CODE=#{userCode,jdbcType=VARCHAR}
 
     </select>
 
     <select id="queryUserByUserId" parameterType="String" resultMap="BaseResultMap">
-        SELECT * FROM "USER"
+        SELECT * FROM USER_INFO
         WHERE USER_ID = #{userId,jdbcType=VARCHAR}
     </select>
 
     <update id="updateUserByUserId" parameterType="com.zuer.movieprojectcommon.entity.User">
-        UPDATE "USER"
+        UPDATE USER_INFO
         SET
         USER_CODE = #{userCode,jdbcType=VARCHAR},
         PASSWORD = #{password,jdbcType=VARCHAR},
@@ -111,7 +111,7 @@
 
     <select id="deleteUserByUserId" parameterType="String">
 
-        DELETE FROM "USER"
+        DELETE FROM USER_INFO
         WHERE
         USER_ID = #{userId,jdbcType=VARCHAR}
 
@@ -119,7 +119,7 @@
 
     <update id="updateUserToStatusByUserId"  parameterType="java.util.Map">
 
-        UPDATE "USER" SET
+        UPDATE USER_INFO SET
         STATUS =#{status,jdbcType=VARCHAR},
         ALT_TIME = #{altTime,jdbcType=VARCHAR}
         WHERE

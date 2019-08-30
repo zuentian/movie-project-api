@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @EnableAutoConfiguration
-@RequestMapping("jwt")
+@RequestMapping(value = "jwt")
 //@Slf4j
 public class AuthController {
 
@@ -22,6 +22,7 @@ public class AuthController {
     public String createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest) throws Exception {
         System.out.println(authenticationRequest.getUsername()+" require logging...");
+        System.out.println(authService);
         final String token = authService.login(authenticationRequest);
         System.out.println(token);
         return token;

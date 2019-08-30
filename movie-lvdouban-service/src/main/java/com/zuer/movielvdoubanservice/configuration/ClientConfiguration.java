@@ -3,9 +3,6 @@ package com.zuer.movielvdoubanservice.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Created by ace on 2017/9/12.
- */
 @Configuration
 public class ClientConfiguration {
     @Value("${client.id}")

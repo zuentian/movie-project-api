@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
-@FeignClient(value = "ace-admin",configuration = FeignConfiguration.class)
+//@FeignClient(value = "ace-admin",configuration = FeignConfiguration.class)
 public interface IUserService {
 
-    @RequestMapping(value = "/api/user/validate", method = RequestMethod.POST)
+   // @RequestMapping(value = "/api/user/validate", method = RequestMethod.POST)
     public UserInfo validate(@RequestBody JwtAuthenticationRequest authenticationRequest);
 }
 
