@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @FeignClient(value = "zuer-lvdouban-service")
 public interface UserFeginService {
 
-    @RequestMapping(value = "/User/queryUserByQueryParam",method = RequestMethod.POST)
+    @RequestMapping(value = "/User/queryUserByQueryParam",method = RequestMethod.POST, consumes = "application/json")
     List<User> queryUserByQueryParam(@RequestBody QueryParam queryParam) ;
 
     @RequestMapping(value = "/User/queryUserInfoByUserName",method = RequestMethod.GET)

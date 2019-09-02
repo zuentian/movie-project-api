@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-@Data
+
 public class QueryParam extends LinkedHashMap<String, Object> {
     private static final long serialVersionUID = 1L;
     //当前页码
@@ -23,5 +23,22 @@ public class QueryParam extends LinkedHashMap<String, Object> {
         }
         this.remove("page");
         this.remove("limit");
+    }
+
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 }

@@ -4,6 +4,7 @@ import com.zuer.zuerlvdoubanauth.FeginService.MenuFeginService;
 import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
 import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.Menu;
+import com.zuer.zuerlvdoubancommon.entity.User;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.vo.EntireUser;
 import com.zuer.zuerlvdoubancommon.vo.PermissionInfo;
@@ -84,7 +85,8 @@ public class UserController {
         QueryParam queryParam=new QueryParam(param);
         System.out.println(queryParam);
 
-        System.out.println(userFeginService.queryUserByQueryParam(queryParam));
+        List<User> userList=userFeginService.queryUserByQueryParam(queryParam);
+        System.out.println(userList);
         return null;
     }
 }

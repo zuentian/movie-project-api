@@ -59,7 +59,7 @@ public class UserServiceClient  {
         List<User> list = userService.selectByExample(example);
 
         System.out.println("example==================list"+list);
-        return null;
+        return list;
     }
 
 }
