@@ -5,6 +5,7 @@ import com.zuer.zuerlvdoubanservice.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @EnableAutoConfiguration
 @RequestMapping(value = "/Menu")
+@Transactional(rollbackFor = Exception.class)
 public class MenuServiceClient {
 
     @Autowired

@@ -40,7 +40,6 @@ public class MenuController {
         UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
         List<Menu> menus=menuFeginService.getUserAuthorityMenuByUserId(userInfo.getId());
         List<MenuTree> menuTreeList=createrMenuTree(menus,"");
-        System.out.println("获取菜单的树状结构menuTreeList："+menuTreeList);
         return menuTreeList;
     }
 

@@ -7,17 +7,16 @@ import com.zuer.zuerlvdoubancommon.entity.Menu;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.vo.EntireUser;
 import com.zuer.zuerlvdoubancommon.vo.PermissionInfo;
+import com.zuer.zuerlvdoubancommon.vo.QueryParam;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -76,5 +75,16 @@ public class UserController {
         return permissionInfoList;
     }
 
+    /*
+    查询用户列表
+     */
+    @RequestMapping(value = "/queryUser",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> queryUser(@RequestParam Map<String, Object> param){
+        QueryParam queryParam=new QueryParam(param);
+        System.out.println(queryParam);
 
+        System.out.println(userFeginService.queryUserByQueryParam(queryParam));
+        return null;
+    }
 }

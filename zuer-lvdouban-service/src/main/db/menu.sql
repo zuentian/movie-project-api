@@ -68,3 +68,6 @@ is '启用禁用'
 /
 INSERT INTO MENU (ID, CODE, TITLE, PARENT_ID, HREF, ICON, TYPE, ORDER_NUM, DESCRIPTION, PATH, ENABLED, CRT_TIME, CRT_USER, CRT_NAME, CRT_HOST, UPD_TIME, UPD_USER, UPD_NAME, UPD_HOST, ATTR1, ATTR2, ATTR3, ATTR4, ATTR5, ATTR6, ATTR7, ATTR8) VALUES ('00000999', 'userManager', '用户管理', '000000', '/admin/user', 'fa-user', 'menu', 0, null, '/adminSys/baseManager/userManager', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 INSERT INTO MENU (ID, CODE, TITLE, PARENT_ID, HREF, ICON, TYPE, ORDER_NUM, DESCRIPTION, PATH, ENABLED, CRT_TIME, CRT_USER, CRT_NAME, CRT_HOST, UPD_TIME, UPD_USER, UPD_NAME, UPD_HOST, ATTR1, ATTR2, ATTR3, ATTR4, ATTR5, ATTR6, ATTR7, ATTR8) VALUES ('000000', 'baseManager', '基础配置管理', null, '/admin', 'setting', 'dirt', 0, null, '/adminSys/baseManager', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+
+
+commit;
