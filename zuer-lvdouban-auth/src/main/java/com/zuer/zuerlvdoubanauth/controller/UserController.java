@@ -8,7 +8,6 @@ import com.zuer.zuerlvdoubancommon.entity.User;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.vo.EntireUser;
 import com.zuer.zuerlvdoubancommon.vo.PermissionInfo;
-import com.zuer.zuerlvdoubancommon.vo.QueryParam;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,14 +78,12 @@ public class UserController {
     /*
     查询用户列表
      */
+
     @RequestMapping(value = "/queryUser",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> queryUser(@RequestParam Map<String, Object> param){
-        QueryParam queryParam=new QueryParam(param);
-        System.out.println(queryParam);
-
-        List<User> userList=userFeginService.queryUserByQueryParam(queryParam);
+    public List<User> queryUser(@RequestParam Map<String, Object> param){
+        List<User> userList=userFeginService.queryUserByQueryParam(param);
         System.out.println(userList);
-        return null;
+        return userList;
     }
 }
