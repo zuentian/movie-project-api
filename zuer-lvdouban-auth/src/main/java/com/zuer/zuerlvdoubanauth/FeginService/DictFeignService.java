@@ -2,7 +2,6 @@ package com.zuer.zuerlvdoubanauth.FeginService;
 
 
 import com.zuer.zuerlvdoubancommon.entity.Dict;
-import com.zuer.zuerlvdoubancommon.vo.page.PageResult;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,14 +18,17 @@ public interface DictFeignService {
     //此处调用的时候@RequestParam需要加value不然会报错
     //List<DictValue> queryDictByDictType(@RequestParam("dictType") String dictType)throws Exception;
 
-    @RequestMapping(value = "/Dict/queryDict",method = RequestMethod.POST)
-    PageResult<List<Dict>> queryDict(@RequestBody Map<String, Object> map,
+    @RequestMapping(value = "/Dict/queryPageFromDict",method = RequestMethod.POST)
+    Map<String,Object> queryPageFromDict(@RequestBody Map<String, Object> map,
                                      @RequestParam("pageSize") String pageSize,
                                      @RequestParam("pageIndex") String pageIndex) throws Exception;
 
 
     @RequestMapping(value = "/Dict/queryDictCount",method = RequestMethod.POST)
     int queryDictCount(@RequestBody Map<String, Object> map);
+
+    @RequestMapping(value = "/Dict/getDictTypeName",method = RequestMethod.POST)
+    Dict getDictTypeName(@RequestParam("dictType") String dictType);
 /*
 
     @RequestMapping(value = "/Dict/queryDictTypeNameByDictType",method = RequestMethod.GET)

@@ -3,7 +3,6 @@ package com.zuer.zuerlvdoubanservice.controller;
 
 import com.zuer.zuerlvdoubancommon.entity.Dict;
 import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
-import com.zuer.zuerlvdoubancommon.vo.page.PageResult;
 import com.zuer.zuerlvdoubanservice.service.DictService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,25 +25,39 @@ public class DictServiceClient {
     @Autowired
     DictService dictService;
 
-    @RequestMapping(value = "/queryDict",method = RequestMethod.POST)
+    @RequestMapping(value = "/queryPageFromDict",method = RequestMethod.POST)
     @ResponseBody
-    public PageResult<List<Dict>> queryDict(@RequestBody Map<String, Object> map, @RequestParam("pageSize") String pageSize, @RequestParam("pageIndex") String pageIndex) throws Exception{
-        System.out.println("--------------------------"+map+"==="+pageSize+","+pageIndex);
-        PageResult list=new PageResult();
+    public Map<String,Object> queryPageFromDict(@RequestBody Map<String, Object> map,
+                                                @RequestParam("pageSize") String pageSize,
+                                                @RequestParam("pageIndex") String pageIndex) throws Exception{
+
         Example example=new Example(Dict.class);
+        example.setOrderByClause("DICT_TYPE");//实现排序
         Example.Criteria criteria = example.createCriteria();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             criteria.andEqualTo(entry.getKey(),entry.getValue());
         }
         RowBounds rowBounds = RowBoundUtil.getRowBounds(pageSize, pageIndex);
-        List<Dict> gdNoRepairDos = dictService.selectByExampleAndRowBounds(example, rowBounds);
-        System.out.println("--------------------------"+gdNoRepairDos);
-        list.setData(gdNoRepairDos);
+        List<Dict> lists = dictService.selectByExampleAndRowBounds(example, rowBounds);
+        Map<String,Object> resultMap=new HashMap<String, Object>();
+        resultMap.put("list",lists);
         int count = dictService.selectCountByExample(example);
-        System.out.println("--------------------------"+count);
-        list.setTotal(count);
-        System.out.println(list);
-        return list;
+        resultMap.put("count",count);
+        return resultMap;
     }
 
+
+
+    @RequestMapping(value = "/getDictTypeName",method = RequestMethod.POST)
+    public Dict getDictTypeName(@RequestParam("dictType") String dictType){
+        Example example=new Example(Dict.class);
+        example.createCriteria().andEqualTo("dictType",dictType);
+        List<Dict> dictList=dictService.selectByExample(example);
+        System.out.println("--------------"+dictList);
+        Dict dict=null;
+        if(dictList!=null&&dictList.size()>0){
+            dict=dictList.get(0);
+        }
+        return dict;
+    }
 }

@@ -10,8 +10,8 @@ public class RowBoundUtil {
      * @return
      */
     public static RowBounds getRowBounds(String pageSize,String pageIndex){
-        int limit =Integer.valueOf(pageSize);
-        int offset =Integer.valueOf(pageIndex )* limit;
+        int limit =Integer.valueOf( pageSize);
+        int offset=(Integer.valueOf(pageIndex)-1)* limit;
         RowBounds rowBounds = new RowBounds(offset, limit);
         return rowBounds;
     }

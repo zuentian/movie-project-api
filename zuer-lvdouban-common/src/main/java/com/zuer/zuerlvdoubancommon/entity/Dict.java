@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Table(name = "DICT")
 public class Dict {
     @Id
-    @Column(name = "DICT_TYPE")
+    @Column(name = "DICT_ID")
     private String dictId;
 
     @Column(name = "DICT_TYPE")

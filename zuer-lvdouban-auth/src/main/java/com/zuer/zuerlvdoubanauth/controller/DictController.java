@@ -2,8 +2,6 @@ package com.zuer.zuerlvdoubanauth.controller;
 
 import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
 import com.zuer.zuerlvdoubancommon.entity.Dict;
-import com.zuer.zuerlvdoubancommon.vo.page.PageResult;
-import org.bouncycastle.crypto.tls.MACAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,42 +33,42 @@ public class DictController {
 */
 
     @Transactional(rollbackFor = {Exception.class})
-    @RequestMapping(value = "/queryDict",method = RequestMethod.POST)
+    @RequestMapping(value = "/queryPageFromDict",method = RequestMethod.POST)
     @ResponseBody
-    public PageResult<List<Dict>> queryDict(@RequestParam Map<String,Object> param) throws Exception{
+    public  Map<String,Object> queryPageFromDict(@RequestParam Map<String,Object> param) throws Exception{
+            try{
+                Map<String,Object> map=new HashMap<>();
+                String pageSize=(String)param.get("pageSize");
+                String pageIndex=(String)param.get("currentPage");
+                String dictType =param.get("dictType")==null?null:(String) param.get("dictType");
+                if(dictType!=null&&!"".equals(dictType)){
+                    map.put("dictType",dictType);
+                }
+                System.out.println(map);
 
-            System.out.println("111111111111111111111");
-            Map<String,Object> map=new HashMap<>();
-            //String pageSize=(String)param.get("pageSize");
-            //String pageIndex=(String)param.get("currentPage");
-            String dictType =param.get("dictType")==null?null:(String) param.get("dictType");
+                Map<String,Object> resultMap = dictFeignService.queryPageFromDict(map,pageSize,pageIndex);
+                System.out.println(resultMap);
+                return resultMap;
 
-            if(dictType!=null&&!"".equals(dictType)){
-                map.put("dictType",dictType);
+            }catch (Exception e){
+                throw new Exception("查询数据字典失败！");
             }
-            String pageSize="10";
-            String pageIndex="1";
-            System.out.println(map);
-
-            PageResult<List<Dict>> list = dictFeignService.queryDict(map,pageSize,pageIndex);
-            System.out.println(list);
-            return list;
 
     }
 
-  /*  @Transactional(rollbackFor = {Exception.class})
+    @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/getDictTypeName",method = RequestMethod.POST)
-    public String getDictTypeName(@RequestBody Map<String,Object> param) throws Exception{
+    public String getDictTypeName(@RequestParam Map<String,Object> param) throws Exception{
 
         String dictType=param.get("dictType")==null?null:(String)param.get("dictType");
-        List<Dict> list=dictFeignClient.queryDictTypeNameByDictType(dictType);
-        if(list!=null&&list.size()>0){
-            return list.get(0).getDictTypeName();
+        Dict dict=dictFeignService.getDictTypeName(dictType);
+        if(dict!=null){
+            return dict.getDictTypeName();
         }else {
             return "";
         }
     }
-
+  /*
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/addDict",method = RequestMethod.POST)
     public void addDict(@RequestBody Map<String,Object> param) throws Exception{
