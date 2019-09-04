@@ -117,17 +117,19 @@ public class UserController {
         String hostIp = ClientUtil.getClientIp(request);
         user.setCrtHost(hostIp);
 
-        String token=request.getHeader("Authorization");
+        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
         UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
         user.setCrtUser(userInfo.getUsername());
         user.setCrtName(userInfo.getName());
+        user.setUpdUser(userInfo.getUsername());
+        user.setUpdName(userInfo.getName());
         // 默认属性
-        String[] fields = {"crtHost","crtTime"};
+        String[] fields = {"crtHost","crtTime","updHost","updTime"};
         Field field = ReflectionUtils.getAccessibleField(user, "crtTime");
         // 默认值
         Object [] value = null;
         if(field!=null&&field.getType().equals(Date.class)){
-            value = new Object []{hostIp,new Date()};
+            value = new Object []{hostIp,new Date(),hostIp,new Date()};
         }
         // 填充默认属性值
         setDefaultValues(user, fields, value);

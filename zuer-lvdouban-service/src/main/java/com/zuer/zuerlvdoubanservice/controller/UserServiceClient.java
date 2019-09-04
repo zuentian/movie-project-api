@@ -46,6 +46,7 @@ public class UserServiceClient  {
 
     @RequestMapping(value = "/insertUser",method = RequestMethod.POST)
     public int insertUser(@RequestBody User user){
-        return userService.insert(user);
+
+        return userService.insertSelective(user);
     }
 }
