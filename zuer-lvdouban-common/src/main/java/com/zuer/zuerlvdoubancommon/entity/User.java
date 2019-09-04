@@ -15,6 +15,10 @@ public class User {
 
     private String username;
 
+
+    @Column(name = "name_bak")
+    private String nameBak;
+
     private String password;
 
     private String name;

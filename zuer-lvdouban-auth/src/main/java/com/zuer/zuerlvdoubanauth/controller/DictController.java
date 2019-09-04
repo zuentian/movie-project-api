@@ -1,7 +1,10 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
 import com.zuer.zuerlvdoubancommon.entity.Dict;
+import com.zuer.zuerlvdoubancommon.utils.DateUtil;
+import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/DictController")
@@ -20,17 +24,15 @@ public class DictController {
     @Autowired
     DictFeignService dictFeignService;
 
-/*
+
 
     @RequestMapping(value = "/queryDictByDictType",method = RequestMethod.POST)
-    public Map<String,Object> queryDictByDictType(@RequestBody Map<String,Object> param) throws Exception{
+    public List<DictValue>  queryDictByDictType(@RequestParam Map<String,Object> param) throws Exception{
         String dictType=param.get("dictType")==null?null:(String)param.get("dictType");
-        List<DictValue> list=dictFeignClient.queryDictByDictType(dictType);
-        Map<String,Object> resultMap=new HashMap<>();
-        resultMap.put("list",list);
-        return resultMap;
+        List<DictValue> list=dictFeignService.queryDictByDictType(dictType);
+        return list;
     }
-*/
+
 
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/queryPageFromDict",method = RequestMethod.POST)
@@ -44,10 +46,7 @@ public class DictController {
                 if(dictType!=null&&!"".equals(dictType)){
                     map.put("dictType",dictType);
                 }
-                System.out.println(map);
-
                 Map<String,Object> resultMap = dictFeignService.queryPageFromDict(map,pageSize,pageIndex);
-                System.out.println(resultMap);
                 return resultMap;
 
             }catch (Exception e){
@@ -68,20 +67,20 @@ public class DictController {
             return "";
         }
     }
-  /*
+
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/addDict",method = RequestMethod.POST)
-    public void addDict(@RequestBody Map<String,Object> param) throws Exception{
+    public void addDict(@RequestParam Map<String,Object> param) throws Exception{
         try {
             ObjectMapper mapper = new ObjectMapper();
-            Dict dict= mapper.convertValue(param.get("dictInfoAdd"), Dict.class);
-
+            Dict dict= mapper.readValue((String) param.get("dictInfoAdd"), Dict.class);
             String dictId = UUID.randomUUID().toString();
             dict.setDictId(dictId);
-            dict.setCrtTime(DateUtils.getCurrentDateTime());
-            dict.setAltTime(DateUtils.getCurrentDateTime());
-            int i=dictFeignClient.addDict(dict);
+            dict.setCrtTime(DateUtil.getCurrentDateTime());
+            dict.setAltTime(DateUtil.getCurrentDateTime());
+            dictFeignService.addDict(dict);
         }catch (Exception e){
+            System.out.println(e.getMessage());
             throw new Exception("增加数据字典失败！");
         }
 
@@ -90,10 +89,10 @@ public class DictController {
 
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/queryDictByDictId",method = RequestMethod.POST)
-    public Dict queryDictByDictId(@RequestBody Map<String ,Object> param) throws Exception{
+    public Dict queryDictByDictId(@RequestParam Map<String ,Object> param) throws Exception{
         try {
             String dictId=(String)param.get("dictId");
-            Dict dict=dictFeignClient.queryDictByDictId(dictId);
+            Dict dict=dictFeignService.queryDictByDictId(dictId);
             return dict;
         }catch (Exception e){
             throw new Exception("数字字典查询失败！");
@@ -102,12 +101,12 @@ public class DictController {
 
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/editDictByDictId",method = RequestMethod.POST)
-    public void editDictByDictId(@RequestBody Map<String,Object> param )throws Exception{
+    public void editDictByDictId(@RequestParam Map<String,Object> param )throws Exception{
         try{
-            ObjectMapper obj=new ObjectMapper();
-            Dict dict = obj.convertValue(param.get("dictInfoEdit"),Dict.class);
-            dict.setAltTime(DateUtils.getCurrentDateTime());
-            dictFeignClient.editDictByDictId(dict);
+            ObjectMapper mapper=new ObjectMapper();
+            Dict dict= mapper.readValue((String) param.get("dictInfoEdit"), Dict.class);
+            dict.setAltTime(DateUtil.getCurrentDateTime());
+            dictFeignService.editDictByDictId(dict);
         }catch (Exception e){
             throw new Exception("更新数据字典失败");
         }
@@ -116,18 +115,16 @@ public class DictController {
 
     @Transactional(rollbackFor = {Exception.class})
     @RequestMapping(value = "/deleteDictByDictId",method = RequestMethod.POST)
-    public void deleteDictByDictId(@RequestBody Map<String,Object>param ) throws Exception{
-
+    public void deleteDictByDictId(@RequestParam Map<String,Object>param ) throws Exception{
         try{
-
             String dictId=(String)param.get("dictId");
-            dictFeignClient.deleteDictByDictId(dictId);
+            dictFeignService.deleteDictByDictId(dictId);
 
         }catch (Exception e){
             throw new Exception("删除数据字典失败！");
         }
 
 
-    }*/
+    }
 
 }

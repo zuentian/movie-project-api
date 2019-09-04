@@ -2,7 +2,9 @@ package com.zuer.zuerlvdoubanservice.controller;
 
 
 import com.zuer.zuerlvdoubancommon.entity.Dict;
+import com.zuer.zuerlvdoubancommon.entity.User;
 import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
+import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import com.zuer.zuerlvdoubanservice.service.DictService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +55,47 @@ public class DictServiceClient {
         Example example=new Example(Dict.class);
         example.createCriteria().andEqualTo("dictType",dictType);
         List<Dict> dictList=dictService.selectByExample(example);
-        System.out.println("--------------"+dictList);
         Dict dict=null;
         if(dictList!=null&&dictList.size()>0){
             dict=dictList.get(0);
         }
         return dict;
     }
+
+
+    @RequestMapping(value = "/addDict",method = RequestMethod.POST)
+    public int addDict(@RequestBody Dict dict){
+        return dictService.insert(dict);
+    }
+
+
+    @RequestMapping(value = "/queryDictByDictId",method = RequestMethod.GET)
+    public Dict queryDictByDictId(@RequestParam("dictId") String dictId){
+        Dict dict=new Dict();
+        dict.setDictId(dictId);
+        return dictService.selectOne(dict);
+    }
+
+
+    @RequestMapping(value = "/editDictByDictId",method = RequestMethod.POST)
+    public int editDictByDictId(@RequestBody Dict dict){
+        return dictService.updateByPrimaryKey(dict);
+    }
+
+
+    @RequestMapping(value = "/deleteDictByDictId",method = RequestMethod.GET)
+    public int deleteDictByDictId(@RequestParam("dictId") String dictId){
+        Dict dict=new Dict();
+        dict.setDictId(dictId);
+        return dictService.delete(dict);
+    }
+
+    @RequestMapping(value = "/queryDictByDictType",method = RequestMethod.GET)
+        //此处调用的时候@RequestParam需要加value不然会报错
+    public List<DictValue> queryDictByDictType(@RequestParam("dictType") String dictType){
+
+        return dictService.queryDictByDictType(dictType);
+
+    }
+
 }

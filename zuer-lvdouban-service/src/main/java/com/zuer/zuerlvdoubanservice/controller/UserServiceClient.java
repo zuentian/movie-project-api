@@ -27,8 +27,9 @@ public class UserServiceClient  {
         User user =new User();
         user.setUsername(username);
         user=userService.selectOne(user);
-        UserInfo userInfo=new UserInfo();
+        UserInfo userInfo=null;
         if(user!=null){
+            userInfo=new UserInfo();
             BeanUtils.copyProperties(user,userInfo);
         }
         return  userInfo;
@@ -42,4 +43,9 @@ public class UserServiceClient  {
         return list;
     }
 
+
+    @RequestMapping(value = "/insertUser",method = RequestMethod.POST)
+    public int insertUser(@RequestBody User user){
+        return userService.insert(user);
+    }
 }

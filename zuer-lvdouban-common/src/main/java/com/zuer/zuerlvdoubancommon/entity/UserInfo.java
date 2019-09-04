@@ -9,6 +9,7 @@ public class UserInfo {
     public String username;
     public String password;
     public String name;
+    public String usernameBak;
     private String description;
     private Date updTime;
 }

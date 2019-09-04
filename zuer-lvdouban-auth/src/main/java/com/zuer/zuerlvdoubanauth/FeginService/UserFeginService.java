@@ -18,4 +18,7 @@ public interface UserFeginService {
     @RequestMapping(value = "/User/queryUserInfoByUserName",method = RequestMethod.GET)
     UserInfo queryUserInfoByUserName(@RequestParam("username") String username) ;
 
+
+    @RequestMapping(value = "/User/insertUser",method = RequestMethod.POST)
+    int insertUser(User user);
 }

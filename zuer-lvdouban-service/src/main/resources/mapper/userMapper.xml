@@ -37,8 +37,8 @@
         SELECT * FROM USER_INFO
         WHERE 1=1
             <if test="name!=null and name!=''">
-                AND (USERNAME = '%'#{name,jdbcType="VARCHAR"}'%'
-                OR NAME = '%'#{name,jdbcType="VARCHAR"}'%')
+                AND (USERNAME LIKE '%'||#{name,jdbcType=VARCHAR}||'%'
+                OR NAME LIKE '%'||#{name,jdbcType=VARCHAR}||'%')
             </if>
     </select>
 

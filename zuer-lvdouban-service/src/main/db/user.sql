@@ -42,3 +42,6 @@ alter table USER_INFO
         primary key (ID)
 /
 
+alter table USER_INFO
+	add name_bak varchar2(50) default null
+/
