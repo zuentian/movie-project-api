@@ -88,10 +88,22 @@ public class UserController {
 
     @RequestMapping(value = "/queryUser",method = RequestMethod.POST)
     @ResponseBody
-    public List<User> queryUser(@RequestParam Map<String, Object> param){
-        List<User> userList=userFeginService.queryUserByQueryParam(param);
-        System.out.println(userList);
-        return userList;
+    public Map<String,Object>  queryUser(@RequestParam Map<String, Object> param) throws Exception{
+
+        try{
+            Map<String,Object> map=new HashMap<>();
+            String pageSize=(String)param.get("limit");
+            String pageIndex=(String)param.get("page");
+            String name =param.get("name")==null?null:(String) param.get("name");
+            if(name!=null&&!"".equals(name)){
+                map.put("name",name);
+            }
+            Map<String,Object> resultMap = userFeginService.queryUserByQueryParam(map,pageSize,pageIndex);
+            return resultMap;
+
+        }catch (Exception e){
+            throw new Exception("查询数据字典失败！");
+        }
     }
 
     @RequestMapping(value = "/addUser",method = RequestMethod.POST)
@@ -111,34 +123,30 @@ public class UserController {
         DefaultPasswordService defaultPasswordService=new DefaultPasswordService();
         String password = defaultPasswordService.encryptPassword(user.getPassword());
         user.setPassword(password);
-
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        String hostIp = ClientUtil.getClientIp(request);
-        user.setCrtHost(hostIp);
-
-        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
-        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
-        user.setCrtUser(userInfo.getUsername());
-        user.setCrtName(userInfo.getName());
-        user.setUpdUser(userInfo.getUsername());
-        user.setUpdName(userInfo.getName());
-        // 默认属性
-        String[] fields = {"crtHost","crtTime","updHost","updTime"};
-        Field field = ReflectionUtils.getAccessibleField(user, "crtTime");
-        // 默认值
-        Object [] value = null;
-        if(field!=null&&field.getType().equals(Date.class)){
-            value = new Object []{hostIp,new Date(),hostIp,new Date()};
-        }
-        // 填充默认属性值
-        setDefaultValues(user, fields, value);
-
-
+        user=setUserCrt(user);
+        user=setUserUpd(user);
         return userFeginService.insertUser(user);
 
     }
+    @RequestMapping(value = "/updateUserById",method = RequestMethod.POST)
+    @ResponseBody
+    public int updateUserById(@RequestParam Map<String, Object> param) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        User user = mapper.readValue((String) param.get("user"), User.class);
+        user=setUserUpd(user);
+        return userFeginService.updateUserById(user);
+    }
 
+    @RequestMapping(value = "/queryUserById/{id}",method = RequestMethod.GET)
+    @ResponseBody
+    public User queryUserById(@PathVariable String id) throws Exception {
+        return userFeginService.queryUserById(id);
+    }
+    @RequestMapping(value = "/deleteUserById/{id}",method = RequestMethod.GET)
+    @ResponseBody
+    public int deleteUserById(@PathVariable String id) throws Exception {
+        return userFeginService.deleteUserById(id);
+    }
     /**
      * 依据对象的属性数组和值数组对对象的属性进行赋值
      *
@@ -154,5 +162,41 @@ public class UserController {
                 ReflectionUtils.invokeSetter(entity, field, value[i]);
             }
         }
+    }
+
+    private User setUserCrt(User user){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String hostIp = ClientUtil.getClientIp(request);
+        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
+        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
+        // 默认属性
+        String[] fields = {"crtHost","crtTime","crtUser","crtName"};
+        Field field = ReflectionUtils.getAccessibleField(user, "crtTime");
+        // 默认值
+        Object [] value = null;
+        if(field!=null&&field.getType().equals(Date.class)){
+            value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
+        }
+        // 填充默认属性值
+        setDefaultValues(user, fields, value);
+        return user;
+    }
+
+    private User setUserUpd(User user){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String hostIp = ClientUtil.getClientIp(request);
+        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
+        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
+        // 默认属性
+        String[] fields = {"updHost","updTime","updUser","updName"};
+        Field field = ReflectionUtils.getAccessibleField(user, "updTime");
+        // 默认值
+        Object [] value = null;
+        if(field!=null&&field.getType().equals(Date.class)){
+            value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
+        }
+        // 填充默认属性值
+        setDefaultValues(user, fields, value);
+        return user;
     }
 }

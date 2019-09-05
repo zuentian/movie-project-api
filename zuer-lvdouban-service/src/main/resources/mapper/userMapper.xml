@@ -15,11 +15,11 @@
         <result column="sex" jdbcType="VARCHAR" property="sex" />
         <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="description" jdbcType="VARCHAR" property="description" />
-        <result column="crt_time" jdbcType="DATE" property="crtTime" />
+        <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
         <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
         <result column="crt_host" jdbcType="VARCHAR" property="crtHost" />
-        <result column="upd_time" jdbcType="DATE" property="updTime" />
+        <result column="upd_time" jdbcType="TIMESTAMP" property="updTime" />
         <result column="upd_user" jdbcType="VARCHAR" property="updUser" />
         <result column="upd_name" jdbcType="VARCHAR" property="updName" />
         <result column="upd_host" jdbcType="VARCHAR" property="updHost" />

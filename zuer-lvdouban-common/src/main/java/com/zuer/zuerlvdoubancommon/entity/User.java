@@ -1,10 +1,9 @@
 package com.zuer.zuerlvdoubancommon.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 @Data
 @Table(name = "USER_INFO")
@@ -39,6 +38,7 @@ public class User {
     private String description;
 
     @Column(name = "crt_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date crtTime;
 
     @Column(name = "crt_user")
@@ -51,6 +51,7 @@ public class User {
     private String crtHost;
 
     @Column(name = "upd_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updTime;
 
     @Column(name = "upd_user")

@@ -1,14 +1,19 @@
 package com.zuer.zuerlvdoubanservice.controller;
 
+import com.zuer.zuerlvdoubancommon.entity.Dict;
 import com.zuer.zuerlvdoubancommon.entity.User;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
+import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
 import com.zuer.zuerlvdoubanservice.service.UserService;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Example;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,10 +42,24 @@ public class UserServiceClient  {
 
 
     @RequestMapping(value = "/queryUserByQueryParam",method = RequestMethod.POST)
-    public List<User> queryUserByQueryParam( @RequestBody Map<String, Object> param) {
-        List<User> list = userService.queryUserByQueryParam(param);
-        System.out.println("+++++++++++++++++++++++"+list);
-        return list;
+    public Map<String,Object> queryUserByQueryParam(@RequestBody Map<String, Object> map,
+                                            @RequestParam("pageSize") String pageSize,
+                                            @RequestParam("pageIndex") String pageIndex) {
+        Example example=new Example(User.class);
+        example.setOrderByClause("UPD_TIME DESC");//实现排序
+        Example.Criteria criteria = example.createCriteria();
+
+        if(map.get("name")!=null){
+            criteria.orLike("name","%"+map.get("name")+"%");
+            criteria.orLike("username","%"+map.get("name")+"%");
+        }
+        RowBounds rowBounds = RowBoundUtil.getRowBounds(pageSize, pageIndex);
+        List<User> lists = userService.selectByExampleAndRowBounds(example, rowBounds);
+        Map<String,Object> resultMap=new HashMap<String, Object>();
+        resultMap.put("list",lists);
+        int count = userService.selectCountByExample(example);
+        resultMap.put("count",count);
+        return resultMap;
     }
 
 
@@ -48,5 +67,23 @@ public class UserServiceClient  {
     public int insertUser(@RequestBody User user){
 
         return userService.insertSelective(user);
+    }
+
+
+
+    @RequestMapping(value = "/queryUserById",method = RequestMethod.GET)
+    public User queryUserById(@RequestParam("id") String id){
+        return userService.selectByPrimaryKey(id);
+    }
+
+    @RequestMapping(value = "/updateUserById",method = RequestMethod.POST)
+    public int updateUserById(@RequestBody User user){
+        return userService.updateByPrimaryKeySelective(user);
+    }
+
+
+    @RequestMapping(value = "/deleteUserById",method = RequestMethod.GET)
+    public int deleteUserById(@RequestParam("id") String id){
+        return userService.deleteByPrimaryKey(id);
     }
 }
