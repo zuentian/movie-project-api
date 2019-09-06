@@ -26,6 +26,9 @@ public class Menu {
 
     private String type;
 
+    @Column(name = "ORDER_NUM")
+    private int orderNum;
+
     private String description;
 
     @Column(name = "crt_time")

@@ -16,4 +16,17 @@ public interface MenuFeginService {
     List<Menu> getUserAuthorityMenuByUserId(@RequestParam("id") String id) ;
     @RequestMapping(value = "/Menu/queryMenu",method = RequestMethod.GET)
     List<Menu> queryMenu();
+
+    @RequestMapping(value = "/Menu/queryMenuByTitle",method = RequestMethod.GET)
+    List<Menu> queryMenuByTitle(@RequestParam("title") String title);
+
+
+    @RequestMapping(value = "/Menu/queryMenuById",method = RequestMethod.GET)
+    Menu queryMenuById(@RequestParam("id") String id);
+
+    @RequestMapping(value = "/Menu/insertMenu",method = RequestMethod.POST)
+    int insertMenu(Menu menu);
+
+    @RequestMapping(value = "/Menu/updateMenuById",method = RequestMethod.POST)
+    int updateMenuById(Menu menu);
 }

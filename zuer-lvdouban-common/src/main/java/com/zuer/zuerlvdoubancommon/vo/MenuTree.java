@@ -14,6 +14,7 @@ public class MenuTree extends TreeNode {
     String redirect;
     String code;
     String type;
+    int orderNum;
 
     String label;
 

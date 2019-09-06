@@ -2,14 +2,13 @@ package com.zuer.zuerlvdoubanservice.controller;
 
 import com.zuer.zuerlvdoubancommon.entity.Menu;
 import com.zuer.zuerlvdoubanservice.service.MenuService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -38,4 +37,30 @@ public class MenuServiceClient {
         return menuService.selectAll();
     }
 
+    @RequestMapping(value = "/queryMenuByTitle",method = RequestMethod.GET)
+    public List<Menu> queryMenuByTitle(@RequestParam("title") String title){
+        Example example = new Example(Menu.class);
+        if (StringUtils.isNotBlank(title)) {
+            example.createCriteria().andLike("title", "%" + title + "%");
+        }
+        return menuService.selectByExample(example);
+    }
+
+
+    @RequestMapping(value = "/queryMenuById",method = RequestMethod.GET)
+    public Menu queryMenuById(@RequestParam("id") String id){
+        return menuService.selectByPrimaryKey(id);
+    }
+
+
+    @RequestMapping(value = "/insertMenu",method = RequestMethod.POST)
+    public int insertMenu(@RequestBody  Menu menu){
+        return menuService.insertSelective(menu);
+    }
+
+
+    @RequestMapping(value = "/updateMenuById",method = RequestMethod.POST)
+    public int updateMenuById(@RequestBody Menu menu){
+        return menuService.updateByPrimaryKeySelective(menu);
+    }
 }
