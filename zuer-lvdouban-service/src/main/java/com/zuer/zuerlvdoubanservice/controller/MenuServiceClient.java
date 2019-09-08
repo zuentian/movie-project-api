@@ -63,4 +63,16 @@ public class MenuServiceClient {
     public int updateMenuById(@RequestBody Menu menu){
         return menuService.updateByPrimaryKeySelective(menu);
     }
+
+    @RequestMapping(value = "/queryMenuByParentIdCount",method = RequestMethod.GET)
+    public int queryMenuByParentIdCount(@RequestParam("parentId") String parentId){
+        Example example= new Example(Menu.class);
+        example.createCriteria().andEqualTo("parentId",parentId);
+        return menuService.selectCountByExample(example);
+    }
+
+    @RequestMapping(value = "/deleteMenuById",method = RequestMethod.GET)
+    public int deleteMenuById(@RequestParam("id") String id){
+        return menuService.deleteByPrimaryKey(id);
+    }
 }

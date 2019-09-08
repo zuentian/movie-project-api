@@ -29,4 +29,10 @@ public interface MenuFeginService {
 
     @RequestMapping(value = "/Menu/updateMenuById",method = RequestMethod.POST)
     int updateMenuById(Menu menu);
+
+    @RequestMapping(value = "/Menu/queryMenuByParentIdCount",method = RequestMethod.GET)
+    int queryMenuByParentIdCount(@RequestParam("parentId") String parentId);
+
+    @RequestMapping(value = "/Menu/deleteMenuById",method = RequestMethod.GET)
+    int deleteMenuById(@RequestParam("id") String id);
 }

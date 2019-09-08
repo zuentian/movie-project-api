@@ -1,6 +1,7 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.MenuFeginService;
 import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
 import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
@@ -10,6 +11,7 @@ import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
 import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
 import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
+import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import com.zuer.zuerlvdoubancommon.vo.MenuTree;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -34,6 +36,9 @@ public class MenuController {
     private MenuFeginService menuFeginService;
     @Autowired
     private UserFeginService userFeginService;
+    @Autowired
+    private DictFeignService dictFeignService;
+
     @RequestMapping(value = "/queryAllMenu",method = RequestMethod.GET)
     public List<Menu> queryAllMenu(){
         List<Menu> menuList=menuFeginService.queryMenu();
@@ -44,7 +49,13 @@ public class MenuController {
     public List<MenuTree> getMenuTree(String token){
         UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
         List<Menu> menus=menuFeginService.getUserAuthorityMenuByUserId(userInfo.getId());
-        List<MenuTree> menuTreeList=createrMenuTree(menus,"");
+
+        String root="";
+        List<DictValue> dictValueList=dictFeignService.queryDictByDictType("MENUROOT");
+        if(dictValueList!=null&&dictValueList.size()>0){
+            root=dictValueList.get(0).getLabel();
+        }
+        List<MenuTree> menuTreeList=createrMenuTree(menus,root);
         return menuTreeList;
     }
 
@@ -65,7 +76,12 @@ public class MenuController {
     public List<MenuTree> queryMenuTree(@RequestParam Map<String, Object> param) {
         String title = param.get("title") == null ? null : (String) param.get("title");
         List<Menu> menuList = menuFeginService.queryMenuByTitle(title);
-        return createrMenuTree(menuList, "");
+        String root="";
+        List<DictValue> dictValueList=dictFeignService.queryDictByDictType("MENUROOT");
+        if(dictValueList!=null&&dictValueList.size()>0){
+            root=dictValueList.get(0).getLabel();
+        }
+        return createrMenuTree(menuList, root);
     }
 
     @RequestMapping(value = "/queryMenuById/{id}",method = RequestMethod.GET)
@@ -146,4 +162,14 @@ public class MenuController {
         menu=setMenuUpd(menu);
         return menuFeginService.updateMenuById(menu);
     }
+
+    @RequestMapping(value = "/deleteMenuById/{id}",method = RequestMethod.GET)
+    public int deleteMenuById(@PathVariable String id) throws Exception{
+        return menuFeginService.deleteMenuById(id);
+    }
+    @RequestMapping(value = "/queryMenuByParentIdCount/{parentId}",method = RequestMethod.GET)
+    public int queryMenuByParentIdCount(@PathVariable String parentId) throws Exception{
+        return menuFeginService.queryMenuByParentIdCount(parentId);
+    }
+
 }

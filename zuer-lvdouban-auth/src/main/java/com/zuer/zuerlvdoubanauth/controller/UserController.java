@@ -48,13 +48,16 @@ public class UserController {
         UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
         EntireUser entireUser=new EntireUser();
         BeanUtils.copyProperties(userInfo,entireUser);
-
+        System.out.println("登陆之后id:"+userInfo.getId());
         List<Menu> menus=menuFeginService.getUserAuthorityMenuByUserId(userInfo.getId());
+
+        System.out.println("登陆之后menus:"+menus);
         List<PermissionInfo> permissionInfos=getMenuPermission(menus);
         Stream<PermissionInfo> menusFilter = permissionInfos.parallelStream().filter((permission) -> {
             return permission.getType().equals("menu");
         });
         entireUser.setMenus(menusFilter.collect(Collectors.toList()));
+
         System.out.println("登陆之查询菜单和功能结果EntireUser=["+entireUser+"]");
         return entireUser;
     }
