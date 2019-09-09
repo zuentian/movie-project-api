@@ -52,13 +52,7 @@ public class Element {
 
     private String attr4;
 
-    private String attr5;
 
-    private String attr6;
-
-    private String attr7;
-
-    private String attr8;
 
 
 }
