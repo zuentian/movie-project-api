@@ -19,4 +19,14 @@ public interface ElementFeignService {
     Map<String, Object> queryElementParam(@RequestParam("pageSize") String pageSize,
                                           @RequestParam("page") String page,
                                           @RequestBody Map<String, Object> map);
+
+    @RequestMapping(value = "/Element/queryElementById",method = RequestMethod.GET)
+    Element queryElementById(@RequestParam("id") String id);
+
+
+    @RequestMapping(value = "/Element/updateElementById",method = RequestMethod.POST)
+    int updateElementById(Element element);
+
+    @RequestMapping(value = "/Element/deleteElementById",method = RequestMethod.GET)
+    int deleteElementById(@RequestParam("id") String id);
 }

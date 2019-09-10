@@ -11,10 +11,7 @@ import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
 import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -54,6 +51,27 @@ public class ElementController {
         element.setId(uuid);
         element=setMenuCrt(element);
         return elementFeignService.insertElement(element);
+    }
+
+
+    @RequestMapping(value = "/queryElementById/{id}",method = RequestMethod.GET)
+    public Element queryElementById(@PathVariable String id){
+        return elementFeignService.queryElementById(id);
+    }
+
+    @RequestMapping(value = "/updateElementById",method = RequestMethod.POST)
+    @ResponseBody
+    public int updateElementById(@RequestParam Map<String, Object> param) throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+        Element element = mapper.readValue((String) param.get("element"), Element.class);
+        return elementFeignService.updateElementById(element);
+
+    }
+
+    @RequestMapping(value = "/deleteElementById/{id}",method = RequestMethod.GET)
+    public int deleteElementById(@PathVariable String id){
+        return elementFeignService.deleteElementById(id);
     }
 
     private Element setMenuCrt(Element element){

@@ -55,4 +55,21 @@ public class ElementServiceClient {
     public int insertElement(@RequestBody Element element){
         return elementService.insertSelective(element);
     }
+
+
+    @RequestMapping(value = "/queryElementById",method = RequestMethod.GET)
+    public Element queryElementById(@RequestParam("id") String id){
+        return elementService.selectByPrimaryKey(id);
+    }
+
+
+    @RequestMapping(value = "/updateElementById",method = RequestMethod.POST)
+    public int updateElementById(@RequestBody Element element){
+        return elementService.updateByPrimaryKeySelective(element);
+    }
+
+    @RequestMapping(value = "/deleteElementById",method = RequestMethod.GET)
+    public int deleteElementById(@RequestParam("id") String id){
+        return elementService.deleteByPrimaryKey(id);
+    }
 }
