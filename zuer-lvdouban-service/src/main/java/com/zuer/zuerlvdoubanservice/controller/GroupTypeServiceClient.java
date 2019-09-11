@@ -68,4 +68,10 @@ public class GroupTypeServiceClient {
     public int deleteGroupTypeById(@RequestParam("id")  String id){
         return groupTypeService.deleteByPrimaryKey(id);
     }
+
+
+    @RequestMapping(value = "/queryGroupType",method = RequestMethod.POST)
+    public List<GroupType> queryGroupType(){
+        return groupTypeService.selectAll();
+    }
 }

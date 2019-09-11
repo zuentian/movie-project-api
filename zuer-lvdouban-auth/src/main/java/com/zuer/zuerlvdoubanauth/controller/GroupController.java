@@ -1,13 +1,15 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuer.zuerlvdoubanauth.FeginService.GroupTypeFeignService;
+import com.zuer.zuerlvdoubanauth.FeginService.GroupFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
 import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
-import com.zuer.zuerlvdoubancommon.entity.GroupType;
+import com.zuer.zuerlvdoubancommon.entity.Group;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
 import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
+import com.zuer.zuerlvdoubancommon.vo.GroupTree;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -15,99 +17,74 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 
 @EnableAutoConfiguration
-@RequestMapping(value = "/GroupTypeController")
+@RequestMapping(value = "/GroupController")
 @RestController
-public class GroupTypeController {
-
-    @Autowired
-    private GroupTypeFeignService groupTypeFeignService;
+public class GroupController {
 
     @Autowired
     private UserFeginService userFeginService;
+    @Autowired
+    private GroupFeignService groupFeignService;
 
-    @RequestMapping(value = "/addGroupType",method = RequestMethod.POST)
-    public int addElement(@RequestParam Map<String, Object> param) throws IOException {
+    @RequestMapping(value = "/queryTree", method = RequestMethod.GET)
+    @ResponseBody
+    public List<GroupTree> queryTree(String name, String groupType) {
+        if(StringUtils.isBlank(groupType)) {
+            return new ArrayList<GroupTree>();
+        }
+        return null;
+    }
+    @RequestMapping(value = "/insertGroup",method = RequestMethod.POST)
+    public int insertGroup(@RequestParam Map<String, Object> param) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        GroupType groupType = mapper.readValue((String) param.get("groupType"), GroupType.class);
+        Group group = mapper.readValue((String) param.get("groupType"), Group.class);
 
         String uuid= UUID.randomUUID().toString();
-        groupType.setId(uuid);
-        groupType=setGroupTypeCrt(groupType);
-        groupType=setGroupTypeUpd(groupType);
-        return groupTypeFeignService.insertGroupType(groupType);
+        group.setId(uuid);
+        group=setGroupTypeCrt(group);
+        group=setGroupTypeUpd(group);
+        return groupFeignService.insertGroup(group);
     }
 
-    @RequestMapping(value = "/queryGroupTypeByParam",method = RequestMethod.POST)
-    public Map<String,Object> queryGroupTypeByParam(@RequestParam(defaultValue = "10") String limit,
-                                                @RequestParam(defaultValue = "1") String page,
-                                                String name){
-        Map<String,Object> map=new HashMap<>();
-        map.put("name",name);
-        return groupTypeFeignService.queryGroupTypeByParam(limit,page,map);
-    }
-
-    @RequestMapping(value = "/queryGroupTypeById/{id}",method = RequestMethod.GET)
-    public GroupType queryGroupTypeById(@PathVariable String id){
-        return groupTypeFeignService.queryGroupTypeById(id);
-    }
-
-    @RequestMapping(value = "/updateGroupTypeById",method = RequestMethod.POST)
-    @ResponseBody
-    public int updateGroupTypeById(@RequestParam Map<String, Object> param) throws Exception {
-
-        ObjectMapper mapper = new ObjectMapper();
-        GroupType groupType = mapper.readValue((String) param.get("groupType"), GroupType.class);
-        groupType=setGroupTypeUpd(groupType);
-        return groupTypeFeignService.updateGroupTypeById(groupType);
-
-    }
-
-    @RequestMapping(value = "/deleteGroupTypeById/{id}",method = RequestMethod.GET)
-    public int deleteGroupTypeById(@PathVariable String id){
-        return groupTypeFeignService.deleteGroupTypeById(id);
-    }
-
-
-    private GroupType setGroupTypeCrt(GroupType groupType){
+    private Group setGroupTypeCrt(Group group){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String hostIp = ClientUtil.getClientIp(request);
         String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
         UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
         // 默认属性
         String[] fields = {"crtHost","crtTime","crtUser","crtName"};
-        Field field = ReflectionUtils.getAccessibleField(groupType, "crtTime");
+        Field field = ReflectionUtils.getAccessibleField(group, "crtTime");
         // 默认值
         Object [] value = null;
         if(field!=null&&field.getType().equals(Date.class)){
             value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
         }
         // 填充默认属性值
-        setDefaultValues(groupType, fields, value);
-        return groupType;
+        setDefaultValues(group, fields, value);
+        return group;
     }
 
 
-    private GroupType setGroupTypeUpd(GroupType groupType){
+    private Group setGroupTypeUpd(Group group){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String hostIp = ClientUtil.getClientIp(request);
         String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
         UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
         // 默认属性
         String[] fields = {"updHost","updTime","updUser","updName"};
-        Field field = ReflectionUtils.getAccessibleField(groupType, "updTime");
+        Field field = ReflectionUtils.getAccessibleField(group, "updTime");
         // 默认值
         Object [] value = null;
         if(field!=null&&field.getType().equals(Date.class)){
             value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
         }
         // 填充默认属性值
-        setDefaultValues(groupType, fields, value);
-        return groupType;
+        setDefaultValues(group, fields, value);
+        return group;
     }
     /**
      * 依据对象的属性数组和值数组对对象的属性进行赋值
@@ -124,9 +101,5 @@ public class GroupTypeController {
                 ReflectionUtils.invokeSetter(entity, field, value[i]);
             }
         }
-    }
-    @RequestMapping(value = "/getAllGroupTypes",method = RequestMethod.POST)
-    public List<GroupType> getAllGroupTypes() throws Exception{
-        return groupTypeFeignService.queryGroupType();
     }
 }
