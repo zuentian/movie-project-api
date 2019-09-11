@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 @Data
-@Table(name = "group")
+@Table(name = "zu_group")
 public class Group {
     @Id
     private String  id;
@@ -23,8 +23,8 @@ public class Group {
 
     private String type;
 
-    @Column(name = "group_type")
-    private Integer groupType ;
+    @Column(name = "group_type_id")
+    private String groupTypeId ;
 
     private String description;
 

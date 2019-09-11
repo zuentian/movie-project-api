@@ -5,9 +5,10 @@ import com.zuer.zuerlvdoubanservice.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 @EnableFeignClients
 @RestController
@@ -19,7 +20,14 @@ public class GroupServiceClient {
     private GroupService groupService;
 
     @RequestMapping(value = "/insertGroup",method = RequestMethod.POST)
-    public int insertGroup(Group group){
+    public int insertGroup( @RequestBody Group group){
         return groupService.insertSelective(group);
+    }
+
+    @RequestMapping(value = "/queryGroupByGroupTypeId",method = RequestMethod.GET)
+    public List<Group> queryGroupByGroupTypeId(@RequestParam("groupTypeId") String groupTypeId){
+        Example example=new Example(Group.class);
+        example.createCriteria().andEqualTo("groupTypeId",groupTypeId);
+        return groupService.selectByExample(example);
     }
 }

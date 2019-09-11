@@ -1,15 +1,21 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.GroupFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
 import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.Group;
+import com.zuer.zuerlvdoubancommon.entity.Menu;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
 import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
+import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
+import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import com.zuer.zuerlvdoubancommon.vo.GroupTree;
+import com.zuer.zuerlvdoubancommon.vo.MenuTree;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -29,19 +35,27 @@ public class GroupController {
     private UserFeginService userFeginService;
     @Autowired
     private GroupFeignService groupFeignService;
+    @Autowired
+    private DictFeignService dictFeignService;
 
-    @RequestMapping(value = "/queryTree", method = RequestMethod.GET)
+    @RequestMapping(value = "/queryTree", method = RequestMethod.POST)
     @ResponseBody
-    public List<GroupTree> queryTree(String name, String groupType) {
-        if(StringUtils.isBlank(groupType)) {
+    public List<GroupTree> queryTree(String groupTypeId) {
+        if(StringUtils.isBlank(groupTypeId)) {
             return new ArrayList<GroupTree>();
         }
-        return null;
+        List<Group> groupList=groupFeignService.queryGroupByGroupTypeId(groupTypeId);
+        String root="";
+        List<DictValue> dictValueList=dictFeignService.queryDictByDictType("GROUPROOT");
+        if(dictValueList!=null&&dictValueList.size()>0){
+            root=dictValueList.get(0).getLabel();
+        }
+        return createrGroupTree(groupList, root);
     }
     @RequestMapping(value = "/insertGroup",method = RequestMethod.POST)
     public int insertGroup(@RequestParam Map<String, Object> param) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        Group group = mapper.readValue((String) param.get("groupType"), Group.class);
+        Group group = mapper.readValue((String) param.get("group"), Group.class);
 
         String uuid= UUID.randomUUID().toString();
         group.setId(uuid);
@@ -102,4 +116,17 @@ public class GroupController {
             }
         }
     }
+
+    private List<GroupTree> createrGroupTree(List<Group> groups, String root) {
+        List<GroupTree> trees = new ArrayList<GroupTree>();
+        GroupTree node = null;
+        for (Group group : groups) {
+            node = new GroupTree();
+            BeanUtils.copyProperties(group, node);
+            node.setLabel(group.getName());
+            trees.add(node);
+        }
+        return TreeUtil.bulid(trees, root);
+    }
+
 }
