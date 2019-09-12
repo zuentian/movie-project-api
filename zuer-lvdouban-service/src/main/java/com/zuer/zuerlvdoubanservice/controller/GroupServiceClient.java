@@ -30,4 +30,24 @@ public class GroupServiceClient {
         example.createCriteria().andEqualTo("groupTypeId",groupTypeId);
         return groupService.selectByExample(example);
     }
+
+
+    @RequestMapping(value = "/queryGroupById",method = RequestMethod.GET)
+    public Group queryGroupById(@RequestParam("id") String id){
+        return groupService.selectByPrimaryKey(id);
+    }
+
+
+    @RequestMapping(value = "/updateGroupById",method = RequestMethod.POST)
+    public int updateGroupById(@RequestBody Group group){
+        return groupService.updateByPrimaryKeySelective(group);
+    }
+
+
+    @RequestMapping(value = "/queryGroupByParentIdCount",method = RequestMethod.GET)
+    public int queryGroupByParentIdCount(@RequestParam("parentId") String parentId){
+        Example example= new Example(Group.class);
+        example.createCriteria().andEqualTo("parentId",parentId);
+        return groupService.selectCountByExample(example);
+    }
 }

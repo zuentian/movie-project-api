@@ -6,14 +6,13 @@ import com.zuer.zuerlvdoubanauth.FeginService.GroupFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
 import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.Group;
-import com.zuer.zuerlvdoubancommon.entity.Menu;
+import com.zuer.zuerlvdoubancommon.entity.GroupType;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
 import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
 import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
 import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import com.zuer.zuerlvdoubancommon.vo.GroupTree;
-import com.zuer.zuerlvdoubancommon.vo.MenuTree;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +102,7 @@ public class GroupController {
     /**
      * 依据对象的属性数组和值数组对对象的属性进行赋值
      *
-     * @param entity 对象
+      * @param entity 对象
      * @param fields 属性数组
      * @param value 值数组
      * @author 王浩彬
@@ -127,6 +126,26 @@ public class GroupController {
             trees.add(node);
         }
         return TreeUtil.bulid(trees, root);
+    }
+
+    @RequestMapping(value = "/queryGroupById/{id}",method = RequestMethod.GET)
+    public Group queryGroupById(@PathVariable String id){
+        return groupFeignService.queryGroupById(id);
+    }
+
+    @RequestMapping(value = "/updateGroupById",method = RequestMethod.POST)
+    @ResponseBody
+    public int updateGroupById(@RequestParam Map<String, Object> param) throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+        Group group = mapper.readValue((String) param.get("group"), Group.class);
+        group=setGroupTypeUpd(group);
+        return groupFeignService.updateGroupById(group);
+
+    }
+    @RequestMapping(value = "/queryGroupByParentIdCount/{parentId}",method = RequestMethod.GET)
+    public int queryGroupByParentIdCount(@PathVariable String parentId) throws Exception{
+        return groupFeignService.queryGroupByParentIdCount(parentId);
     }
 
 }

@@ -16,4 +16,13 @@ public interface GroupFeignService {
 
     @RequestMapping(value = "/Group/queryGroupByGroupTypeId",method = RequestMethod.GET)
     List<Group> queryGroupByGroupTypeId(@RequestParam("groupTypeId") String groupTypeId);
+
+    @RequestMapping(value = "/Group/queryGroupById",method = RequestMethod.GET)
+    Group queryGroupById(@RequestParam("id") String id);
+
+    @RequestMapping(value = "/Group/updateGroupById",method = RequestMethod.POST)
+    int updateGroupById(Group group);
+
+    @RequestMapping(value = "/Group/queryGroupByParentIdCount",method = RequestMethod.GET)
+    int queryGroupByParentIdCount(@RequestParam("parentId") String parentId);
 }

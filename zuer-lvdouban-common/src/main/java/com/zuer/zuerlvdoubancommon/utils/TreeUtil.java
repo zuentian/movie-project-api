@@ -19,7 +19,7 @@ public class TreeUtil {
       }
 
       for (T it : treeNodes) {
-        if (it.getParentId().equals(treeNode.getId())) {
+        if (it.getParentId()!=null&&it.getParentId().equals(treeNode.getId())) {
           if (treeNode.getChildren() == null) {
             treeNode.setChildren(new ArrayList<TreeNode>());
           }
