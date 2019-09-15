@@ -7,6 +7,7 @@ import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.GroupType;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
+import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -37,8 +38,7 @@ public class GroupTypeController {
 
         String uuid= UUID.randomUUID().toString();
         groupType.setId(uuid);
-        groupType=setGroupTypeCrt(groupType);
-        groupType=setGroupTypeUpd(groupType);
+        EntityUtils.setCreatAndUpdatInfo(groupType);
         return groupTypeFeignService.insertGroupType(groupType);
     }
 
@@ -62,7 +62,7 @@ public class GroupTypeController {
 
         ObjectMapper mapper = new ObjectMapper();
         GroupType groupType = mapper.readValue((String) param.get("groupType"), GroupType.class);
-        groupType=setGroupTypeUpd(groupType);
+        EntityUtils.setUpdatedInfo(groupType);
         return groupTypeFeignService.updateGroupTypeById(groupType);
 
     }
@@ -73,58 +73,6 @@ public class GroupTypeController {
     }
 
 
-    private GroupType setGroupTypeCrt(GroupType groupType){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String hostIp = ClientUtil.getClientIp(request);
-        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
-        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
-        // 默认属性
-        String[] fields = {"crtHost","crtTime","crtUser","crtName"};
-        Field field = ReflectionUtils.getAccessibleField(groupType, "crtTime");
-        // 默认值
-        Object [] value = null;
-        if(field!=null&&field.getType().equals(Date.class)){
-            value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
-        }
-        // 填充默认属性值
-        setDefaultValues(groupType, fields, value);
-        return groupType;
-    }
-
-
-    private GroupType setGroupTypeUpd(GroupType groupType){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String hostIp = ClientUtil.getClientIp(request);
-        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
-        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
-        // 默认属性
-        String[] fields = {"updHost","updTime","updUser","updName"};
-        Field field = ReflectionUtils.getAccessibleField(groupType, "updTime");
-        // 默认值
-        Object [] value = null;
-        if(field!=null&&field.getType().equals(Date.class)){
-            value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
-        }
-        // 填充默认属性值
-        setDefaultValues(groupType, fields, value);
-        return groupType;
-    }
-    /**
-     * 依据对象的属性数组和值数组对对象的属性进行赋值
-     *
-     * @param entity 对象
-     * @param fields 属性数组
-     * @param value 值数组
-     * @author 王浩彬
-     */
-    private static <T> void setDefaultValues(T entity, String[] fields, Object[] value) {
-        for(int i=0;i<fields.length;i++){
-            String field = fields[i];
-            if(ReflectionUtils.hasField(entity, field)){
-                ReflectionUtils.invokeSetter(entity, field, value[i]);
-            }
-        }
-    }
     @RequestMapping(value = "/getAllGroupTypes",method = RequestMethod.POST)
     public List<GroupType> getAllGroupTypes() throws Exception{
         return groupTypeFeignService.queryGroupType();

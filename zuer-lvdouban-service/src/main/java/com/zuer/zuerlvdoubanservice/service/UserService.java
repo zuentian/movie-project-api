@@ -8,5 +8,7 @@ import java.util.Map;
 
 public interface UserService extends Mapper<User> {
 
-    List<User> queryUserByQueryParam(Map<String, Object> param);
+    List<User> queryUserLeaderByGroupId(String groupId);
+
+    List<User> queryUserMemberByGroupId(String groupId);
 }

@@ -15,6 +15,7 @@
         <result column="sex" jdbcType="VARCHAR" property="sex" />
         <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="NAME_BAK" jdbcType="VARCHAR" property="nameBak" />
         <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
         <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
@@ -42,4 +43,23 @@
             </if>
     </select>
 
+    <select id="queryUserLeaderByGroupId" parameterType="String" resultMap="BaseResultMap">
+
+        select * from USER_INFO u
+        left join USER_GROUP_LEADER ug
+        on  ug.USER_ID=u.ID
+        where
+        ug.GROUP_ID=#{groupId,jdbcType=VARCHAR}
+
+    </select>
+
+    <select id="queryUserMemberByGroupId" parameterType="String" resultMap="BaseResultMap">
+
+        select * from USER_INFO u
+        left join USER_GROUP_MEMBER ug
+        on  ug.USER_ID=u.ID
+        where
+        ug.GROUP_ID=#{groupId,jdbcType=VARCHAR}
+
+    </select>
 </mapper>

@@ -9,6 +9,7 @@ import com.zuer.zuerlvdoubancommon.entity.Group;
 import com.zuer.zuerlvdoubancommon.entity.GroupType;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
+import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
 import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
 import com.zuer.zuerlvdoubancommon.vo.DictValue;
@@ -58,62 +59,8 @@ public class GroupController {
 
         String uuid= UUID.randomUUID().toString();
         group.setId(uuid);
-        group=setGroupTypeCrt(group);
-        group=setGroupTypeUpd(group);
+        EntityUtils.setCreatAndUpdatInfo(group);
         return groupFeignService.insertGroup(group);
-    }
-
-    private Group setGroupTypeCrt(Group group){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String hostIp = ClientUtil.getClientIp(request);
-        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
-        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
-        // 默认属性
-        String[] fields = {"crtHost","crtTime","crtUser","crtName"};
-        Field field = ReflectionUtils.getAccessibleField(group, "crtTime");
-        // 默认值
-        Object [] value = null;
-        if(field!=null&&field.getType().equals(Date.class)){
-            value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
-        }
-        // 填充默认属性值
-        setDefaultValues(group, fields, value);
-        return group;
-    }
-
-
-    private Group setGroupTypeUpd(Group group){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String hostIp = ClientUtil.getClientIp(request);
-        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
-        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
-        // 默认属性
-        String[] fields = {"updHost","updTime","updUser","updName"};
-        Field field = ReflectionUtils.getAccessibleField(group, "updTime");
-        // 默认值
-        Object [] value = null;
-        if(field!=null&&field.getType().equals(Date.class)){
-            value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
-        }
-        // 填充默认属性值
-        setDefaultValues(group, fields, value);
-        return group;
-    }
-    /**
-     * 依据对象的属性数组和值数组对对象的属性进行赋值
-     *
-      * @param entity 对象
-     * @param fields 属性数组
-     * @param value 值数组
-     * @author 王浩彬
-     */
-    private static <T> void setDefaultValues(T entity, String[] fields, Object[] value) {
-        for(int i=0;i<fields.length;i++){
-            String field = fields[i];
-            if(ReflectionUtils.hasField(entity, field)){
-                ReflectionUtils.invokeSetter(entity, field, value[i]);
-            }
-        }
     }
 
     private List<GroupTree> createrGroupTree(List<Group> groups, String root) {
@@ -139,7 +86,7 @@ public class GroupController {
 
         ObjectMapper mapper = new ObjectMapper();
         Group group = mapper.readValue((String) param.get("group"), Group.class);
-        group=setGroupTypeUpd(group);
+        EntityUtils.setUpdatedInfo(group);
         return groupFeignService.updateGroupById(group);
 
     }
@@ -148,4 +95,9 @@ public class GroupController {
         return groupFeignService.queryGroupByParentIdCount(parentId);
     }
 
+
+    @RequestMapping(value = "/deleteGroupById/{id}",method = RequestMethod.GET)
+    public int deleteGroupById(@PathVariable String id) throws Exception{
+        return groupFeignService.deleteGroupById(id);
+    }
 }

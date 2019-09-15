@@ -5,6 +5,7 @@ import com.zuer.zuerlvdoubancommon.entity.User;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
 import com.zuer.zuerlvdoubanservice.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,4 +87,32 @@ public class UserServiceClient  {
     public int deleteUserById(@RequestParam("id") String id){
         return userService.deleteByPrimaryKey(id);
     }
+
+
+    @RequestMapping(value = "/queryUserLeaderByGroupId",method = RequestMethod.GET)
+    public List<User> queryUserLeaderByGroupId(@RequestParam("groupId")String groupId){
+        return userService.queryUserLeaderByGroupId(groupId);
+    }
+
+
+
+    @RequestMapping(value = "/queryUserLikeUserNames",method = RequestMethod.GET)
+    public List<User> queryUserLikeUserNames(@RequestParam("name") String name){
+        Example example=new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        if(StringUtils.isNotBlank(name)){
+            criteria.orLike("name","%"+name+"%");
+            criteria.orLike("username","%"+name+"%");
+            criteria.orLike("nameBak","%"+name+"%");
+        }
+        return userService.selectByExample(example);
+    }
+
+
+    @RequestMapping(value = "/queryUserMemberByGroupId",method = RequestMethod.GET)
+    public List<User> queryUserMemberByGroupId(@RequestParam("groupId") String groupId){
+        return userService.queryUserMemberByGroupId(groupId);
+    }
+
+
 }

@@ -3,11 +3,12 @@ package com.zuer.zuerlvdoubanauth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuer.zuerlvdoubanauth.FeginService.MenuFeginService;
 import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
+import com.zuer.zuerlvdoubanauth.FeginService.UserGroupLeaderFeignService;
+import com.zuer.zuerlvdoubanauth.FeginService.UserGroupMemberFeignService;
 import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
-import com.zuer.zuerlvdoubancommon.entity.Menu;
-import com.zuer.zuerlvdoubancommon.entity.User;
-import com.zuer.zuerlvdoubancommon.entity.UserInfo;
+import com.zuer.zuerlvdoubancommon.entity.*;
 import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
+import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
 import com.zuer.zuerlvdoubancommon.vo.EntireUser;
 import com.zuer.zuerlvdoubancommon.vo.PermissionInfo;
@@ -126,8 +127,7 @@ public class UserController {
         DefaultPasswordService defaultPasswordService=new DefaultPasswordService();
         String password = defaultPasswordService.encryptPassword(user.getPassword());
         user.setPassword(password);
-        user=setUserCrt(user);
-        user=setUserUpd(user);
+        EntityUtils.setCreatAndUpdatInfo(user);
         return userFeginService.insertUser(user);
 
     }
@@ -136,7 +136,7 @@ public class UserController {
     public int updateUserById(@RequestParam Map<String, Object> param) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         User user = mapper.readValue((String) param.get("user"), User.class);
-        user=setUserUpd(user);
+        EntityUtils.setUpdatedInfo(user);
         return userFeginService.updateUserById(user);
     }
 
@@ -150,56 +150,62 @@ public class UserController {
     public int deleteUserById(@PathVariable String id) throws Exception {
         return userFeginService.deleteUserById(id);
     }
-    /**
-     * 依据对象的属性数组和值数组对对象的属性进行赋值
-     *
-     * @param entity 对象
-     * @param fields 属性数组
-     * @param value 值数组
-     * @author 王浩彬
-     */
-    private static <T> void setDefaultValues(T entity, String[] fields, Object[] value) {
-        for(int i=0;i<fields.length;i++){
-            String field = fields[i];
-            if(ReflectionUtils.hasField(entity, field)){
-                ReflectionUtils.invokeSetter(entity, field, value[i]);
+    @RequestMapping(value = "/queryUserByGroupId/{groupId}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> queryUserByGroupId(@PathVariable String groupId) throws Exception {
+
+        Map<String,Object> resultMap=new HashMap<>();
+        List<User> leaders=userFeginService.queryUserLeaderByGroupId(groupId);
+        List<User> members=userFeginService.queryUserMemberByGroupId(groupId);
+        resultMap.put("leaders",leaders);
+        resultMap.put("members",members);
+        return resultMap;
+    }
+
+    @RequestMapping(value = "/queryUserLikeUserNames",method = RequestMethod.POST)
+    @ResponseBody
+    public List<User> queryUserLikeUserNames(@RequestParam Map<String, Object> param) throws Exception {
+        String name=param.get("name")==null?null:(String)param.get("name");
+        List<User> list=userFeginService.queryUserLikeUserNames(name);
+        return list;
+    }
+
+    @Autowired
+    UserGroupLeaderFeignService userGroupLeaderFeignService;
+    @Autowired
+    UserGroupMemberFeignService userGroupMemberFeignService;
+
+    @RequestMapping(value = "/updateUserByGroupId",method = RequestMethod.POST)
+    @ResponseBody
+    public void updateUserByGroupId(@RequestParam Map<String, Object> param) throws Exception {
+        String groupId=param.get("groupId")==null?null:(String)param.get("groupId");
+        String leaders=param.get("leaders")==null?null:(String)param.get("leaders");
+        String members=param.get("members")==null?null:(String)param.get("members");
+        userGroupLeaderFeignService.deleteUserGroupLeaderByGroupId(groupId);
+        userGroupMemberFeignService.deleteUserGroupMemberByGroupId(groupId);
+
+        if(!StringUtils.isEmpty(leaders)){
+            String[] leader=leaders.split(",");
+            for(String userId:leader){
+                UserGroupLeader userGroupLeader=new UserGroupLeader();
+                userGroupLeader.setGroupId(groupId);
+                userGroupLeader.setUserId(userId);
+                userGroupLeader.setId(UUID.randomUUID().toString());
+                EntityUtils.setCreatAndUpdatInfo(userGroupLeader);
+                userGroupLeaderFeignService.insertUserGroupLeader(userGroupLeader);
             }
         }
-    }
 
-    private User setUserCrt(User user){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String hostIp = ClientUtil.getClientIp(request);
-        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
-        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
-        // 默认属性
-        String[] fields = {"crtHost","crtTime","crtUser","crtName"};
-        Field field = ReflectionUtils.getAccessibleField(user, "crtTime");
-        // 默认值
-        Object [] value = null;
-        if(field!=null&&field.getType().equals(Date.class)){
-            value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
+        if(!StringUtils.isEmpty(members)){
+            String[] member=members.split(",");
+            for(String userId:member){
+                UserGroupMember userGroupMember=new UserGroupMember();
+                userGroupMember.setGroupId(groupId);
+                userGroupMember.setUserId(userId);
+                userGroupMember.setId(UUID.randomUUID().toString());
+                EntityUtils.setCreatAndUpdatInfo(userGroupMember);
+                userGroupMemberFeignService.insertUserGroupMember(userGroupMember);
+            }
         }
-        // 填充默认属性值
-        setDefaultValues(user, fields, value);
-        return user;
-    }
-
-    private User setUserUpd(User user){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String hostIp = ClientUtil.getClientIp(request);
-        String token=request.getHeader("Authorization");//获取token值，取得登陆的账号
-        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
-        // 默认属性
-        String[] fields = {"updHost","updTime","updUser","updName"};
-        Field field = ReflectionUtils.getAccessibleField(user, "updTime");
-        // 默认值
-        Object [] value = null;
-        if(field!=null&&field.getType().equals(Date.class)){
-            value = new Object []{hostIp,new Date(),userInfo.getUsername(),userInfo.getName()};
-        }
-        // 填充默认属性值
-        setDefaultValues(user, fields, value);
-        return user;
     }
 }

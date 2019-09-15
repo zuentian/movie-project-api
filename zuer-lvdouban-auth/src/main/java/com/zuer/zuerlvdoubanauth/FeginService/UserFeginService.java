@@ -33,4 +33,13 @@ public interface UserFeginService {
 
     @RequestMapping(value = "/User/deleteUserById",method = RequestMethod.GET)
     int deleteUserById(@RequestParam("id") String id);
+
+    @RequestMapping(value = "/User/queryUserLeaderByGroupId",method = RequestMethod.GET)
+    List<User> queryUserLeaderByGroupId(@RequestParam("groupId")String groupId);
+
+    @RequestMapping(value = "/User/queryUserLikeUserNames",method = RequestMethod.GET)
+    List<User> queryUserLikeUserNames(@RequestParam("name") String name);
+
+    @RequestMapping(value = "/User/queryUserMemberByGroupId",method = RequestMethod.GET)
+    List<User> queryUserMemberByGroupId(@RequestParam("groupId") String groupId);
 }

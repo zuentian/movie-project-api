@@ -50,4 +50,10 @@ public class GroupServiceClient {
         example.createCriteria().andEqualTo("parentId",parentId);
         return groupService.selectCountByExample(example);
     }
+
+    @RequestMapping(value = "/deleteGroupById",method = RequestMethod.GET)
+    public int deleteGroupById(@RequestParam("id")String id){
+        return groupService.deleteByPrimaryKey(id);
+    }
+
 }
