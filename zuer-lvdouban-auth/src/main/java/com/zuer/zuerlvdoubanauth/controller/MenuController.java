@@ -3,14 +3,13 @@ package com.zuer.zuerlvdoubanauth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.MenuFeginService;
+import com.zuer.zuerlvdoubanauth.FeginService.MenuGroupFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
 import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.Menu;
-import com.zuer.zuerlvdoubancommon.entity.User;
+import com.zuer.zuerlvdoubancommon.entity.MenuGroup;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
-import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
-import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
 import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
 import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import com.zuer.zuerlvdoubancommon.vo.MenuTree;
@@ -19,11 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Field;
 import java.util.*;
 
 /*
@@ -39,6 +34,11 @@ public class MenuController {
     private UserFeginService userFeginService;
     @Autowired
     private DictFeignService dictFeignService;
+
+    private final static String MENU_TYPE="menu";
+    private final static String GROUP_TYPE="group";
+
+
 
     @RequestMapping(value = "/queryAllMenu",method = RequestMethod.GET)
     public List<Menu> queryAllMenu(){
@@ -119,5 +119,67 @@ public class MenuController {
     public int queryMenuByParentIdCount(@PathVariable String parentId) throws Exception{
         return menuFeginService.queryMenuByParentIdCount(parentId);
     }
+
+    @Autowired
+    private MenuGroupFeignService menuGroupFeignService;
+
+
+    @RequestMapping(value = "/updateMenuGroupByGroupId",method = RequestMethod.POST)
+    @ResponseBody
+    public void updateMenuGroupByGroupId(@RequestParam Map<String, Object> param) throws Exception {
+
+        String groupId=param.get("groupId")==null?null:(String)param.get("groupId");
+
+        String menuTrees=param.get("menuTrees")==null?null:(String)param.get("menuTrees");
+        String[] menus=null;
+        if(StringUtils.isNotBlank(menuTrees)){
+            menus=menuTrees.split(",");
+        }
+
+        menuGroupFeignService.deleteMenuGroupByGroupIdAndMenuType(groupId,MENU_TYPE);
+
+        List<Menu> menuList = menuFeginService.queryMenu();
+        Map<String, String> map = new HashMap<String, String>();
+        for (Menu menu : menuList) {
+            map.put(menu.getId(), menu.getParentId());
+        }
+        Set<String> relationMenus = new HashSet<String>();
+        relationMenus.addAll(Arrays.asList(menus));
+
+        String root="";
+        List<DictValue> dictValueList=dictFeignService.queryDictByDictType("MENUROOT");
+        if(dictValueList!=null&&dictValueList.size()>0){
+            root=dictValueList.get(0).getLabel();
+        }
+        MenuGroup menuGroup = null;
+        for (String menuId : menus) {
+            findParentID(map, relationMenus, menuId,root);//需要父节点的id
+        }
+        for(String menuId:relationMenus){
+            menuGroup=new MenuGroup(GROUP_TYPE,MENU_TYPE);
+            menuGroup.setId(UUID.randomUUID().toString());
+            menuGroup.setGroupId(groupId);
+            menuGroup.setMenuId(menuId);
+            menuGroup.setParentId("0");
+            EntityUtils.setCreateInfo(menuGroup);
+            menuGroupFeignService.insertMenuGroup(menuGroup);
+        }
+    }
+
+    private void findParentID(Map<String, String> map, Set<String> relationMenus, String id,String root) {
+        String parentId = map.get(id);
+        if (root.equals(id)) {
+            return;
+        }
+        relationMenus.add(parentId);
+        findParentID(map, relationMenus, parentId,root);
+    }
+    @RequestMapping(value = "/queryMenuGroupByGroupId/{groupId}",method = RequestMethod.GET)
+    public void queryMenuGroupByGroupId(@PathVariable String groupId) throws Exception{
+
+        List<Menu> menuList=menuFeginService.queryMenuGroupByGroupIdAndGroupType(groupId,GROUP_TYPE);
+        System.out.println("menuList-------------------"+menuList);
+    }
+
 
 }

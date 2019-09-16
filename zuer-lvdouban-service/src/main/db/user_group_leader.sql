@@ -21,3 +21,5 @@ create table USER_GROUP_LEADER
 )
 /
 
+comment on table USER_GROUP_LEADER
+is '角色和用户上级层关联表'

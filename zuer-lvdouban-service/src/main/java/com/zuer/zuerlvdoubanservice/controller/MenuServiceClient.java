@@ -38,7 +38,7 @@ public class MenuServiceClient {
     }
 
     @RequestMapping(value = "/queryMenuByTitle",method = RequestMethod.GET)
-    public List<Menu> queryMenuByTitle(@RequestParam("title") String title){
+    public List<Menu> queryMenuByTitle(@RequestParam(value="title", required = false) String title){
         Example example = new Example(Menu.class);
         if (StringUtils.isNotBlank(title)) {
             example.createCriteria().andLike("title", "%" + title + "%");
@@ -75,4 +75,15 @@ public class MenuServiceClient {
     public int deleteMenuById(@RequestParam("id") String id){
         return menuService.deleteByPrimaryKey(id);
     }
+
+
+    @RequestMapping(value = "/queryMenuGroupByGroupIdAndGroupType",method = RequestMethod.GET)
+    public List<Menu> queryMenuGroupByGroupIdAndGroupType(@RequestParam(value="groupId", required = false) String groupId,
+                                                          @RequestParam(value="groupType", required = false) String groupType){
+
+        return menuService.queryMenuGroupByGroupIdAndGroupType(groupId,groupType);
+    }
+
+
+
 }

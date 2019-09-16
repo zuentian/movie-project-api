@@ -1,5 +1,6 @@
 package com.zuer.zuerlvdoubancommon.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -31,6 +32,11 @@ public class Menu {
 
     private String description;
 
+    private String path;
+
+    private String enabled;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @Column(name = "crt_time")
     private Date crtTime;
 
@@ -43,6 +49,8 @@ public class Menu {
     @Column(name = "crt_host")
     private String crtHost;
 
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @Column(name = "upd_time")
     private Date updTime;
 
@@ -71,5 +79,4 @@ public class Menu {
 
     private String attr8;
 
-    private String path;
 }

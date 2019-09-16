@@ -18,7 +18,7 @@ public interface MenuFeginService {
     List<Menu> queryMenu();
 
     @RequestMapping(value = "/Menu/queryMenuByTitle",method = RequestMethod.GET)
-    List<Menu> queryMenuByTitle(@RequestParam("title") String title);
+    List<Menu> queryMenuByTitle(@RequestParam(value="title", required = false) String title);
 
 
     @RequestMapping(value = "/Menu/queryMenuById",method = RequestMethod.GET)
@@ -35,4 +35,12 @@ public interface MenuFeginService {
 
     @RequestMapping(value = "/Menu/deleteMenuById",method = RequestMethod.GET)
     int deleteMenuById(@RequestParam("id") String id);
+
+
+    @RequestMapping(value = "/Menu/queryMenuGroupByGroupIdAndGroupType",method = RequestMethod.GET)
+    List<Menu> queryMenuGroupByGroupIdAndGroupType(@RequestParam(value="groupId", required = false) String groupId,
+                                                   @RequestParam(value="groupType", required = false) String groupType);
+
+
+
 }

@@ -1,5 +1,5 @@
 
-create table ZU_GROUP
+create table GROUP_INFO
 (
     ID          VARCHAR2(36) not null,
     CODE        VARCHAR2(255),
@@ -24,15 +24,15 @@ create table ZU_GROUP
 )
 /
 
-comment on table ZU_GROUP is '角色表'
+comment on table GROUP_INFO is '角色表'
 /
 
-create unique index ZU_GROUP_ID_UINDEX
-    on ZU_GROUP (ID)
+create unique index GROUP_INFO_ID_UINDEX
+    on GROUP_INFO (ID)
 /
 
-alter table ZU_GROUP
-    add constraint ZU_GROUP_PK
+alter table GROUP_INFO
+    add constraint GROUP_INFO_PK
         primary key (ID)
 /
 

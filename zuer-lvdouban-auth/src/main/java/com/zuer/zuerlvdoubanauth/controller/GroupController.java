@@ -4,13 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.GroupFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
-import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.Group;
-import com.zuer.zuerlvdoubancommon.entity.GroupType;
-import com.zuer.zuerlvdoubancommon.entity.UserInfo;
-import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
-import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
 import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
 import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import com.zuer.zuerlvdoubancommon.vo.GroupTree;
@@ -19,12 +14,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/GroupController")

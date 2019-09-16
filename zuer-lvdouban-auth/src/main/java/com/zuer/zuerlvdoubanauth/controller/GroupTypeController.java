@@ -3,22 +3,17 @@ package com.zuer.zuerlvdoubanauth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuer.zuerlvdoubanauth.FeginService.GroupTypeFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
-import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.GroupType;
-import com.zuer.zuerlvdoubancommon.entity.UserInfo;
-import com.zuer.zuerlvdoubancommon.utils.ClientUtil;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
-import com.zuer.zuerlvdoubancommon.utils.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/GroupTypeController")

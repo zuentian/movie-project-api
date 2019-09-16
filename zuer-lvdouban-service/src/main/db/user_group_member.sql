@@ -21,7 +21,7 @@ create table USER_GROUP_MEMBER
 )
 /
 
-comment on table USER_GROUP_LEADER
+comment on table USER_GROUP_MEMBER
 is '角色和用户下属层关联表'
 /
 
