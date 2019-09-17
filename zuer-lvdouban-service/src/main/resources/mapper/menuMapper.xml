@@ -34,7 +34,7 @@
 
     <select id="queryMenuGroupByGroupIdAndGroupType" parameterType="String" resultMap="BaseResultMap">
 
-        SELECT * FROM MENU_GROUP mg
+        SELECT m.* FROM MENU_GROUP mg
         INNER JOIN MENU m ON
         mg.MENU_ID=m.ID
         AND mg.GROUP_ID=#{groupId,jdbcType=VARCHAR}

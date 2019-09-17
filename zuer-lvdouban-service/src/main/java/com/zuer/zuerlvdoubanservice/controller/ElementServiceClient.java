@@ -72,4 +72,14 @@ public class ElementServiceClient {
     public int deleteElementById(@RequestParam("id") String id){
         return elementService.deleteByPrimaryKey(id);
     }
+
+
+    @RequestMapping(value = "/queryElementByMenuId",method = RequestMethod.GET)
+    public List<Element> queryElementByMenuId(@RequestParam("menuId") String menuId){
+        Example example=new Example(Element.class);
+        example.createCriteria().andEqualTo("menuId",menuId);
+        return elementService.selectByExample(example);
+    }
+
+
 }

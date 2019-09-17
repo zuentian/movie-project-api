@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Map;
 
 @FeignClient("zuer-lvdouban-service")
@@ -29,4 +30,8 @@ public interface ElementFeignService {
 
     @RequestMapping(value = "/Element/deleteElementById",method = RequestMethod.GET)
     int deleteElementById(@RequestParam("id") String id);
+
+    @RequestMapping(value = "/Element/queryElementByMenuId",method = RequestMethod.GET)
+    List<Element> queryElementByMenuId(@RequestParam("menuId") String menuId);
+
 }

@@ -175,10 +175,9 @@ public class MenuController {
         findParentID(map, relationMenus, parentId,root);
     }
     @RequestMapping(value = "/queryMenuGroupByGroupId/{groupId}",method = RequestMethod.GET)
-    public void queryMenuGroupByGroupId(@PathVariable String groupId) throws Exception{
-
+    public List<Menu> queryMenuGroupByGroupId(@PathVariable String groupId) throws Exception{
         List<Menu> menuList=menuFeginService.queryMenuGroupByGroupIdAndGroupType(groupId,GROUP_TYPE);
-        System.out.println("menuList-------------------"+menuList);
+        return menuList ;
     }
 
 
