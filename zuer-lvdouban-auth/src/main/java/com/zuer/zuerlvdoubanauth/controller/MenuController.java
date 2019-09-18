@@ -4,11 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.MenuFeginService;
 import com.zuer.zuerlvdoubanauth.FeginService.MenuGroupFeignService;
-import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
-import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.Menu;
 import com.zuer.zuerlvdoubancommon.entity.MenuGroup;
-import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
 import com.zuer.zuerlvdoubancommon.vo.DictValue;
@@ -31,8 +28,6 @@ public class MenuController {
     @Autowired
     private MenuFeginService menuFeginService;
     @Autowired
-    private UserFeginService userFeginService;
-    @Autowired
     private DictFeignService dictFeignService;
 
     private final static String MENU_TYPE="menu";
@@ -40,24 +35,10 @@ public class MenuController {
 
 
 
-    @RequestMapping(value = "/queryAllMenu",method = RequestMethod.GET)
+    @RequestMapping(value = "/queryAllMenu",method = RequestMethod.POST)
     public List<Menu> queryAllMenu(){
         List<Menu> menuList=menuFeginService.queryMenu();
         return menuList;
-    }
-    @RequestMapping(value = "/getMenuTree",method = RequestMethod.GET)
-    @ResponseBody
-    public List<MenuTree> getMenuTree(String token){
-        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
-        List<Menu> menus=menuFeginService.getUserAuthorityMenuByUserId(userInfo.getId());
-
-        String root="";
-        List<DictValue> dictValueList=dictFeignService.queryDictByDictType("MENUROOT");
-        if(dictValueList!=null&&dictValueList.size()>0){
-            root=dictValueList.get(0).getLabel();
-        }
-        List<MenuTree> menuTreeList=createrMenuTree(menus,root);
-        return menuTreeList;
     }
 
     private List<MenuTree> createrMenuTree(List<Menu> menus, String root) {

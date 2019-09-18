@@ -13,4 +13,6 @@ public class EntireUser {
     private String image;
     private List<PermissionInfo> menus;//菜单属性
     private List<PermissionInfo> elements;//功能属性
+    private List<MenuTree> menuTrees;//菜单树状结构
+    private List<RouterTree> routerTrees;//动态路由，测试阶段
 }

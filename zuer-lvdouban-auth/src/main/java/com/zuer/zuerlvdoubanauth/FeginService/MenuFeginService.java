@@ -14,6 +14,7 @@ public interface MenuFeginService {
 
     @RequestMapping(value = "/Menu/getUserAuthorityMenuByUserId",method = RequestMethod.GET)
     List<Menu> getUserAuthorityMenuByUserId(@RequestParam("id") String id) ;
+
     @RequestMapping(value = "/Menu/queryMenu",method = RequestMethod.GET)
     List<Menu> queryMenu();
 
@@ -41,6 +42,6 @@ public interface MenuFeginService {
     List<Menu> queryMenuGroupByGroupIdAndGroupType(@RequestParam(value="groupId", required = false) String groupId,
                                                    @RequestParam(value="groupType", required = false) String groupType);
 
-
-
+    @RequestMapping(value = "/Menu/getUserMenuAllByUserId",method = RequestMethod.GET)
+    List<Menu> getUserMenuAllByUserId(@RequestParam("id") String id);
 }

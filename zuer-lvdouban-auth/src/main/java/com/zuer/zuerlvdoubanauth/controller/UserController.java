@@ -1,15 +1,12 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuer.zuerlvdoubanauth.FeginService.MenuFeginService;
-import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
-import com.zuer.zuerlvdoubanauth.FeginService.UserGroupLeaderFeignService;
-import com.zuer.zuerlvdoubanauth.FeginService.UserGroupMemberFeignService;
+import com.zuer.zuerlvdoubanauth.FeginService.*;
 import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.*;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
-import com.zuer.zuerlvdoubancommon.vo.EntireUser;
-import com.zuer.zuerlvdoubancommon.vo.PermissionInfo;
+import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
+import com.zuer.zuerlvdoubancommon.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.springframework.beans.BeanUtils;
@@ -34,6 +31,9 @@ public class UserController {
     @Autowired
     private MenuFeginService menuFeginService;
 
+    @Autowired
+    private DictFeignService dictFeignService;
+
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
     @ResponseBody
     public EntireUser getUserInfo(String token) throws Exception {
@@ -43,18 +43,75 @@ public class UserController {
         EntireUser entireUser=new EntireUser();
         BeanUtils.copyProperties(userInfo,entireUser);
         System.out.println("登陆之后id:"+userInfo.getId());
-        List<Menu> menus=menuFeginService.getUserAuthorityMenuByUserId(userInfo.getId());
+
+        String isAuthority="";
+
+        List<DictValue> dictValueList=dictFeignService.queryDictByDictType("AUTHORITYFLAG");
+        if(dictValueList!=null&&dictValueList.size()>0){
+            isAuthority=dictValueList.get(0).getLabel();
+        }
+        List<Menu> menus=null;
+        if("Y".equals(isAuthority)){
+            //查询数据字典，如果AUTHORITYFLAG开启了权限控制
+            menus=menuFeginService.getUserAuthorityMenuByUserId(userInfo.getId());
+        }else{
+            menus=menuFeginService.getUserMenuAllByUserId(userInfo.getId());
+        }
+
 
         System.out.println("登陆之后menus:"+menus);
         List<PermissionInfo> permissionInfos=getMenuPermission(menus);
-        Stream<PermissionInfo> menusFilter = permissionInfos.parallelStream().filter((permission) -> {
-            return permission.getType().equals("menu");
-        });
-        entireUser.setMenus(menusFilter.collect(Collectors.toList()));
+
+
+        //此处是刷选菜单列表中类型为menu,但是没有必要
+        //permissionInfos = permissionInfos.parallelStream().filter((permission) -> {
+            //return permission.getType().equals("menu");
+        //}).collect(Collectors.toList());
+        entireUser.setMenus(permissionInfos);
+
+        //将获取的菜单整理成树状结构
+        String root="";
+        List<DictValue> dictValueListMenuRoot=dictFeignService.queryDictByDictType("MENUROOT");
+        if(dictValueListMenuRoot!=null&&dictValueListMenuRoot.size()>0){
+            root=dictValueListMenuRoot.get(0).getLabel();
+        }
+        List<MenuTree> menuTreeList=createrMenuTree(menus,root);
+        entireUser.setMenuTrees(menuTreeList);
+
+        List<RouterTree> routerTrees=createrRouterTree(menus,root);
+        entireUser.setRouterTrees(routerTrees);
 
         System.out.println("登陆之查询菜单和功能结果EntireUser=["+entireUser+"]");
         return entireUser;
     }
+
+    private List<MenuTree> createrMenuTree(List<Menu> menus, String root) {
+        List<MenuTree> trees = new ArrayList<MenuTree>();
+        MenuTree node = null;
+        for (Menu menu : menus) {
+            node = new MenuTree();
+            BeanUtils.copyProperties(menu, node);
+            node.setLabel(menu.getTitle());
+            trees.add(node);
+        }
+        return TreeUtil.bulid(trees, root);
+    }
+
+    private List<RouterTree> createrRouterTree(List<Menu> menus, String root) {
+        List<RouterTree> trees = new ArrayList<RouterTree>();
+        RouterTree node = null;
+        for (Menu menu : menus) {
+            node = new RouterTree();
+            node.setComponent(menu.getHref());
+            node.setPath(menu.getCode());
+            node.setId(menu.getId());
+            node.setParentId(menu.getParentId());
+            trees.add(node);
+        }
+        return TreeUtil.bulid(trees, root);
+    }
+
+
 
     private List<PermissionInfo> getMenuPermission(List<Menu> menus){
         List<PermissionInfo> permissionInfoList=new ArrayList<>();
@@ -71,7 +128,8 @@ public class UserController {
             }else{
                 info.setUrl(url);
             }
-            info.setType("menu");
+            //info.setType("menu");
+            info.setType(menu.getType());
             info.setName("访问");
             info.setMethod("GET");
             permissionInfoList.add(info);

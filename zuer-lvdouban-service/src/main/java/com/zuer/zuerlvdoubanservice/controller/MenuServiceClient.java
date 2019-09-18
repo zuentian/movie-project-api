@@ -24,13 +24,24 @@ public class MenuServiceClient {
     @RequestMapping(value = "/getUserAuthorityMenuByUserId",method = RequestMethod.GET)
     public List<Menu> getUserAuthorityMenuByUserId(@RequestParam("id") String id) throws Exception{
         try{
-            List<Menu> menus=menuService.selectAll();
+            List<Menu> menus=menuService.getUserAuthorityMenuByUserId(id);
             return menus;
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
 
     }
+
+    @RequestMapping(value = "/getUserMenuAllByUserId",method = RequestMethod.GET)
+    public List<Menu> getUserMenuAllByUserId(@RequestParam("id") String id)throws Exception{
+        try{
+            List<Menu> menus=menuService.selectAll();
+            return menus;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
 
     @RequestMapping(value = "/queryMenu",method = RequestMethod.GET)
     public List<Menu> queryMenu(){

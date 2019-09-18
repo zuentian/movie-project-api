@@ -10,4 +10,6 @@ import java.util.List;
 public interface MenuService extends Mapper<Menu> {
 
     List<Menu> queryMenuGroupByGroupIdAndGroupType(@Param("groupId")String groupId, @Param("groupType")String groupType);
+
+    List<Menu> getUserAuthorityMenuByUserId(@Param("userId")String userId);
 }
