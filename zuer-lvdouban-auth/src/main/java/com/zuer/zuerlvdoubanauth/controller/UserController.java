@@ -6,7 +6,10 @@ import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.*;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
-import com.zuer.zuerlvdoubancommon.vo.*;
+import com.zuer.zuerlvdoubancommon.vo.DictValue;
+import com.zuer.zuerlvdoubancommon.vo.EntireUser;
+import com.zuer.zuerlvdoubancommon.vo.MenuTree;
+import com.zuer.zuerlvdoubancommon.vo.RouterTree;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.springframework.beans.BeanUtils;
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /*
 用户
@@ -57,17 +59,10 @@ public class UserController {
         }else{
             menus=menuFeginService.getUserMenuAllByUserId(userInfo.getId());
         }
-
-
+        if(menus==null||menus.size()<=0){
+            throw new Exception("请为该用户分配权限！");
+        }
         System.out.println("登陆之后menus:"+menus);
-        List<PermissionInfo> permissionInfos=getMenuPermission(menus);
-
-
-        //此处是刷选菜单列表中类型为menu,但是没有必要
-        //permissionInfos = permissionInfos.parallelStream().filter((permission) -> {
-            //return permission.getType().equals("menu");
-        //}).collect(Collectors.toList());
-        entireUser.setMenus(permissionInfos);
 
         //将获取的菜单整理成树状结构
         String root="";
@@ -79,7 +74,18 @@ public class UserController {
         entireUser.setMenuTrees(menuTreeList);
 
         List<RouterTree> routerTrees=createrRouterTree(menus,root);
+
+        //因为这是VUE的动态路由，所以开头的path前面加上“/”
+        routerTrees=routerTrees.parallelStream().map(
+                routerTree -> {
+                    routerTree.setPath("/"+routerTree.getPath());
+                    return routerTree;
+                }
+        ).collect(Collectors.toList());
+
         entireUser.setRouterTrees(routerTrees);
+
+
 
         System.out.println("登陆之查询菜单和功能结果EntireUser=["+entireUser+"]");
         return entireUser;
@@ -102,39 +108,16 @@ public class UserController {
         RouterTree node = null;
         for (Menu menu : menus) {
             node = new RouterTree();
-            node.setComponent(menu.getHref());
+            if("menu".equals(menu.getType())) {
+                node.setComponent(menu.getHref());
+            }
             node.setPath(menu.getCode());
             node.setId(menu.getId());
+            node.setName(menu.getTitle());
             node.setParentId(menu.getParentId());
             trees.add(node);
         }
         return TreeUtil.bulid(trees, root);
-    }
-
-
-
-    private List<PermissionInfo> getMenuPermission(List<Menu> menus){
-        List<PermissionInfo> permissionInfoList=new ArrayList<>();
-        for(Menu menu:menus){
-            if(StringUtils.isBlank(menu.getHref())){
-                menu.setHref("/"+menu.getCode());
-            }
-            PermissionInfo info=new PermissionInfo();
-            info.setCode(menu.getCode());
-            info.setMenu(menu.getTitle());
-            String url=menu.getHref();
-            if(!url.startsWith("/")){
-                info.setUrl("/"+url);
-            }else{
-                info.setUrl(url);
-            }
-            //info.setType("menu");
-            info.setType(menu.getType());
-            info.setName("访问");
-            info.setMethod("GET");
-            permissionInfoList.add(info);
-        }
-        return permissionInfoList;
     }
 
     /*
