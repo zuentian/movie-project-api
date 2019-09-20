@@ -18,16 +18,12 @@ import tk.mybatis.mapper.entity.Example;
 public class MenuGroupServiceClient {
     @Autowired
     private MenuGroupService menuGroupService;
-    @RequestMapping(value = "/deleteMenuGroupByGroupIdAndMenuType",method = RequestMethod.GET)
-    public void deleteMenuGroupByGroupIdAndMenuType(@RequestParam(value="groupId", required = false) String groupId,
-                                                    @RequestParam(value="menuType", required = false) String menuType){
+    @RequestMapping(value = "/deleteMenuGroupByGroupId",method = RequestMethod.GET)
+    public void deleteMenuGroupByGroupIdAndMenuType(@RequestParam(value="groupId", required = false) String groupId){
 
         Example example=new Example(MenuGroup.class);
         if (StringUtils.isNotBlank(groupId)) {
             example.createCriteria().andEqualTo("groupId",  groupId);
-        }
-        if (StringUtils.isNotBlank(menuType)) {
-            example.createCriteria().andEqualTo("menuType",  menuType);
         }
         menuGroupService.deleteByExample(example);
 

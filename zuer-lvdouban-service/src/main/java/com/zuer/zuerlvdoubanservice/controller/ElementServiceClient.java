@@ -82,4 +82,16 @@ public class ElementServiceClient {
     }
 
 
+
+    @RequestMapping(value = "/getUserAuthorityElementByUserId",method = RequestMethod.GET)
+    public List<Element> getUserAuthorityElementByUserId(@RequestParam("userId")String userId){
+        return elementService.getUserAuthorityElementByUserId(userId);
+    }
+
+    //当不开启权限控制，查询所有的element功能
+    @RequestMapping(value = "/getUserElementAllByUserId",method = RequestMethod.GET)
+    public List<Element> getUserElementAllByUserId(@RequestParam("userId")String userId){
+        return elementService.getUserElementAllByUserId(userId);
+    }
+
 }

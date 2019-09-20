@@ -26,8 +26,6 @@ import java.util.Map;
 public class LoginController {
 
 
-    @Autowired
-    private UserFeginService userFeginService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String createAuthenticationToken(@RequestBody Map<String,Object> param) throws Exception{

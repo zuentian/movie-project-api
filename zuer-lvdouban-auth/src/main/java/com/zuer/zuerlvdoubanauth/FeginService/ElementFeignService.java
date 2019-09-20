@@ -34,4 +34,11 @@ public interface ElementFeignService {
     @RequestMapping(value = "/Element/queryElementByMenuId",method = RequestMethod.GET)
     List<Element> queryElementByMenuId(@RequestParam("menuId") String menuId);
 
+
+    @RequestMapping(value = "/Element/getUserAuthorityElementByUserId",method = RequestMethod.GET)
+    List<Element> getUserAuthorityElementByUserId(@RequestParam("userId")String userId);
+
+    //当不开启权限控制，查询所有的element功能
+    @RequestMapping(value = "/Element/getUserElementAllByUserId",method = RequestMethod.GET)
+    List<Element> getUserElementAllByUserId(@RequestParam("userId")String userId);
 }

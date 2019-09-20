@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface MenuGroupFeignService {
 
 
-    @RequestMapping(value = "/MenuGroup/deleteMenuGroupByGroupIdAndMenuType",method = RequestMethod.GET)
-    void deleteMenuGroupByGroupIdAndMenuType(@RequestParam(value="groupId", required = false) String groupId,
-                                             @RequestParam(value="menuType", required = false) String menuType);
+    @RequestMapping(value = "/MenuGroup/deleteMenuGroupByGroupId",method = RequestMethod.GET)
+    void deleteMenuGroupByGroupId(@RequestParam(value="groupId", required = false) String groupId);
 
     @RequestMapping(value = "/MenuGroup/insertMenuGroup",method = RequestMethod.POST)
     void insertMenuGroup(MenuGroup menuGroup);

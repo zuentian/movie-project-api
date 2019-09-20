@@ -12,7 +12,6 @@
         <result column="TYPE" jdbcType="VARCHAR" property="type" />
         <result column="ORDER_NUM" jdbcType="VARCHAR" property="orderNum" />
         <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
-        <result column="ENABLED" jdbcType="VARCHAR" property="enabled" />
         <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
         <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
@@ -31,27 +30,26 @@
         <result column="attr8" jdbcType="VARCHAR" property="attr8" />
     </resultMap>
 
-    <select id="queryMenuGroupByGroupIdAndGroupType" parameterType="String" resultMap="BaseResultMap">
+    <select id="queryMenuGroupByGroupId" parameterType="String" resultMap="BaseResultMap">
 
         SELECT m.* FROM MENU_GROUP mg
         INNER JOIN MENU m ON
         mg.MENU_ID=m.ID
         AND mg.GROUP_ID=#{groupId,jdbcType=VARCHAR}
-        AND mg.GROUP_TYPE=#{groupType,jdbcType=VARCHAR}
-        AND mg.MENU_TYPE='menu'
 
     </select>
 
     <select id="getUserAuthorityMenuByUserId" parameterType="String" resultMap="BaseResultMap">
 
-        SELECT m.* FROM MENU_GROUP mg inner join menu m
+        SELECT distinct m.* FROM MENU_GROUP mg inner join menu m
         on mg.MENU_ID=m.ID
 
         AND mg.GROUP_ID in (
 
         SELECT GROUP_ID FROM USER_GROUP_LEADER WHERE USER_ID=#{userId,jdbcType=VARCHAR}
         UNION
-        SELECT GROUP_ID FROM USER_GROUP_MEMBER WHERE USER_ID=#{userId,jdbcType=VARCHAR})
-
+        SELECT GROUP_ID FROM USER_GROUP_MEMBER WHERE USER_ID=#{userId,jdbcType=VARCHAR}
+        )
+        order by m.ORDER_NUM
     </select>
 </mapper>
