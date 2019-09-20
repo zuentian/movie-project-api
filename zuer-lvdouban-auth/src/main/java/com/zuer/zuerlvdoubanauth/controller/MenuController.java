@@ -30,17 +30,6 @@ public class MenuController {
     @Autowired
     private DictFeignService dictFeignService;
 
-    private final static String MENU_TYPE="menu";
-    private final static String GROUP_TYPE="group";
-
-
-
-    @RequestMapping(value = "/queryAllMenu",method = RequestMethod.POST)
-    public List<Menu> queryAllMenu(){
-        List<Menu> menuList=menuFeginService.queryMenu();
-        return menuList;
-    }
-
     private List<MenuTree> createrMenuTree(List<Menu> menus, String root) {
         List<MenuTree> trees = new ArrayList<MenuTree>();
         MenuTree node = null;
@@ -117,7 +106,7 @@ public class MenuController {
             menus=menuTrees.split(",");
         }
 
-        menuGroupFeignService.deleteMenuGroupByGroupIdAndMenuType(groupId,MENU_TYPE);
+        menuGroupFeignService.deleteMenuGroupByGroupId(groupId);
 
         List<Menu> menuList = menuFeginService.queryMenu();
         Map<String, String> map = new HashMap<String, String>();
@@ -137,11 +126,10 @@ public class MenuController {
             findParentID(map, relationMenus, menuId,root);//需要父节点的id
         }
         for(String menuId:relationMenus){
-            menuGroup=new MenuGroup(GROUP_TYPE,MENU_TYPE);
+            menuGroup=new MenuGroup();
             menuGroup.setId(UUID.randomUUID().toString());
             menuGroup.setGroupId(groupId);
             menuGroup.setMenuId(menuId);
-            menuGroup.setParentId("0");
             EntityUtils.setCreateInfo(menuGroup);
             menuGroupFeignService.insertMenuGroup(menuGroup);
         }
@@ -157,7 +145,7 @@ public class MenuController {
     }
     @RequestMapping(value = "/queryMenuGroupByGroupId/{groupId}",method = RequestMethod.GET)
     public List<Menu> queryMenuGroupByGroupId(@PathVariable String groupId) throws Exception{
-        List<Menu> menuList=menuFeginService.queryMenuGroupByGroupIdAndGroupType(groupId,GROUP_TYPE);
+        List<Menu> menuList=menuFeginService.queryMenuGroupByGroupId(groupId);
         return menuList ;
     }
 

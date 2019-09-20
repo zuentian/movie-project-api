@@ -14,19 +14,10 @@ public class Element {
 
     private String code;
 
-    private String type;
-
     private String name;
-
-    private String uri;
 
     @Column(name = "menu_id")
     private String menuId;
-
-    @Column(name = "parent_id")
-    private String parentId;
-
-    private String path;
 
     private String method;
 

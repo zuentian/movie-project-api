@@ -32,7 +32,6 @@ public class Menu {
 
     private String description;
 
-    private String enabled;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @Column(name = "crt_time")

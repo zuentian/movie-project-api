@@ -38,9 +38,8 @@ public interface MenuFeginService {
     int deleteMenuById(@RequestParam("id") String id);
 
 
-    @RequestMapping(value = "/Menu/queryMenuGroupByGroupIdAndGroupType",method = RequestMethod.GET)
-    List<Menu> queryMenuGroupByGroupIdAndGroupType(@RequestParam(value="groupId", required = false) String groupId,
-                                                   @RequestParam(value="groupType", required = false) String groupType);
+    @RequestMapping(value = "/Menu/queryMenuGroupByGroupId",method = RequestMethod.GET)
+    List<Menu> queryMenuGroupByGroupId(@RequestParam(value="groupId", required = false) String groupId);
 
     @RequestMapping(value = "/Menu/getUserMenuAllByUserId",method = RequestMethod.GET)
     List<Menu> getUserMenuAllByUserId(@RequestParam("id") String id);

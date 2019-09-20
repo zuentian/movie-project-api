@@ -23,8 +23,6 @@ public class GroupTypeController {
     @Autowired
     private GroupTypeFeignService groupTypeFeignService;
 
-    @Autowired
-    private UserFeginService userFeginService;
 
     @RequestMapping(value = "/addGroupType",method = RequestMethod.POST)
     public int addElement(@RequestParam Map<String, Object> param) throws IOException {

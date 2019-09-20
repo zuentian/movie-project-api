@@ -86,7 +86,6 @@ public class ElementController {
         elementGroup.setId(UUID.randomUUID().toString());
         elementGroup.setGroupId(groupId);
         elementGroup.setElementId(elementId);
-        elementGroup.setGroupType(GROUP_TYPE);
         EntityUtils.setCreateInfo(elementGroup);
         return elementGroupFeignService.insertElementGroup(elementGroup);
 
@@ -130,7 +129,6 @@ public class ElementController {
             elementGroup.setId(UUID.randomUUID().toString());
             elementGroup.setGroupId(groupId);
             elementGroup.setElementId(id);
-            elementGroup.setGroupType(GROUP_TYPE);
             EntityUtils.setCreateInfo(elementGroup);
             elementGroupFeignService.insertElementGroup(elementGroup);
         }

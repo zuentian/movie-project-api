@@ -88,11 +88,10 @@ public class MenuServiceClient {
     }
 
 
-    @RequestMapping(value = "/queryMenuGroupByGroupIdAndGroupType",method = RequestMethod.GET)
-    public List<Menu> queryMenuGroupByGroupIdAndGroupType(@RequestParam(value="groupId", required = false) String groupId,
-                                                          @RequestParam(value="groupType", required = false) String groupType){
+    @RequestMapping(value = "/queryMenuGroupByGroupId",method = RequestMethod.GET)
+    public List<Menu> queryMenuGroupByGroupId(@RequestParam(value="groupId", required = false) String groupId){
 
-        return menuService.queryMenuGroupByGroupIdAndGroupType(groupId,groupType);
+        return menuService.queryMenuGroupByGroupId(groupId);
     }
 
 

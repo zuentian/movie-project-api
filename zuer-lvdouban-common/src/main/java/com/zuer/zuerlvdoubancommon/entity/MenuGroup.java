@@ -16,20 +16,8 @@ public class MenuGroup {
     @Column(name = "group_id")
     private String groupId;
 
-    @Column(name = "group_type")
-    private String groupType;
-
     @Column(name = "menu_id")
     private String menuId;
-
-    @Column(name = "menu_type")
-    private String menuType;
-
-    @Column(name = "parent_id")
-    private String parentId;
-
-    private String path;
-
     private String description;
     
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
@@ -52,11 +40,6 @@ public class MenuGroup {
     private String attr3;
 
     private String attr4;
-
-    public MenuGroup(String groupType, String menuType) {
-        this.groupType = groupType;
-        this.menuType = menuType;
-    }
 
     public MenuGroup() {
     }

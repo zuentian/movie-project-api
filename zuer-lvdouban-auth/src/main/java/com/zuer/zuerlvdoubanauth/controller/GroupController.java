@@ -26,8 +26,6 @@ import java.util.UUID;
 public class GroupController {
 
     @Autowired
-    private UserFeginService userFeginService;
-    @Autowired
     private GroupFeignService groupFeignService;
     @Autowired
     private DictFeignService dictFeignService;

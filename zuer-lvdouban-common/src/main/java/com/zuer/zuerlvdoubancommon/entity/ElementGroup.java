@@ -17,16 +17,8 @@ public class ElementGroup {
     @Column(name = "group_id")
     private String groupId;
 
-    @Column(name = "group_type")
-    private String groupType;
-
     @Column(name = "element_id")
     private String elementId;
-
-    @Column(name = "parent_id")
-    private String parentId;
-
-    private String path;
 
     private String description;
 
@@ -50,10 +42,6 @@ public class ElementGroup {
     private String attr3;
 
     private String attr4;
-
-    public ElementGroup(String groupType) {
-        this.groupType = groupType;
-    }
 
     public ElementGroup() {
     }

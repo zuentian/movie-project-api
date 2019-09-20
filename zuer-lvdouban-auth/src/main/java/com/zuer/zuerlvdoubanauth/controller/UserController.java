@@ -34,6 +34,9 @@ public class UserController {
     private MenuFeginService menuFeginService;
 
     @Autowired
+    private ElementFeignService elementFeignService;
+
+    @Autowired
     private DictFeignService dictFeignService;
 
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
@@ -53,15 +56,19 @@ public class UserController {
             isAuthority=dictValueList.get(0).getLabel();
         }
         List<Menu> menus=null;
+        List<Element> elements=null;
         if("Y".equals(isAuthority)){
             //查询数据字典，如果AUTHORITYFLAG开启了权限控制
             menus=menuFeginService.getUserAuthorityMenuByUserId(userInfo.getId());
+            elements=elementFeignService.getUserAuthorityElementByUserId(userInfo.getId());
         }else{
             menus=menuFeginService.getUserMenuAllByUserId(userInfo.getId());
+            elements=elementFeignService.getUserElementAllByUserId(userInfo.getId());
         }
         if(menus==null||menus.size()<=0){
             throw new Exception("请为该用户分配权限！");
         }
+        entireUser.setElements(elements);
         System.out.println("登陆之后menus:"+menus);
 
         //将获取的菜单整理成树状结构
@@ -73,23 +80,26 @@ public class UserController {
         List<MenuTree> menuTreeList=createrMenuTree(menus,root);
         entireUser.setMenuTrees(menuTreeList);
 
-        List<RouterTree> routerTrees=createrRouterTree(menus,root);
 
-        //因为这是VUE的动态路由，所以开头的path前面加上“/”
+
+        List<RouterTree> routerTrees=createrRouterTree(menus,root);
+        //因为这是VUE的动态路由，所以开头的path前面都要写先加上“/”
         routerTrees=routerTrees.parallelStream().map(
                 routerTree -> {
                     routerTree.setPath("/"+routerTree.getPath());
                     return routerTree;
                 }
         ).collect(Collectors.toList());
-
         entireUser.setRouterTrees(routerTrees);
+
 
 
 
         System.out.println("登陆之查询菜单和功能结果EntireUser=["+entireUser+"]");
         return entireUser;
     }
+
+
 
     private List<MenuTree> createrMenuTree(List<Menu> menus, String root) {
         List<MenuTree> trees = new ArrayList<MenuTree>();
