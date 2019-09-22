@@ -23,7 +23,6 @@ import java.util.Map;
 @RequestMapping(value = "/Dict")
 public class DictServiceClient {
 
-
     @Autowired
     DictService dictService;
 

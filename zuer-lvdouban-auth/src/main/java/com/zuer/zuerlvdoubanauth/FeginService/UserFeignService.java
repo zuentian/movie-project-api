@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @FeignClient(value = "zuer-lvdouban-service")
-public interface UserFeginService {
+public interface UserFeignService {
     @RequestMapping(value = "/User/queryUserByQueryParam",method = RequestMethod.POST)
     Map<String,Object>  queryUserByQueryParam( @RequestBody Map<String, Object> map,
                                                @RequestParam("pageSize") String pageSize,
@@ -23,13 +23,13 @@ public interface UserFeginService {
 
 
     @RequestMapping(value = "/User/insertUser",method = RequestMethod.POST)
-    int insertUser(User user);
+    int insertUser (User user)throws Exception;
 
     @RequestMapping(value = "/User/queryUserById",method = RequestMethod.GET)
     User queryUserById(@RequestParam("id") String id);
 
     @RequestMapping(value = "/User/updateUserById",method = RequestMethod.POST)
-    int updateUserById(User user);
+    int updateUserById(User user)throws Exception;
 
     @RequestMapping(value = "/User/deleteUserById",method = RequestMethod.GET)
     int deleteUserById(@RequestParam("id") String id);

@@ -29,9 +29,9 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    private UserFeginService userFeginService;
+    private UserFeignService userFeignService;
     @Autowired
-    private MenuFeginService menuFeginService;
+    private MenuFeignService menuFeignService;
 
     @Autowired
     private ElementFeignService elementFeignService;
@@ -44,7 +44,7 @@ public class UserController {
     public EntireUser getUserInfo(String token) throws Exception {
         System.out.println("登陆之后token："+token);
 
-        UserInfo userInfo=userFeginService.queryUserInfoByUserName(JWTUtil.getUsername(token));
+        UserInfo userInfo=userFeignService.queryUserInfoByUserName(JWTUtil.getUsername(token));
         EntireUser entireUser=new EntireUser();
         BeanUtils.copyProperties(userInfo,entireUser);
         System.out.println("登陆之后id:"+userInfo.getId());
@@ -59,10 +59,10 @@ public class UserController {
         List<Element> elements=null;
         if("Y".equals(isAuthority)){
             //查询数据字典，如果AUTHORITYFLAG开启了权限控制
-            menus=menuFeginService.getUserAuthorityMenuByUserId(userInfo.getId());
+            menus=menuFeignService.getUserAuthorityMenuByUserId(userInfo.getId());
             elements=elementFeignService.getUserAuthorityElementByUserId(userInfo.getId());
         }else{
-            menus=menuFeginService.getUserMenuAllByUserId(userInfo.getId());
+            menus=menuFeignService.getUserMenuAllByUserId(userInfo.getId());
             elements=elementFeignService.getUserElementAllByUserId(userInfo.getId());
         }
         if(menus==null||menus.size()<=0){
@@ -92,9 +92,6 @@ public class UserController {
         ).collect(Collectors.toList());
         entireUser.setRouterTrees(routerTrees);
 
-
-
-
         System.out.println("登陆之查询菜单和功能结果EntireUser=["+entireUser+"]");
         return entireUser;
     }
@@ -118,6 +115,7 @@ public class UserController {
         RouterTree node = null;
         for (Menu menu : menus) {
             node = new RouterTree();
+            node.setType(menu.getType());
             if("menu".equals(menu.getType())) {
                 node.setComponent(menu.getHref());
             }
@@ -146,7 +144,7 @@ public class UserController {
             if(name!=null&&!"".equals(name)){
                 map.put("name",name);
             }
-            Map<String,Object> resultMap = userFeginService.queryUserByQueryParam(map,pageSize,pageIndex);
+            Map<String,Object> resultMap = userFeignService.queryUserByQueryParam(map,pageSize,pageIndex);
             return resultMap;
 
         }catch (Exception e){
@@ -156,11 +154,11 @@ public class UserController {
 
     @RequestMapping(value = "/addUser",method = RequestMethod.POST)
     @ResponseBody
-    public int addUser(@RequestParam Map<String, Object> param) throws Exception {
+    public void addUser(@RequestParam Map<String, Object> param) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         User user= mapper.readValue((String) param.get("user"), User.class);
 
-        UserInfo userInfoOld=userFeginService.queryUserInfoByUserName(user.getUsername());
+        UserInfo userInfoOld=userFeignService.queryUserInfoByUserName(user.getUsername());
         if(userInfoOld!=null){
             throw new Exception("该用户已被创建！");
         }
@@ -172,7 +170,7 @@ public class UserController {
         String password = defaultPasswordService.encryptPassword(user.getPassword());
         user.setPassword(password);
         EntityUtils.setCreatAndUpdatInfo(user);
-        return userFeginService.insertUser(user);
+        userFeignService.insertUser(user);
 
     }
     @RequestMapping(value = "/updateUserById",method = RequestMethod.POST)
@@ -181,26 +179,26 @@ public class UserController {
         ObjectMapper mapper = new ObjectMapper();
         User user = mapper.readValue((String) param.get("user"), User.class);
         EntityUtils.setUpdatedInfo(user);
-        return userFeginService.updateUserById(user);
+        return userFeignService.updateUserById(user);
     }
 
     @RequestMapping(value = "/queryUserById/{id}",method = RequestMethod.GET)
     @ResponseBody
     public User queryUserById(@PathVariable String id) throws Exception {
-        return userFeginService.queryUserById(id);
+        return userFeignService.queryUserById(id);
     }
     @RequestMapping(value = "/deleteUserById/{id}",method = RequestMethod.GET)
     @ResponseBody
     public int deleteUserById(@PathVariable String id) throws Exception {
-        return userFeginService.deleteUserById(id);
+        return userFeignService.deleteUserById(id);
     }
     @RequestMapping(value = "/queryUserByGroupId/{groupId}",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> queryUserByGroupId(@PathVariable String groupId) throws Exception {
 
         Map<String,Object> resultMap=new HashMap<>();
-        List<User> leaders=userFeginService.queryUserLeaderByGroupId(groupId);
-        List<User> members=userFeginService.queryUserMemberByGroupId(groupId);
+        List<User> leaders=userFeignService.queryUserLeaderByGroupId(groupId);
+        List<User> members=userFeignService.queryUserMemberByGroupId(groupId);
         resultMap.put("leaders",leaders);
         resultMap.put("members",members);
         return resultMap;
@@ -210,7 +208,7 @@ public class UserController {
     @ResponseBody
     public List<User> queryUserLikeUserNames(@RequestParam Map<String, Object> param) throws Exception {
         String name=param.get("name")==null?null:(String)param.get("name");
-        List<User> list=userFeginService.queryUserLikeUserNames(name);
+        List<User> list=userFeignService.queryUserLikeUserNames(name);
         return list;
     }
 

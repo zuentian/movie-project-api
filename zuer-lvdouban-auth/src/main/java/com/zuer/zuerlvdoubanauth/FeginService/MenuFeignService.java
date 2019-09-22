@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @FeignClient(value = "zuer-lvdouban-service")
-public interface MenuFeginService {
+public interface MenuFeignService {
 
     @RequestMapping(value = "/Menu/getUserAuthorityMenuByUserId",method = RequestMethod.GET)
     List<Menu> getUserAuthorityMenuByUserId(@RequestParam("id") String id) ;

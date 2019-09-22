@@ -9,5 +9,6 @@ public class RouterTree   extends  TreeNode{
     private String path;
     private String component;
     private String name;
+    private String type;
 
 }

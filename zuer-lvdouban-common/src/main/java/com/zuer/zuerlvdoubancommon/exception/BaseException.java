@@ -1,8 +1,10 @@
 package com.zuer.zuerlvdoubancommon.exception;
 
+import lombok.Data;
+
+@Data
 public class BaseException extends RuntimeException {
     private int status = 200;
-
     public int getStatus() {
         return status;
     }

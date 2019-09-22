@@ -1,6 +1,6 @@
 package com.zuer.zuerlvdoubanauth.shiro;
 
-import com.zuer.zuerlvdoubanauth.FeginService.UserFeginService;
+import com.zuer.zuerlvdoubanauth.FeginService.UserFeignService;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserRealm extends AuthorizingRealm {
     @Autowired
-    private UserFeginService userFeginService;
+    private UserFeignService userFeignService;
 
     //获取角色权限信息
     @Override
@@ -27,7 +27,7 @@ public class UserRealm extends AuthorizingRealm {
         System.out.println("获取用户凭证信息：" + authenticationToken);
         String usename = (String) authenticationToken.getPrincipal();
         String password = new String((char[]) authenticationToken.getCredentials());
-        UserInfo userInfo = userFeginService.queryUserInfoByUserName(usename);
+        UserInfo userInfo = userFeignService.queryUserInfoByUserName(usename);
         if(userInfo==null||userInfo.getUsername()==null){
             throw new UnknownAccountException();
         }

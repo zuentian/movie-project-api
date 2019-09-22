@@ -2,7 +2,7 @@ package com.zuer.zuerlvdoubanauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
-import com.zuer.zuerlvdoubanauth.FeginService.MenuFeginService;
+import com.zuer.zuerlvdoubanauth.FeginService.MenuFeignService;
 import com.zuer.zuerlvdoubanauth.FeginService.MenuGroupFeignService;
 import com.zuer.zuerlvdoubancommon.entity.Menu;
 import com.zuer.zuerlvdoubancommon.entity.MenuGroup;
@@ -26,7 +26,7 @@ import java.util.*;
 @RestController
 public class MenuController {
     @Autowired
-    private MenuFeginService menuFeginService;
+    private MenuFeignService menuFeignService;
     @Autowired
     private DictFeignService dictFeignService;
 
@@ -46,7 +46,7 @@ public class MenuController {
     @RequestMapping(value = "/queryMenuTree",method = RequestMethod.POST)
     public List<MenuTree> queryMenuTree(@RequestParam Map<String, Object> param) {
         String title = param.get("title") == null ? null : (String) param.get("title");
-        List<Menu> menuList = menuFeginService.queryMenuByTitle(title);
+        List<Menu> menuList = menuFeignService.queryMenuByTitle(title);
         String root="";
         List<DictValue> dictValueList=dictFeignService.queryDictByDictType("MENUROOT");
         if(dictValueList!=null&&dictValueList.size()>0){
@@ -57,7 +57,7 @@ public class MenuController {
 
     @RequestMapping(value = "/queryMenuById/{id}",method = RequestMethod.GET)
     public Menu queryMenuById(@PathVariable String id){
-        return menuFeginService.queryMenuById(id);
+        return menuFeignService.queryMenuById(id);
     }
 
     @RequestMapping(value = "/addMenu",method = RequestMethod.POST)
@@ -69,7 +69,7 @@ public class MenuController {
         String uuid= UUID.randomUUID().toString();
         menu.setId(uuid);
         EntityUtils.setCreatAndUpdatInfo(menu);
-        return menuFeginService.insertMenu(menu);
+        return menuFeignService.insertMenu(menu);
     }
 
     @RequestMapping(value = "/updateMenu",method = RequestMethod.POST)
@@ -78,16 +78,16 @@ public class MenuController {
         ObjectMapper mapper = new ObjectMapper();
         Menu menu = mapper.readValue((String) param.get("menu"), Menu.class);
         EntityUtils.setUpdatedInfo(menu);
-        return menuFeginService.updateMenuById(menu);
+        return menuFeignService.updateMenuById(menu);
     }
 
     @RequestMapping(value = "/deleteMenuById/{id}",method = RequestMethod.GET)
     public int deleteMenuById(@PathVariable String id) throws Exception{
-        return menuFeginService.deleteMenuById(id);
+        return menuFeignService.deleteMenuById(id);
     }
     @RequestMapping(value = "/queryMenuByParentIdCount/{parentId}",method = RequestMethod.GET)
     public int queryMenuByParentIdCount(@PathVariable String parentId) throws Exception{
-        return menuFeginService.queryMenuByParentIdCount(parentId);
+        return menuFeignService.queryMenuByParentIdCount(parentId);
     }
 
     @Autowired
@@ -108,7 +108,7 @@ public class MenuController {
 
         menuGroupFeignService.deleteMenuGroupByGroupId(groupId);
 
-        List<Menu> menuList = menuFeginService.queryMenu();
+        List<Menu> menuList = menuFeignService.queryMenu();
         Map<String, String> map = new HashMap<String, String>();
         for (Menu menu : menuList) {
             map.put(menu.getId(), menu.getParentId());
@@ -145,7 +145,7 @@ public class MenuController {
     }
     @RequestMapping(value = "/queryMenuGroupByGroupId/{groupId}",method = RequestMethod.GET)
     public List<Menu> queryMenuGroupByGroupId(@PathVariable String groupId) throws Exception{
-        List<Menu> menuList=menuFeginService.queryMenuGroupByGroupId(groupId);
+        List<Menu> menuList=menuFeignService.queryMenuGroupByGroupId(groupId);
         return menuList ;
     }
 
