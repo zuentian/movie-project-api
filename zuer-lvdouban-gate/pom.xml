@@ -19,6 +19,18 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.zuer</groupId>
+            <artifactId>zuer-lvdouban-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zuer</groupId>
+            <artifactId>zuer-lvdouban-auth</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

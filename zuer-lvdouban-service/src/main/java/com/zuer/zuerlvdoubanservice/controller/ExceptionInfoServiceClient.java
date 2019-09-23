@@ -1,15 +1,12 @@
 package com.zuer.zuerlvdoubanservice.controller;
 
 import com.zuer.zuerlvdoubancommon.entity.ExceptionInfo;
-import com.zuer.zuerlvdoubancommon.entity.User;
 import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
 import com.zuer.zuerlvdoubanservice.service.ExceptionInfoService;
-import net.sf.ehcache.transaction.xa.EhcacheXAException;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 

@@ -1,6 +1,5 @@
 package com.zuer.zuerlvdoubanservice.controller;
 
-import com.zuer.zuerlvdoubancommon.entity.Dict;
 import com.zuer.zuerlvdoubancommon.entity.User;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
@@ -10,7 +9,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 

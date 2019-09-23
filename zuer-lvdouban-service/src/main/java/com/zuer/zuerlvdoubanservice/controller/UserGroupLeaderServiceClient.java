@@ -4,7 +4,7 @@ import com.zuer.zuerlvdoubancommon.entity.UserGroupLeader;
 import com.zuer.zuerlvdoubanservice.service.UserGroupLeaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 

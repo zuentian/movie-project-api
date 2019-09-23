@@ -37,7 +37,7 @@ public class LoginController {
         return token;
     }
 
-    private UserInfo login(AuthenticationToken token) throws  BaseException{
+    public UserInfo login(AuthenticationToken token) throws  BaseException{
         try{
             System.out.println("UserLoginController token="+token.getCredentials()+" " +token.getPrincipal());
             SecurityUtils.getSubject().login(token);
