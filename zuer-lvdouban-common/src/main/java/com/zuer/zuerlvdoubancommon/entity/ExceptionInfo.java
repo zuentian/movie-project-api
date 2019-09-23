@@ -1,5 +1,6 @@
 package com.zuer.zuerlvdoubancommon.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -35,6 +36,7 @@ public class ExceptionInfo {
     @Column(name="ERR_DETAIL")
     private String errDetail;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @Column(name = "crt_time")
     private Date crtTime;
 

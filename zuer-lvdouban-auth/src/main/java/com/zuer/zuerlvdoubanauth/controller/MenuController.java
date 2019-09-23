@@ -30,7 +30,7 @@ public class MenuController {
     @Autowired
     private DictFeignService dictFeignService;
 
-    private List<MenuTree> createrMenuTree(List<Menu> menus, String root) {
+    private List<MenuTree> createMenuTree(List<Menu> menus, String root) {
         List<MenuTree> trees = new ArrayList<MenuTree>();
         MenuTree node = null;
         for (Menu menu : menus) {
@@ -52,7 +52,7 @@ public class MenuController {
         if(dictValueList!=null&&dictValueList.size()>0){
             root=dictValueList.get(0).getLabel();
         }
-        return createrMenuTree(menuList, root);
+        return createMenuTree(menuList, root);
     }
 
     @RequestMapping(value = "/queryMenuById/{id}",method = RequestMethod.GET)

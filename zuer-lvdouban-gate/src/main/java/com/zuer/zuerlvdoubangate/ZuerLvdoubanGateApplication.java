@@ -1,0 +1,23 @@
+package com.zuer.zuerlvdoubangate;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
+
+
+//GlobalGilter 全局过滤器接口与 GatewayFilter 网关过滤器接口具有相同的方法定义。
+//全局过滤器是一系列特殊的过滤器，会根据条件应用到所有路由中。网关过滤器是更细粒度的过滤器，作用于指定的路由中。
+
+
+
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableFeignClients
+public class ZuerLvdoubanGateApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ZuerLvdoubanGateApplication.class, args);
+    }
+
+}
