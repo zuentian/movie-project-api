@@ -1,0 +1,22 @@
+
+gate:
+  ignore:
+    startWith:  /admin
+  tokenHeader:  Authorization
+
+
+cloud:
+  gateway:
+    discovery:
+      locator:
+        enabled: false
+        lowerCaseServiceId: true
+    routes:
+      - id: zuer-lvdouban-service
+        uri: lb://ZUER-LVDOUBAN-SERVICE
+        predicates:
+          - Path=/demo/**
+        filters:
+          - StripPrefix=1
+
+

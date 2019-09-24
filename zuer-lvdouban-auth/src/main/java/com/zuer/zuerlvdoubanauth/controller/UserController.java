@@ -137,7 +137,7 @@ public class UserController {
     public Map<String,Object>  queryUser(@RequestParam Map<String, Object> param) throws Exception{
 
         try{
-            Map<String,Object> map=new HashMap<>();
+            Map<String,Object> map=new HashMap<String, Object>();
             String pageSize=(String)param.get("limit");
             String pageIndex=(String)param.get("page");
             String name =param.get("name")==null?null:(String) param.get("name");

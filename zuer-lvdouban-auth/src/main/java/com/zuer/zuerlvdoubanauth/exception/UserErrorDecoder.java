@@ -1,6 +1,17 @@
 package com.zuer.zuerlvdoubanauth.exception;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zuer.zuerlvdoubancommon.exception.FeignBaseException;
+import feign.Response;
+import feign.Util;
+import feign.codec.ErrorDecoder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+
+import java.io.IOException;
 
 /*
 捕获Feign异常处理
@@ -11,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
      * 重新实现feign的异常处理，捕捉restful接口返回的json格式的异常信息
      *
      */
-public class UserErrorDecoder{/* implements ErrorDecoder {
+public class UserErrorDecoder implements ErrorDecoder {
 
     @Override
     public FeignBaseException decode(String methodKey, Response response) {
@@ -48,5 +59,5 @@ public class UserErrorDecoder{/* implements ErrorDecoder {
 
         }
         return exception;
-    }*/
+    }
 }

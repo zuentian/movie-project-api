@@ -39,7 +39,7 @@ public class DictController {
     @ResponseBody
     public  Map<String,Object> queryPageFromDict(@RequestParam Map<String,Object> param) throws Exception{
             try{
-                Map<String,Object> map=new HashMap<>();
+                Map<String,Object> map=new HashMap<String, Object>();
                 String pageSize=(String)param.get("pageSize");
                 String pageIndex=(String)param.get("currentPage");
                 String dictType =param.get("dictType")==null?null:(String) param.get("dictType");

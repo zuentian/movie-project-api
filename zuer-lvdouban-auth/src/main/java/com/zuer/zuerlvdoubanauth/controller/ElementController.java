@@ -27,7 +27,7 @@ public class ElementController {
                                                 @RequestParam(defaultValue = "1") String page,
                                                 String name,
                                                 String menuId){
-        Map<String,Object> map=new HashMap<>();
+        Map<String,Object> map=new HashMap<String, Object>();
         map.put("name",name);
         map.put("menuId",menuId);
         return elementFeignService.queryElementParam(limit,page,map);

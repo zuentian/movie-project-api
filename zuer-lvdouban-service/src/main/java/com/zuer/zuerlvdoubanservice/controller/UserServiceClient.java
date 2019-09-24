@@ -1,5 +1,6 @@
 package com.zuer.zuerlvdoubanservice.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.zuer.zuerlvdoubancommon.entity.User;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
@@ -76,8 +77,9 @@ public class UserServiceClient  {
         return userService.selectByPrimaryKey(id);
     }
 
+   // @HystrixCommand(fallbackMethod="getFallback")
     @RequestMapping(value = "/updateUserById",method = RequestMethod.POST)
-    public int updateUserById(@RequestBody User user){
+    public int updateUserById(@RequestBody User user) {
         return userService.updateByPrimaryKeySelective(user);
     }
 
@@ -112,6 +114,5 @@ public class UserServiceClient  {
     public List<User> queryUserMemberByGroupId(@RequestParam("groupId") String groupId){
         return userService.queryUserMemberByGroupId(groupId);
     }
-
 
 }

@@ -30,7 +30,7 @@ public class ElementServiceClient {
     public Map<String, Object> queryElementParam(@RequestParam("pageSize") String pageSize,
                                           @RequestParam("page") String page,
                                           @RequestBody Map<String, Object> map){
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String,Object> resultMap=new HashMap<String, Object>();
         Example example=new Example(Element.class);
         example.setOrderByClause("CODE");//实现排序
         Example.Criteria criteria = example.createCriteria();

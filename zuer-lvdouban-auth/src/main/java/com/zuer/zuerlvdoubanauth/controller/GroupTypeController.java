@@ -38,7 +38,7 @@ public class GroupTypeController {
     public Map<String,Object> queryGroupTypeByParam(@RequestParam(defaultValue = "10") String limit,
                                                 @RequestParam(defaultValue = "1") String page,
                                                 String name){
-        Map<String,Object> map=new HashMap<>();
+        Map<String,Object> map=new HashMap<String, Object>();
         map.put("name",name);
         return groupTypeFeignService.queryGroupTypeByParam(limit,page,map);
     }

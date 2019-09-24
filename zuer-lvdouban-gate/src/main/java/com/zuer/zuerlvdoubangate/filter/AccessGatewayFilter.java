@@ -1,28 +1,34 @@
 package com.zuer.zuerlvdoubangate.filter;
 
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
+import java.net.URI;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 @Configuration
-//@Slf4j
 public class AccessGatewayFilter implements GlobalFilter {
     private static final String GATE_WAY_PREFIX = "/api";
 
-    //@Value("${gate.ignore.startWith}")
-   // private String startWith;
-    //@Value("${gate.tokenHeader}")
-    //private String tokenHeader;
+    @Value("${gate.ignore.startWith}")
+    private String startWith;
+    @Value("${gate.tokenHeader}")
+    private String tokenHeader;
 
     //@Autowired
     //private LoginController loginController;
 
     @Override
     public Mono filter(ServerWebExchange serverWebExchange, GatewayFilterChain gatewayFilterChain) {
-        /*System.out.println("进入gateWay______________________");
+        System.out.println("进入gateWay______________________");
         LinkedHashSet requiredAttribute = serverWebExchange.getRequiredAttribute(ServerWebExchangeUtils.GATEWAY_ORIGINAL_REQUEST_URL_ATTR);
         ServerHttpRequest request = serverWebExchange.getRequest();
         String requestUri = request.getPath().pathWithinApplication().value();
@@ -30,9 +36,9 @@ public class AccessGatewayFilter implements GlobalFilter {
             Iterator<URI> iterator = requiredAttribute.iterator();
             while (iterator.hasNext()){
                 URI next = iterator.next();
-               *//* if(next.getPath().startsWith(GATE_WAY_PREFIX)){
+                if(next.getPath().startsWith(GATE_WAY_PREFIX)){
                     requestUri = next.getPath().substring(GATE_WAY_PREFIX.length());
-                }*//*
+                }
             }
         }
         final String method = request.getMethod().toString();
@@ -42,7 +48,7 @@ public class AccessGatewayFilter implements GlobalFilter {
         if (isStartWith(requestUri)) {
             ServerHttpRequest build = mutate.build();
             return gatewayFilterChain.filter(serverWebExchange.mutate().request(build).build());
-        }*/
+        }
         return null;
     }
 
@@ -54,11 +60,11 @@ public class AccessGatewayFilter implements GlobalFilter {
      */
     private boolean isStartWith(String requestUri) {
         boolean flag = false;
-        /*for (String s : startWith.split(",")) {
+        for (String s : startWith.split(",")) {
             if (requestUri.startsWith(s)) {
                 return true;
             }
-        }*/
+        }
         return flag;
     }
 
@@ -70,17 +76,12 @@ public class AccessGatewayFilter implements GlobalFilter {
      * @return
      */
     private void getUser(ServerHttpRequest request, ServerHttpRequest.Builder ctx) throws Exception {
-       /* List<String> strings = request.getHeaders().get(tokenHeader);
+        List<String> strings = request.getHeaders().get(tokenHeader);
         String authToken = null;
         if (strings != null) {
             authToken = strings.get(0);
         }
-        if (StringUtils.isBlank(authToken)) {
-            strings = request.getQueryParams().get("token");
-            if (strings != null) {
-                authToken = strings.get(0);
-            }
-        }*/
+
         return ;
     }
 }

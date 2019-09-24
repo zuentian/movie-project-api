@@ -3,7 +3,7 @@ package com.zuer.zuerlvdoubancommon.vo;
 import lombok.Data;
 
 @Data
-public class MenuTree extends TreeNode implements Comparable<MenuTree>{
+public class MenuTree extends TreeNode{
     String icon;
     String title;
     String href;
@@ -15,9 +15,4 @@ public class MenuTree extends TreeNode implements Comparable<MenuTree>{
     String type;
     int orderNum;
     String label;
-
-    @Override
-    public int compareTo(MenuTree o) {
-        return this.orderNum-o.orderNum;
-    }
 }
