@@ -69,7 +69,6 @@ public class UserController {
             throw new Exception("请为该用户分配权限！");
         }
         entireUser.setElements(elements);
-        System.out.println("登陆之后menus:"+menus);
 
         //将获取的菜单整理成树状结构
         String root="";
@@ -91,8 +90,6 @@ public class UserController {
                 }
         ).collect(Collectors.toList());
         entireUser.setRouterTrees(routerTrees);
-
-        System.out.println("登陆之查询菜单和功能结果EntireUser=["+entireUser+"]");
         return entireUser;
     }
 

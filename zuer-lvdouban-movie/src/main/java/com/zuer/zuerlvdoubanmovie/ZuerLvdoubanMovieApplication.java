@@ -1,4 +1,4 @@
-package com.zuer.zuerlvdoubanauth;
+package com.zuer.zuerlvdoubanmovie;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -10,22 +10,15 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.RestController;
 
 
-/*
-包含
-用户登录，注册，添加，权限管理
-菜单、功能、角色的添加，和几者之间的权限分配管理
-数据字典的管理
- */
-
 @RestController
 @SpringBootApplication(exclude ={DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-@MapperScan(basePackages = {"com.zuer.zuerlvdoubanauth"})
+@MapperScan(basePackages = {"com.zuer.zuerlvdoubanmovie"})
 @EnableEurekaClient
 @EnableFeignClients
-public class ZuerLvdoubanAuthApplication {
+public class ZuerLvdoubanMovieApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ZuerLvdoubanAuthApplication.class, args);
+        SpringApplication.run(ZuerLvdoubanMovieApplication.class, args);
     }
 
 }

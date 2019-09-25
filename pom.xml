@@ -50,6 +50,7 @@
         <module>zuer-lvdouban-common</module>
         <module>zuer-lvdouban-service</module>
         <module>zuer-lvdouban-gate</module>
+        <module>zuer-lvdouban-movie</module>
     </modules>
 
 
