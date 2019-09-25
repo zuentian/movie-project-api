@@ -8,17 +8,13 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Data
-@Table(name = "MOVIE_RELNAME")
-public class MovieRelName {
-
+@Table(name = "MOVIE_COUNTRY")
+public class MovieCountry {
     private String id;
     @Column(name = "movie_id")
     private String movieId;
-    private String name;
-
-    @Column(name = "POSITION_ID")
-    private String positionId;
-
+    @Column(name = "country_code")
+    private String countryCode;
 
     @Column(name = "crt_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")

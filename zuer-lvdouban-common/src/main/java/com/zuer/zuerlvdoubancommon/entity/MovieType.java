@@ -8,17 +8,12 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Data
-@Table(name = "MOVIE_RELNAME")
-public class MovieRelName {
-
+@Table(name = "MOVIE_TYPE")
+public class MovieType {
     private String id;
-    @Column(name = "movie_id")
+    @Column(name = "MOVIE_ID")
     private String movieId;
-    private String name;
-
-    @Column(name = "POSITION_ID")
-    private String positionId;
-
+    private String type;
 
     @Column(name = "crt_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
@@ -45,4 +40,5 @@ public class MovieRelName {
 
     @Column(name = "upd_host")
     private String updHost;
+
 }
