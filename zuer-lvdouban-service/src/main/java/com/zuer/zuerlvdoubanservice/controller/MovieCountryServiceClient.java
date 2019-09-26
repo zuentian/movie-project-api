@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 @EnableFeignClients
 @RestController
@@ -25,5 +25,13 @@ public class MovieCountryServiceClient {
     @RequestMapping(value = "/insertMovieCountry",method = RequestMethod.POST)
     public void insertMovieCountry(@RequestBody  MovieCountry movieCountry) {
         movieCountryService.insertSelective(movieCountry);
+    }
+
+    @RequestMapping(value = "/queryMovieCountryByMovieId",method = RequestMethod.GET)
+    public List<MovieCountry> queryMovieCountryByMovieId(@RequestParam("movieId") String movieId){
+        Example example=new Example(MovieCountry.class);
+        example.createCriteria().andEqualTo("movieId",movieId);
+        return movieCountryService.selectByExample(example);
+
     }
 }

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zuer.zuerlvdoubanservice.service.MovieInfoService">
+    <resultMap id="BaseResultMap" type="com.zuer.zuerlvdoubancommon.entity.MovieInfo">
+
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="MOVIE_NAME" jdbcType="VARCHAR" property="movieName" />
+        <result column="MOVIE_NAME1" jdbcType="VARCHAR" property="movieName1" />
+        <result column="MOVIE_NAME2" jdbcType="VARCHAR" property="movieName2" />
+        <result column="MOVIE_TIME" jdbcType="VARCHAR" property="movieTime" />
+        <result column="MOVIE_SHOW_TIME" jdbcType="TIMESTAMP" property="movieShowTime" />
+        <result column="WATCH_AFTER_NUMBER" jdbcType="VARCHAR" property="WatchAfterNumber" />
+        <result column="WATCH_BEFORE_NUMBER" jdbcType="VARCHAR" property="WatchBeforeNumber" />
+        <result column="SCORE" jdbcType="VARCHAR" property="score" />
+        <result column="MOVIE_DESCRIPTION" jdbcType="CLOB" property="movieDescription" />
+        <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
+        <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
+        <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
+        <result column="crt_host" jdbcType="VARCHAR" property="crtHost" />
+        <result column="upd_time" jdbcType="TIMESTAMP" property="updTime" />
+        <result column="upd_user" jdbcType="VARCHAR" property="updUser" />
+        <result column="upd_name" jdbcType="VARCHAR" property="updName" />
+        <result column="upd_host" jdbcType="VARCHAR" property="updHost" />
+    </resultMap>
+
+
+    <select id="queryMovieInfoByParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT TAB.* FROM (
+        SELECT ROWNUM RN ,T1.* FROM
+        (SELECT  DISTINCT
+        MI.ID,
+        MI.MOVIE_NAME,
+        MI.MOVIE_NAME1,
+        MI.MOVIE_NAME2,
+        MI.MOVIE_TIME,
+        MI.MOVIE_SHOW_TIME,
+        MI.WATCH_AFTER_NUMBER,
+        MI.WATCH_BEFORE_NUMBER,
+        MI.SCORE,
+        MI.CRT_TIME,
+        MI.CRT_USER,
+        MI.CRT_NAME,
+        MI.UPD_TIME,
+        MI.UPD_USER,
+        MI.UPD_NAME
+        FROM MOVIE_INFO MI
+
+        LEFT JOIN MOVIE_COUNTRY  MC ON MI.ID=MC.MOVIE_ID
+        LEFT JOIN MOVIE_TYPE MT ON MI.ID=MT.MOVIE_ID
+        WHERE 1=1
+            <if test="name!=null and name!=''">
+                ( MI.MOVIE_NAME  = #{name,jdbcType=VARCHAR} OR
+                  MI.MOVIE_NAME1 = #{name,jdbcType=VARCHAR} OR
+                  MI.MOVIE_NAME2 = #{name,jdbcType=VARCHAR}  )
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                AND MI.MOVIE_SHOW_TIME &gt;=#{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                AND MI.MOVIE_SHOW_TIME &lt;=#{endTime,jdbcType=TIMESTAMP}
+            </if>
+
+            <if test="startScore!=null and startScore!=0">
+                AND TO_NUM(MI.SCORE) &gt;=#{startScore}
+            </if>
+            <if test="endScore!=null and endScore!=0">
+                AND TO_NUM(MI.SCORE) &lt;=#{endScore}
+            </if>
+            <if test="movieType!=null and movieType!=''">
+                AND MT.TYPE =#{movieType}
+            </if>
+            <if test="movieCountry!=null and movieCountry!=''">
+                AND MT.COUNTRY_CODE =#{movieCountry}
+            </if>
+
+        ORDER BY UPD_TIME
+        ) T1) TAB
+        WHERE TAB.RN BETWEEN #{start} AND #{end}
+
+    </select>
+
+    <select id="queryMovieInfoByParamCount" parameterType="java.util.Map" resultType="Integer">
+
+        SELECT  COUNT(DISTINCT MI.ID)
+        FROM MOVIE_INFO MI
+
+        LEFT JOIN MOVIE_COUNTRY  MC ON MI.ID=MC.MOVIE_ID
+        LEFT JOIN MOVIE_TYPE MT ON MI.ID=MT.MOVIE_ID
+        WHERE 1=1
+        <if test="name!=null and name!=''">
+            ( MI.MOVIE_NAME  = #{name,jdbcType=VARCHAR} OR
+            MI.MOVIE_NAME1 = #{name,jdbcType=VARCHAR} OR
+            MI.MOVIE_NAME2 = #{name,jdbcType=VARCHAR}  )
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND MI.MOVIE_SHOW_TIME &gt;=#{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND MI.MOVIE_SHOW_TIME &lt;=#{endTime}
+        </if>
+
+        <if test="startScore!=null and startScore!=0">
+            AND TO_NUMBER(MI.SCORE) &gt;=#{startScore}
+        </if>
+        <if test="endScore!=null and endScore!=0">
+            AND TO_NUMBER(MI.SCORE) &lt;=#{endScore}
+        </if>
+        <if test="movieType!=null and movieType!=''">
+            AND MT.TYPE =#{movieType}
+        </if>
+        <if test="movieCountry!=null and movieCountry!=''">
+            AND MC.COUNTRY_CODE =#{movieCountry}
+        </if>
+
+
+    </select>
+
+</mapper>
