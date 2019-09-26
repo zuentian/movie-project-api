@@ -73,7 +73,7 @@
                 AND MT.COUNTRY_CODE =#{movieCountry}
             </if>
 
-        ORDER BY UPD_TIME
+        ORDER BY UPD_TIME DESC
         ) T1) TAB
         WHERE TAB.RN BETWEEN #{start} AND #{end}
 
