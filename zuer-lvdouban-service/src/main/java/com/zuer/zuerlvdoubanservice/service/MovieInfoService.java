@@ -11,4 +11,6 @@ public interface MovieInfoService extends Mapper<MovieInfo> {
     List<MovieInfo> queryMovieInfoByParam(Map<String, Object> map);
 
     int queryMovieInfoByParamCount(Map<String, Object> map);
+
+    MovieInfo queryMovieInfoById(String id);
 }

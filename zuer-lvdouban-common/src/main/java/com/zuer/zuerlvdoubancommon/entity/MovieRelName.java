@@ -16,8 +16,8 @@ public class MovieRelName {
     private String movieId;
     private String name;
 
-    @Column(name = "POSITION_ID")
-    private String positionId;
+    @Column(name = "POSITION")
+    private String position;
 
 
     @Column(name = "crt_time")

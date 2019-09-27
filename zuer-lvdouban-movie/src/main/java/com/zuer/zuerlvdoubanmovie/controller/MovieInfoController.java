@@ -1,10 +1,7 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuer.zuerlvdoubancommon.entity.MovieCountry;
-import com.zuer.zuerlvdoubancommon.entity.MovieInfo;
-import com.zuer.zuerlvdoubancommon.entity.MovieRelName;
-import com.zuer.zuerlvdoubancommon.entity.MovieType;
+import com.zuer.zuerlvdoubancommon.entity.*;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.vo.MovieInfoExp;
 import com.zuer.zuerlvdoubanmovie.feginservice.MovieCountryFeignService;
@@ -16,10 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -146,14 +140,35 @@ public class MovieInfoController {
 
                 List<MovieType> movieTypeList=movieTypeFeignService.queryMovieTypeByMovieId(movieInfo.getId());
 
+                List<MovieRelName> movieRelNameList=movieRelNameFeignService.queryMovieRelNameByMovieId(movieInfo.getId());
+
                 movieInfoExp.setMovieCountryList(movieCountryList);
                 movieInfoExp.setMovieTypeList(movieTypeList);
+                movieInfoExp.setMovieRelNameList(movieRelNameList);
                 return movieInfoExp;
             }).collect(Collectors.toList());
 
         }
         resultMap.put("list",movieInfoListExpList);
 
+        return resultMap;
+    }
+
+    @RequestMapping(value = "/queryMovieInfoById/{id}",method = RequestMethod.GET)
+    public Map<String,Object> queryMovieInfoById(@PathVariable String id){
+
+        Map<String,Object> resultMap=new HashMap<String, Object>();
+        MovieInfo movieInfo=movieInfoFeignService.queryMovieInfoById(id);
+        resultMap.put("movieInfo",movieInfo);
+
+        List<MovieRelName> movieRelNameList=movieRelNameFeignService.queryMovieRelNameByMovieId(id);
+        resultMap.put("movieRelNameList",movieRelNameList);
+
+        List<MovieCountry> movieCountryList=movieCountryFeignService.queryMovieCountryByMovieId(id);
+        resultMap.put("movieCountryList",movieCountryList);
+
+        List<MovieType> movieTypeList=movieTypeFeignService.queryMovieTypeByMovieId(id);
+        resultMap.put("movieTypeList",movieTypeList);
         return resultMap;
     }
 

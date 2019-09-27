@@ -23,6 +23,11 @@
         <result column="upd_host" jdbcType="VARCHAR" property="updHost" />
     </resultMap>
 
+    <select id="queryMovieInfoById" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM MOVIE_INFO
+        WHERE ID=#{id,jdbcType=VARCHAR}
+    </select>
+
 
     <select id="queryMovieInfoByParam" parameterType="java.util.Map" resultMap="BaseResultMap">
         SELECT TAB.* FROM (

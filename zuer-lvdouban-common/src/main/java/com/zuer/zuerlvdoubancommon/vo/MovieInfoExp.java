@@ -2,6 +2,7 @@ package com.zuer.zuerlvdoubancommon.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zuer.zuerlvdoubancommon.entity.MovieCountry;
+import com.zuer.zuerlvdoubancommon.entity.MovieRelName;
 import com.zuer.zuerlvdoubancommon.entity.MovieType;
 import lombok.Data;
 
@@ -36,6 +37,7 @@ public class MovieInfoExp {
 
     private List<MovieCountry> movieCountryList;
     private List<MovieType> movieTypeList;
+    private List<MovieRelName> movieRelNameList;
 
 
 }
