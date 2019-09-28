@@ -54,8 +54,8 @@ public class MovieInfoController {
                 movieRelNameNew.setId(UUID.randomUUID().toString());
                 movieRelNameNew.setMovieId(id);
                 movieRelNameNew.setName(str);
-                EntityUtils.setCreatAndUpdatInfo(movieRelNameNew);
-                movieRelNameFeignService.insertMovieRelName(movieRelNameNew);
+                EntityUtils.setCreateInfo(movieRelNameNew);
+                insertMovieRelName(movieRelNameNew);
             }
         }
 
@@ -67,8 +67,9 @@ public class MovieInfoController {
                 movieTypeNew.setId(UUID.randomUUID().toString());
                 movieTypeNew.setMovieId(id);
                 movieTypeNew.setType(str);
-                EntityUtils.setCreatAndUpdatInfo(movieTypeNew);
-                movieTypeFeignService.insertMovieType(movieTypeNew);
+                EntityUtils.setCreateInfo(movieTypeNew);
+                insertMovieType(movieTypeNew);
+
             }
         }
         String movieCountry=param.get("movieCountry")==null?null:(String)param.get("movieCountry");
@@ -79,12 +80,26 @@ public class MovieInfoController {
                 movieCountryNew.setId(UUID.randomUUID().toString());
                 movieCountryNew.setMovieId(id);
                 movieCountryNew.setCountryCode(str);
-                EntityUtils.setCreatAndUpdatInfo(movieCountryNew);
-                movieCountryFeignService.insertMovieCountry(movieCountryNew);
+                EntityUtils.setCreateInfo(movieCountryNew);
+                insertMovieCountry(movieCountryNew);
+
             }
         }
     }
+    /*电影出品方国家地区数据插入*/
+    private void insertMovieCountry(MovieCountry movieCountry) {
+        movieCountryFeignService.insertMovieCountry(movieCountry);
+    }
 
+    /*电影类型数据插入*/
+    private void insertMovieType(MovieType movieType) {
+        movieTypeFeignService.insertMovieType(movieType);
+    }
+
+    /*电影相关人物数据插入*/
+    private void insertMovieRelName(MovieRelName movieRelName) {
+        movieRelNameFeignService.insertMovieRelName(movieRelName);
+    }
 
 
     @RequestMapping(value = "/queryMovieInfoByParam",method = RequestMethod.POST)
@@ -161,6 +176,9 @@ public class MovieInfoController {
         MovieInfo movieInfo=movieInfoFeignService.queryMovieInfoById(id);
         resultMap.put("movieInfo",movieInfo);
 
+        Date date=movieInfo.getMovieShowTime();
+        resultMap.put("movieShowTime",date.getTime());
+
         List<MovieRelName> movieRelNameList=movieRelNameFeignService.queryMovieRelNameByMovieId(id);
         resultMap.put("movieRelNameList",movieRelNameList);
 
@@ -172,4 +190,67 @@ public class MovieInfoController {
         return resultMap;
     }
 
+
+    @RequestMapping(value = "/updateMovieInfo",method = RequestMethod.POST)
+    public void updateMovieInfo(@RequestParam Map<String,Object> param) throws Exception {
+        String info=param.get("movieInfo")==null?null:(String) param.get("movieInfo");
+        ObjectMapper mapper = new ObjectMapper();
+        MovieInfo movieInfo= mapper.readValue(info, MovieInfo.class);
+        EntityUtils.setUpdatedInfo(movieInfo);
+        movieInfoFeignService.updateMovieInfoById(movieInfo);
+        int count=0;
+
+        count=movieRelNameFeignService.deleteMovieRelNameByMovieId(movieInfo.getId());
+        if(count>=0){
+            String movieRelName=param.get("movieRelName")==null?null:(String)param.get("movieRelName");
+            if(movieRelName!=null){
+                String[] movieRelNames = movieRelName.trim().split(",");
+                for(String str:movieRelNames){
+                    MovieRelName movieRelNameNew=new MovieRelName();
+                    movieRelNameNew.setId(UUID.randomUUID().toString());
+                    movieRelNameNew.setMovieId(movieInfo.getId());
+                    movieRelNameNew.setName(str);
+                    EntityUtils.setCreateInfo(movieRelNameNew);
+                    insertMovieRelName(movieRelNameNew);
+                }
+            }
+        }
+
+        count=movieTypeFeignService.deleteMovieTypeByMovieId(movieInfo.getId());
+        if(count>=0){
+            String movieType=param.get("movieType")==null?null:(String)param.get("movieType");
+            if(movieType!=null){
+                String[] movieTypes = movieType.trim().split(",");
+                for(String str:movieTypes){
+                    MovieType movieTypeNew=new MovieType();
+                    movieTypeNew.setId(UUID.randomUUID().toString());
+                    movieTypeNew.setMovieId(movieInfo.getId());
+                    movieTypeNew.setType(str);
+                    EntityUtils.setCreateInfo(movieTypeNew);
+                    insertMovieType(movieTypeNew);
+
+                }
+            }
+        }
+
+
+        count=movieCountryFeignService.deleteMovieCountryByMovieId(movieInfo.getId());
+        if(count>=0){
+            String movieCountry=param.get("movieCountry")==null?null:(String)param.get("movieCountry");
+            if(movieCountry!=null){
+                String[] movieCountrys = movieCountry.trim().split(",");
+                for(String str:movieCountrys){
+                    if(StringUtils.isNotBlank(str)){
+                        MovieCountry movieCountryNew =new MovieCountry();
+                        movieCountryNew.setId(UUID.randomUUID().toString());
+                        movieCountryNew.setMovieId(movieInfo.getId());
+                        movieCountryNew.setCountryCode(str);
+                        EntityUtils.setCreateInfo(movieCountryNew);
+                        insertMovieCountry(movieCountryNew);
+                    }
+                }
+            }
+        }
+
+    }
 }

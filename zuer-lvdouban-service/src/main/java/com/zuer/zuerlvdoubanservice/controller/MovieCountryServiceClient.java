@@ -34,4 +34,10 @@ public class MovieCountryServiceClient {
         return movieCountryService.selectByExample(example);
 
     }
+    @RequestMapping(value = "/deleteMovieCountryByMovieId",method = RequestMethod.GET)
+    public int deleteMovieCountryByMovieId(@RequestParam("movieId") String movieId){
+        Example example=new Example(MovieCountry.class);
+        example.createCriteria().andEqualTo("movieId",movieId);
+        return movieCountryService.deleteByExample(example);
+    }
 }

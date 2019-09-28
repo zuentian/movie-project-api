@@ -31,7 +31,7 @@ public class ExceptionInfo {
     private String errMethod;
 
     @Column(name="ERR_LINENUMBER")
-    private int errLineNumber;
+    private Integer errLineNumber;
 
     @Column(name="ERR_DETAIL")
     private String errDetail;

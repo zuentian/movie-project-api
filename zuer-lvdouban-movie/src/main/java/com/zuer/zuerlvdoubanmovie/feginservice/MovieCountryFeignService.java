@@ -16,4 +16,6 @@ public interface MovieCountryFeignService {
     void insertMovieCountry(@RequestBody MovieCountry movieCountry) ;
     @RequestMapping(value = "/MovieCountry/queryMovieCountryByMovieId",method = RequestMethod.GET)
     List<MovieCountry> queryMovieCountryByMovieId(@RequestParam("movieId") String movieId);
+    @RequestMapping(value = "/MovieCountry/deleteMovieCountryByMovieId",method = RequestMethod.GET)
+    int deleteMovieCountryByMovieId(@RequestParam("movieId") String movieId);
 }

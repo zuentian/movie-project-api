@@ -17,4 +17,6 @@ public interface MovieTypeFeignService {
     void insertMovieType(@RequestBody MovieType movieType);
     @RequestMapping(value = "/MovieType/queryMovieTypeByMovieId",method = RequestMethod.GET)
     List<MovieType> queryMovieTypeByMovieId(@RequestParam("movieId")String movieId);
+    @RequestMapping(value = "/MovieType/deleteMovieTypeByMovieId",method = RequestMethod.GET)
+    int deleteMovieTypeByMovieId(@RequestParam("movieId")String movieId);
 }

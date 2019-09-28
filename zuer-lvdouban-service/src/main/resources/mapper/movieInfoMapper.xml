@@ -9,8 +9,8 @@
         <result column="MOVIE_NAME2" jdbcType="VARCHAR" property="movieName2" />
         <result column="MOVIE_TIME" jdbcType="VARCHAR" property="movieTime" />
         <result column="MOVIE_SHOW_TIME" jdbcType="TIMESTAMP" property="movieShowTime" />
-        <result column="WATCH_AFTER_NUMBER" jdbcType="VARCHAR" property="WatchAfterNumber" />
-        <result column="WATCH_BEFORE_NUMBER" jdbcType="VARCHAR" property="WatchBeforeNumber" />
+        <result column="WATCH_AFTER_NUMBER" jdbcType="VARCHAR" property="watchAfterNumber" />
+        <result column="WATCH_BEFORE_NUMBER" jdbcType="VARCHAR" property="watchBeforeNumber" />
         <result column="SCORE" jdbcType="VARCHAR" property="score" />
         <result column="MOVIE_DESCRIPTION" jdbcType="CLOB" property="movieDescription" />
         <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />

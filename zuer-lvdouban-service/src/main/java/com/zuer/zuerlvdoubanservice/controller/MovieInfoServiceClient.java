@@ -43,4 +43,11 @@ public class MovieInfoServiceClient {
     public MovieInfo queryMovieInfoById(@RequestParam("id") String id){
         return movieInfoService.queryMovieInfoById(id);
     }
+
+
+    @RequestMapping(value = "/updateMovieInfoById",method = RequestMethod.POST)
+    public void updateMovieInfoById(@RequestBody MovieInfo movieInfo){
+        System.out.println("1111111111111"+movieInfo);
+        movieInfoService.updateByPrimaryKeySelective(movieInfo);
+    }
 }

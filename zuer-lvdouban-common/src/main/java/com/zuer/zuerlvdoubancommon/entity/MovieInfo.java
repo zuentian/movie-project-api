@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Table(name = "MOVIE_INFO")
 public class MovieInfo {
 
+    @Id
     private String id;
 
     @Column(name = "MOVIE_NAME")
@@ -32,10 +34,10 @@ public class MovieInfo {
     private Date movieShowTime;
 
     @Column(name = "WATCH_AFTER_NUMBER")
-    private String WatchAfterNumber;
+    private String watchAfterNumber;
 
-    @Column(name = "WATCH_AFTER_NUMBER")
-    private String WatchBeforeNumber;
+    @Column(name = "WATCH_BEFORE_NUMBER")
+    private String watchBeforeNumber;
 
     private String score;
 

@@ -34,4 +34,12 @@ public class MovieRelNameServiceClient {
         example.createCriteria().andEqualTo("movieId",movieId);
         return movieRelNameService.selectByExample(example);
     }
+
+
+    @RequestMapping(value = "/deleteMovieRelNameByMovieId",method = RequestMethod.GET)
+    public int deleteMovieRelNameByMovieId(@RequestParam("movieId")String movieId){
+        Example example=new Example(MovieRelName.class);
+        example.createCriteria().andEqualTo("movieId",movieId);
+        return movieRelNameService.deleteByExample(example);
+    }
 }

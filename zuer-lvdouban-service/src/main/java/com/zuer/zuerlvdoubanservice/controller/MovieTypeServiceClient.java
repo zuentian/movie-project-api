@@ -32,4 +32,11 @@ public class MovieTypeServiceClient {
         example.createCriteria().andEqualTo("movieId",movieId);
         return movieTypeService.selectByExample(example);
     }
+
+    @RequestMapping(value = "/deleteMovieTypeByMovieId",method = RequestMethod.GET)
+    public int deleteMovieTypeByMovieId(@RequestParam("movieId")String movieId){
+        Example example=new Example(MovieType.class);
+        example.createCriteria().andEqualTo("movieId",movieId);
+        return movieTypeService.deleteByExample(example);
+    }
 }

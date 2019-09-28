@@ -21,4 +21,6 @@ public interface MovieInfoFeignService {
     int queryMovieInfoByParamCount(@RequestBody Map<String, Object> map);
     @RequestMapping(value = "/MovieInfo/queryMovieInfoById",method = RequestMethod.GET)
     MovieInfo queryMovieInfoById(@RequestParam("id") String id);
+    @RequestMapping(value = "/MovieInfo/updateMovieInfoById",method = RequestMethod.POST)
+    void updateMovieInfoById(@RequestBody MovieInfo movieInfo);
 }
