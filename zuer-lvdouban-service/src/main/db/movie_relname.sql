@@ -8,11 +8,7 @@ create table MOVIE_RELNAME
     CRT_TIME TIMESTAMP(6)  default NULL,
     CRT_USER VARCHAR2(255) default NULL,
     CRT_NAME VARCHAR2(255) default NULL,
-    CRT_HOST VARCHAR2(255) default NULL,
-    UPD_TIME TIMESTAMP(6)  default NULL,
-    UPD_USER VARCHAR2(255) default NULL,
-    UPD_NAME VARCHAR2(255) default NULL,
-    UPD_HOST VARCHAR2(255) default NULL
+    CRT_HOST VARCHAR2(255) default NULL
 )
 /
 

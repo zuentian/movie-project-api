@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,17 +38,18 @@ public class MovieInfoController {
     private MovieCountryFeignService movieCountryFeignService;
 
     @RequestMapping(value = "/insertMovieInfo",method = RequestMethod.POST)
-    public void insertMovieInfo(@RequestParam Map<String,Object> param) throws Exception {
+    public void insertMovieInfo(@RequestParam Map<String,Object> param,@RequestParam("files") MultipartFile[] files) throws Exception {
+        System.out.println(files);
         String info=param.get("movieInfo")==null?null:(String) param.get("movieInfo");
         ObjectMapper mapper = new ObjectMapper();
         MovieInfo movieInfo= mapper.readValue(info, MovieInfo.class);
         String id=UUID.randomUUID().toString();
         movieInfo.setId(id);
         EntityUtils.setCreatAndUpdatInfo(movieInfo);
-        movieInfoFeignService.insertMovieInfo(movieInfo);
+        //movieInfoFeignService.insertMovieInfo(movieInfo);
 
         String movieRelName=param.get("movieRelName")==null?null:(String)param.get("movieRelName");
-        if(movieRelName!=null){
+        if(StringUtils.isNotBlank(movieRelName)){
             String[] movieRelNames = movieRelName.trim().split(",");
             for(String str:movieRelNames){
                 MovieRelName movieRelNameNew=new MovieRelName();
@@ -55,12 +57,13 @@ public class MovieInfoController {
                 movieRelNameNew.setMovieId(id);
                 movieRelNameNew.setName(str);
                 EntityUtils.setCreateInfo(movieRelNameNew);
-                insertMovieRelName(movieRelNameNew);
+                //insertMovieRelName(movieRelNameNew);
             }
         }
 
         String movieType=param.get("movieType")==null?null:(String)param.get("movieType");
-        if(movieType!=null){
+
+        if(StringUtils.isNotBlank(movieType)){
             String[] movieTypes = movieType.trim().split(",");
             for(String str:movieTypes){
                 MovieType movieTypeNew=new MovieType();
@@ -68,12 +71,12 @@ public class MovieInfoController {
                 movieTypeNew.setMovieId(id);
                 movieTypeNew.setType(str);
                 EntityUtils.setCreateInfo(movieTypeNew);
-                insertMovieType(movieTypeNew);
+                //insertMovieType(movieTypeNew);
 
             }
         }
         String movieCountry=param.get("movieCountry")==null?null:(String)param.get("movieCountry");
-        if(movieCountry!=null){
+        if(StringUtils.isNotBlank(movieCountry)){
             String[] movieCountrys = movieCountry.trim().split(",");
             for(String str:movieCountrys){
                 MovieCountry movieCountryNew =new MovieCountry();
@@ -81,7 +84,7 @@ public class MovieInfoController {
                 movieCountryNew.setMovieId(id);
                 movieCountryNew.setCountryCode(str);
                 EntityUtils.setCreateInfo(movieCountryNew);
-                insertMovieCountry(movieCountryNew);
+                //insertMovieCountry(movieCountryNew);
 
             }
         }
@@ -253,4 +256,17 @@ public class MovieInfoController {
         }
 
     }
+
+
+
+    @RequestMapping(value = "/deleteMovieInfoById/{id}",method = RequestMethod.GET)
+    public void deleteMovieInfoById(@PathVariable String id){
+        movieInfoFeignService.deleteMovieInfoById(id);
+        movieRelNameFeignService.deleteMovieRelNameByMovieId(id);//删除电影相关人物
+        movieTypeFeignService.deleteMovieTypeByMovieId(id);//删除电影的类型
+        movieCountryFeignService.deleteMovieCountryByMovieId(id);//删除电影的出品方国家地区
+    }
+
+
+
 }

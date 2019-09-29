@@ -47,7 +47,12 @@ public class MovieInfoServiceClient {
 
     @RequestMapping(value = "/updateMovieInfoById",method = RequestMethod.POST)
     public void updateMovieInfoById(@RequestBody MovieInfo movieInfo){
-        System.out.println("1111111111111"+movieInfo);
         movieInfoService.updateByPrimaryKeySelective(movieInfo);
+    }
+
+
+    @RequestMapping(value = "/deleteMovieInfoById",method = RequestMethod.GET)
+    public void deleteMovieInfoById(@RequestParam("id")  String id){
+        movieInfoService.deleteByPrimaryKey(id);
     }
 }

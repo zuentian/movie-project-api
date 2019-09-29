@@ -23,4 +23,7 @@ public interface MovieInfoFeignService {
     MovieInfo queryMovieInfoById(@RequestParam("id") String id);
     @RequestMapping(value = "/MovieInfo/updateMovieInfoById",method = RequestMethod.POST)
     void updateMovieInfoById(@RequestBody MovieInfo movieInfo);
+
+    @RequestMapping(value = "/MovieInfo/deleteMovieInfoById",method = RequestMethod.GET)
+    void deleteMovieInfoById(@RequestParam("id")  String id);
 }
