@@ -5,48 +5,36 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.Date;
 
 @Data
-@Table(name = "MOVIE_INFO")
-public class MovieInfo {
+@Table(name = "MOVIE_USER")
+public class MovieUser {
 
     @Id
     private String id;
 
-    @Column(name = "MOVIE_NAME")
-    private String movieName;
+    @Column(name = "MOVIE_ID")
+    private String movieId;
 
-    @Column(name = "MOVIE_NAME1")
-    private String movieName1;
-
-    @Column(name = "MOVIE_NAME2")
-    private String movieName2;
-
-
-    @Column(name = "MOVIE_TIME")
-    private String movieTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
-    @Column(name = "MOVIE_SHOW_TIME")
-    private Date movieShowTime;
-
-    @Column(name = "WATCH_AFTER_NUMBER")
-    private Integer watchAfterNumber;
-
-    @Column(name = "WATCH_BEFORE_NUMBER")
-    private Integer watchBeforeNumber;
+    @Column(name = "USER_ID")
+    private String userId;
 
     private String score;
 
-    @Column(name = "PERSON_SCORE_COUNT")
-    private Integer personScoreCount;
+    @Column(name = "SHORT_COMMAND")
+    private String shortCommand;
 
-    @Column(name = "MOVIE_DESCRIPTION",columnDefinition = "CLOB")
-    @Lob
-    private String movieDescription;
+    private String state;
+
+    @Column(name = "WATCH_AFTER_TIME")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+    private Date watchAfterTime;
+
+    @Column(name = "WATCH_BEFORE_TIME")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+    private Date watchBeforeTime;
 
     @Column(name = "crt_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
@@ -61,6 +49,7 @@ public class MovieInfo {
     @Column(name = "crt_host")
     private String crtHost;
 
+
     @Column(name = "upd_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updTime;
@@ -73,6 +62,5 @@ public class MovieInfo {
 
     @Column(name = "upd_host")
     private String updHost;
-
 
 }

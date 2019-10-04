@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -177,10 +178,27 @@ public class MovieInfoController {
         return resultMap;
     }
 
+
+    @RequestMapping(value = "/queryMoviePictureInfoByMovieIdFromSix/{id}",method = RequestMethod.GET)
+    public Map<String,Object> queryMoviePictureInfoByMovieIdFromSix(@PathVariable String id){
+        Map<String,Object> resultMap=new HashMap<String, Object>();
+        //此处查看电影详细信息先展示前六张图片
+        List<MoviePictureInfo> moviePictureInfoList=moviePictureInfoFeignService.queryMoviePictureInfoByMovieIdFromSix(id);
+        int moviePictureCount=moviePictureInfoFeignService.queryMoviePictureInfoByMovieIdCount(id);
+
+        resultMap.put("moviePictureInfoList",moviePictureInfoList);
+        resultMap.put("moviePictureCount",moviePictureCount);
+        return resultMap;
+    }
+    @RequestMapping(value = "/queryMovieBaseInfoById/{id}",method = RequestMethod.GET)
+    public MovieInfo queryMovieBaseInfoById(@PathVariable String id) {
+        return movieInfoFeignService.queryMovieInfoById(id);
+    }
+
     @RequestMapping(value = "/queryMovieInfoById/{id}",method = RequestMethod.GET)
     public Map<String,Object> queryMovieInfoById(@PathVariable String id){
-
         Map<String,Object> resultMap=new HashMap<String, Object>();
+
         MovieInfo movieInfo=movieInfoFeignService.queryMovieInfoById(id);
         resultMap.put("movieInfo",movieInfo);
 
@@ -195,13 +213,6 @@ public class MovieInfoController {
 
         List<MovieType> movieTypeList=movieTypeFeignService.queryMovieTypeByMovieId(id);
         resultMap.put("movieTypeList",movieTypeList);
-
-        //此处查看电影详细信息先展示前六张图片
-        List<MoviePictureInfo> moviePictureInfoList=moviePictureInfoFeignService.queryMoviePictureInfoByMovieIdFromSix(id);
-        int moviePictureCount=moviePictureInfoFeignService.queryMoviePictureInfoByMovieIdCount(id);
-
-        resultMap.put("moviePictureInfoList",moviePictureInfoList);
-        resultMap.put("moviePictureCount",moviePictureCount);
 
 
         return resultMap;
@@ -274,13 +285,27 @@ public class MovieInfoController {
 
 
     @RequestMapping(value = "/deleteMovieInfoById/{id}",method = RequestMethod.GET)
-    public void deleteMovieInfoById(@PathVariable String id){
+    public void deleteMovieInfoById(@PathVariable String id) throws FileNotFoundException {
         movieInfoFeignService.deleteMovieInfoById(id);
         movieRelNameFeignService.deleteMovieRelNameByMovieId(id);//删除电影相关人物
         movieTypeFeignService.deleteMovieTypeByMovieId(id);//删除电影的类型
         movieCountryFeignService.deleteMovieCountryByMovieId(id);//删除电影的出品方国家地区
+
+        List<MoviePictureInfo>  moviePictureInfoList=moviePictureInfoFeignService.queryMoviePictureInfoByMovieId(id);
+        for(MoviePictureInfo moviePictureInfo:moviePictureInfoList){
+            if(UploadFile.deleteFile(moviePictureInfo.getFileUrl())){//删除硬盘中储存的电影海报和剧照
+                moviePictureInfoFeignService.deleteMoviePictureInfoById(moviePictureInfo.getId());//删除电影海报和剧照的所有信息
+            }
+        }
     }
 
+    @RequestMapping(value = "/deletePictureById/{id}",method = RequestMethod.GET)
+    public void deletePictureById(@PathVariable String id) throws FileNotFoundException {
+        MoviePictureInfo moviePictureInfo=moviePictureInfoFeignService.queryMoviePictureInfoById(id);
+        if(UploadFile.deleteFile(moviePictureInfo.getFileUrl())){
+            moviePictureInfoFeignService.deleteMoviePictureInfoById(id);
+        }
+    }
 
     @Value("${local.vueIp}")
     private String vueIp;
@@ -302,12 +327,24 @@ public class MovieInfoController {
                 moviePictureInfo.setMovieId(id);
                 moviePictureInfo.setFileName(file.getOriginalFilename());
                 moviePictureInfo.setType("S");
-                moviePictureInfo.setFileUrl(File.separator+vueIp+ File.separator+ UploadFile.uploadMultipartFile(file,moviePictureId,uploadImagesPath));
+                String path=UploadFile.uploadMultipartFile(file,moviePictureId,uploadImagesPath);
+                moviePictureInfo.setFileUri(File.separator+vueIp+ File.separator+ path);
+                moviePictureInfo.setFileUrl(File.separator+ path);
                 EntityUtils.setCreateInfo(moviePictureInfo);
                 moviePictureInfoFeignService.insertMoviePictureInfo(moviePictureInfo);
             }
         }
 
+    }
+
+
+
+
+    @RequestMapping(value = "/queryMoviePictureByParam",method = RequestMethod.GET)
+    public Map<String,Object> queryMoviePictureByParam(@RequestParam Map<String,Object> param){
+
+        Map<String,Object> resultMap=moviePictureInfoFeignService.queryMoviePictureByParam(param);
+        return resultMap;
     }
 
 }

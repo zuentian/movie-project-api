@@ -9,10 +9,11 @@
         <result column="MOVIE_NAME2" jdbcType="VARCHAR" property="movieName2" />
         <result column="MOVIE_TIME" jdbcType="VARCHAR" property="movieTime" />
         <result column="MOVIE_SHOW_TIME" jdbcType="TIMESTAMP" property="movieShowTime" />
-        <result column="WATCH_AFTER_NUMBER" jdbcType="VARCHAR" property="watchAfterNumber" />
-        <result column="WATCH_BEFORE_NUMBER" jdbcType="VARCHAR" property="watchBeforeNumber" />
+        <result column="WATCH_AFTER_NUMBER" jdbcType="NUMERIC" property="watchAfterNumber" />
+        <result column="WATCH_BEFORE_NUMBER" jdbcType="NUMERIC" property="watchBeforeNumber" />
         <result column="SCORE" jdbcType="VARCHAR" property="score" />
         <result column="MOVIE_DESCRIPTION" jdbcType="CLOB" property="movieDescription" />
+        <result column="PERSON_SCORE_COUNT" jdbcType="NUMERIC" property="personScoreCount" />
         <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
         <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
@@ -119,5 +120,24 @@
 
 
     </select>
+
+    <update id="addWatchBeforeNumber" parameterType="String">
+
+        UPDATE MOVIE_INFO SET WATCH_BEFORE_NUMBER=WATCH_BEFORE_NUMBER+1 WHERE ID=#{id,jdbcType=VARCHAR}
+
+    </update>
+
+    <update id="addWatchAfterNumber" parameterType="String">
+
+        UPDATE MOVIE_INFO SET WATCH_AFTER_NUMBER=WATCH_AFTER_NUMBER+1 WHERE ID=#{id,jdbcType=VARCHAR}
+
+    </update>
+
+    <update id="updateMovieInfoByIdFromScore" parameterType="Object">
+        UPDATE MOVIE_INFO SET
+        SCORE=#{score,jdbcType=VARCHAR},
+        PERSON_SCORE_COUNT=#{personScoreCount,jdbcType=NUMERIC}
+        WHERE ID=#{id,jdbcType=VARCHAR}
+    </update>
 
 </mapper>

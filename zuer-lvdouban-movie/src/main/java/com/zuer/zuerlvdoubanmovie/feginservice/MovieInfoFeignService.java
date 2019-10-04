@@ -1,6 +1,7 @@
 package com.zuer.zuerlvdoubanmovie.feginservice;
 
 import com.zuer.zuerlvdoubancommon.entity.MovieInfo;
+import com.zuer.zuerlvdoubancommon.entity.MovieUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,4 +27,14 @@ public interface MovieInfoFeignService {
 
     @RequestMapping(value = "/MovieInfo/deleteMovieInfoById",method = RequestMethod.GET)
     void deleteMovieInfoById(@RequestParam("id")  String id);
+
+    @RequestMapping(value = "/MovieInfo/addWatchBeforeNumber",method = RequestMethod.GET)
+    void addWatchBeforeNumber(@RequestParam("id")  String id);
+
+    @RequestMapping(value = "/MovieInfo/addWatchAfterNumber",method = RequestMethod.GET)
+    void addWatchAfterNumber(@RequestParam("id")  String id);
+
+    @RequestMapping(value = "/MovieInfo/updateMovieInfoByIdFromScore",method = RequestMethod.GET)
+    void updateMovieInfoByIdFromScore(@RequestParam("id") String id,@RequestParam("score") String score,@RequestParam("personScoreCount") Integer personScoreCount);
+
 }

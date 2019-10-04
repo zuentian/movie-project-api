@@ -29,7 +29,7 @@ public class UploadFile {
         Calendar cal = Calendar.getInstance();
         String year=cal.get(Calendar.YEAR)+"";
         String month=cal.get(Calendar.MONTH)+1<10?"0"+(cal.get(Calendar.MONTH)+1):(cal.get(Calendar.MONTH)+1)+"";
-        String day=cal.get(Calendar.DAY_OF_MONTH)+"";
+        String day=cal.get(Calendar.DAY_OF_MONTH)<10?"0"+cal.get(Calendar.DAY_OF_MONTH):cal.get(Calendar.DAY_OF_MONTH)+"";
         String datePath=year+ File.separator+month+ File.separator+day;
         if (file!=null) {
             String type = null;// 文件类型
@@ -67,17 +67,20 @@ public class UploadFile {
     }
 
     //删除指定路径下的文件
-    public static boolean deleteFile(String path) throws FileNotFoundException {
+    public static boolean deleteFile(String path)  {
 
-        path= ResourceUtils.getURL("classpath:").getPath()+"static"+path;
-        File delFile = new File(path);
-        if(delFile.isFile() && delFile.exists()) {
-            delFile.delete();
+        try {
+            path= ResourceUtils.getURL("classpath:").getPath()+"static"+path;
+
+            File delFile = new File(path);
+            System.out.println("删除文件path:"+path);
+            if(delFile.isFile() && delFile.exists()) {
+                delFile.delete();
+            }
             return true;
-        }else {
+        } catch (FileNotFoundException e) {
             return false;
         }
-
     }
 
 

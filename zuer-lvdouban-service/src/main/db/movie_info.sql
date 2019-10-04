@@ -33,4 +33,9 @@ alter table MOVIE_INFO
     add constraint MOVIE_INFO_PK
         primary key (ID)
 /
+alter table MOVIE_INFO modify (WATCH_AFTER_NUMBER NUMBER(10));
+alter table MOVIE_INFO modify (WATCH_BEFORE_NUMBER NUMBER(10));
+alter table MOVIE_INFO modify WATCH_AFTER_NUMBER default 0;
+alter table MOVIE_INFO modify WATCH_BEFORE_NUMBER default 0;
 
+alter table MOVIE_INFO add( PERSON_SCORE_COUNT NUMBER(10) ) ;

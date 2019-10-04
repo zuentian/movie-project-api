@@ -55,4 +55,22 @@ public class MovieInfoServiceClient {
     public void deleteMovieInfoById(@RequestParam("id")  String id){
         movieInfoService.deleteByPrimaryKey(id);
     }
+
+
+    @RequestMapping(value = "/addWatchBeforeNumber",method = RequestMethod.GET)
+    public void addWatchBeforeNumber(@RequestParam("id")  String id){
+        movieInfoService.addWatchBeforeNumber(id);
+    }
+
+    @RequestMapping(value = "/addWatchAfterNumber",method = RequestMethod.GET)
+    public void addWatchAfterNumber(@RequestParam("id")  String id){
+        movieInfoService.addWatchAfterNumber(id);
+    }
+
+    @RequestMapping(value = "/updateMovieInfoByIdFromScore",method = RequestMethod.GET)
+    public void updateMovieInfoByIdFromScore(@RequestParam("id") String id,
+                                             @RequestParam("score") String score,
+                                             @RequestParam("personScoreCount") Integer personScoreCount){
+        movieInfoService.updateMovieInfoByIdFromScore(id,score,personScoreCount);
+    }
 }

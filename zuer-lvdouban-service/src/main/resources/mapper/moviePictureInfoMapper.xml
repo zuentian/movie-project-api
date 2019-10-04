@@ -7,6 +7,7 @@
         <result column="MOVIE_ID" jdbcType="VARCHAR" property="movieId" />
         <result column="FILE_NAME" jdbcType="VARCHAR" property="fileName" />
         <result column="FILE_URL" jdbcType="VARCHAR" property="fileUrl" />
+        <result column="FILE_URI" jdbcType="VARCHAR" property="fileUri" />
         <result column="TYPE" jdbcType="VARCHAR" property="type" />
         <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />

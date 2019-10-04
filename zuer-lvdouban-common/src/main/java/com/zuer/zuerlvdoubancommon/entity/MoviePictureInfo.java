@@ -24,6 +24,9 @@ public class MoviePictureInfo {
     @Column(name = "FILE_URL")
     private String fileUrl;
 
+    @Column(name="File_URI")
+    private String fileUri;
+
     private String type;
 
 
