@@ -1,6 +1,7 @@
 package com.zuer.zuerlvdoubanservice.controller;
 
 import com.zuer.zuerlvdoubancommon.entity.MovieInfo;
+import com.zuer.zuerlvdoubancommon.entity.MovieUser;
 import com.zuer.zuerlvdoubanservice.service.MovieInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -67,10 +68,21 @@ public class MovieInfoServiceClient {
         movieInfoService.addWatchAfterNumber(id);
     }
 
+    @RequestMapping(value = "/delWatchBeforeNumber",method = RequestMethod.GET)
+    public void delWatchBeforeNumber(@RequestParam("id")  String id){
+        movieInfoService.delWatchBeforeNumber(id);
+    }
+
+    @RequestMapping(value = "/delWatchAfterNumber",method = RequestMethod.GET)
+    public void delWatchAfterNumber(@RequestParam("id")  String id){
+        movieInfoService.delWatchAfterNumber(id);
+    }
     @RequestMapping(value = "/updateMovieInfoByIdFromScore",method = RequestMethod.GET)
     public void updateMovieInfoByIdFromScore(@RequestParam("id") String id,
                                              @RequestParam("score") String score,
                                              @RequestParam("personScoreCount") Integer personScoreCount){
         movieInfoService.updateMovieInfoByIdFromScore(id,score,personScoreCount);
     }
+
+
 }

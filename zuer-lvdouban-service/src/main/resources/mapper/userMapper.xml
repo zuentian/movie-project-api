@@ -15,6 +15,7 @@
         <result column="sex" jdbcType="VARCHAR" property="sex" />
         <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="AVATAR" jdbcType="VARCHAR" property="avatar" />
         <result column="NAME_BAK" jdbcType="VARCHAR" property="nameBak" />
         <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />

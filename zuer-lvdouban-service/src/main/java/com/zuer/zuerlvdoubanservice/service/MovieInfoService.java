@@ -20,4 +20,8 @@ public interface MovieInfoService extends Mapper<MovieInfo> {
     void addWatchAfterNumber(String id);
 
     void updateMovieInfoByIdFromScore(@Param("id") String id, @Param("score")String score, @Param("personScoreCount") Integer personScoreCount);
+
+    void delWatchBeforeNumber(String id);
+
+    void delWatchAfterNumber(String id);
 }

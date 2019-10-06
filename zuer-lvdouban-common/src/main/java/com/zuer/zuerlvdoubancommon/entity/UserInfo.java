@@ -12,4 +12,5 @@ public class UserInfo {
     public String nameBak;
     private String description;
     private Date updTime;
+    private String avatar;
 }

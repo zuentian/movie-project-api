@@ -20,8 +20,9 @@ public class MovieInfoExp {
     private String movieTime;
     @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
     private Date movieShowTime;
-    private String WatchAfterNumber;
-    private String WatchBeforeNumber;
+    private Integer watchAfterNumber;
+    private Integer watchBeforeNumber;
+    private Integer personScoreCount;
     private String score;
     private String movieDescription;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")

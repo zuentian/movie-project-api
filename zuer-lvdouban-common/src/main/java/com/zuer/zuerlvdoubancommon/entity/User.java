@@ -33,6 +33,8 @@ public class User {
 
     private String sex;
 
+    private String avatar;
+
     private String type;
 
     private String description;

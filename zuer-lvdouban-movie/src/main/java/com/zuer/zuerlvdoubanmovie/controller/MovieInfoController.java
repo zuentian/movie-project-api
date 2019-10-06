@@ -155,7 +155,6 @@ public class MovieInfoController {
         List<MovieInfoExp> movieInfoListExpList=new ArrayList<MovieInfoExp>();
         if(count>0){
             List<MovieInfo> movieInfoList =movieInfoFeignService.queryMovieInfoByParam(map);
-
             movieInfoListExpList=movieInfoList.parallelStream().map(movieInfo -> {
                 MovieInfoExp movieInfoExp=new MovieInfoExp();
                 BeanUtils.copyProperties(movieInfo,movieInfoExp);
@@ -340,7 +339,7 @@ public class MovieInfoController {
 
 
 
-    @RequestMapping(value = "/queryMoviePictureByParam",method = RequestMethod.GET)
+    @RequestMapping(value = "/queryMoviePictureByParam",method = RequestMethod.POST)
     public Map<String,Object> queryMoviePictureByParam(@RequestParam Map<String,Object> param){
 
         Map<String,Object> resultMap=moviePictureInfoFeignService.queryMoviePictureByParam(param);

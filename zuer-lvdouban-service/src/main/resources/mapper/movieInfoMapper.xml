@@ -42,6 +42,7 @@
         MI.MOVIE_SHOW_TIME,
         MI.WATCH_AFTER_NUMBER,
         MI.WATCH_BEFORE_NUMBER,
+        MI.PERSON_SCORE_COUNT,
         MI.SCORE,
         MI.CRT_TIME,
         MI.CRT_USER,
@@ -132,6 +133,20 @@
         UPDATE MOVIE_INFO SET WATCH_AFTER_NUMBER=WATCH_AFTER_NUMBER+1 WHERE ID=#{id,jdbcType=VARCHAR}
 
     </update>
+
+    <update id="delWatchBeforeNumber" parameterType="String">
+
+        UPDATE MOVIE_INFO SET WATCH_BEFORE_NUMBER=WATCH_BEFORE_NUMBER-1 WHERE ID=#{id,jdbcType=VARCHAR}
+
+    </update>
+
+    <update id="delWatchAfterNumber" parameterType="String">
+
+        UPDATE MOVIE_INFO SET WATCH_AFTER_NUMBER=WATCH_AFTER_NUMBER-1 WHERE ID=#{id,jdbcType=VARCHAR}
+
+    </update>
+
+
 
     <update id="updateMovieInfoByIdFromScore" parameterType="Object">
         UPDATE MOVIE_INFO SET

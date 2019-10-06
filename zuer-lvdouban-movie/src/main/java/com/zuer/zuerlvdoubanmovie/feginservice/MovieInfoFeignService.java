@@ -37,4 +37,10 @@ public interface MovieInfoFeignService {
     @RequestMapping(value = "/MovieInfo/updateMovieInfoByIdFromScore",method = RequestMethod.GET)
     void updateMovieInfoByIdFromScore(@RequestParam("id") String id,@RequestParam("score") String score,@RequestParam("personScoreCount") Integer personScoreCount);
 
+
+    @RequestMapping(value = "/MovieInfo/delWatchBeforeNumber",method = RequestMethod.GET)
+    void delWatchBeforeNumber(@RequestParam("id")  String id);
+
+    @RequestMapping(value = "/MovieInfo/delWatchAfterNumber",method = RequestMethod.GET)
+    void delWatchAfterNumber(@RequestParam("id")  String id);
 }
