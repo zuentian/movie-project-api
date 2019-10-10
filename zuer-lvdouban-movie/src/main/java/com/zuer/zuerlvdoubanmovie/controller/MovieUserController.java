@@ -1,20 +1,15 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
-import com.zuer.zuerlvdoubancommon.entity.MovieInfo;
 import com.zuer.zuerlvdoubancommon.entity.MovieUser;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
-import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import com.zuer.zuerlvdoubancommon.vo.MovieScoreSection;
 import com.zuer.zuerlvdoubancommon.vo.MovieUserCommand;
-import com.zuer.zuerlvdoubanmovie.feginservice.MovieInfoFeignService;
 import com.zuer.zuerlvdoubanmovie.feginservice.MovieUserFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +23,6 @@ public class MovieUserController {
 
     @Autowired
     private MovieUserFeignService movieUserFeignService;
-    @Autowired
-    private MovieInfoFeignService movieInfoFeignService;
 
     @Autowired
     private MovieCalculateScoreController movieCalculateScoreController;
@@ -82,7 +75,6 @@ public class MovieUserController {
         String userId = param.get("userId") == null ? null : (String) param.get("userId");
         List<MovieUser> movieUserList = movieUserFeignService.queryMovieUserByMovieIdAndUserId(movieId, userId);
         if (movieUserList != null && movieUserList.size() > 0) {
-            String state = movieUserList.get(0).getState();
             int i = movieUserFeignService.deleteMovieUserByMovieIdAndUserId(movieId, userId);
             if (i > 0) {
                 //重新为该电影计算想看人数和看过人数
