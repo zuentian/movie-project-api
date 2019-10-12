@@ -42,4 +42,9 @@ public interface UserFeignService {
 
     @RequestMapping(value = "/User/queryUserMemberByGroupId",method = RequestMethod.GET)
     List<User> queryUserMemberByGroupId(@RequestParam("groupId") String groupId);
+    @RequestMapping(value = "/User/getUserAvatarUrl",method = RequestMethod.GET)
+    String getUserAvatarUrl(@RequestParam("id") String id);
+
+    @RequestMapping(value = "/User/updateUserAvatarById",method = RequestMethod.POST)
+    void updateUserAvatarById(@RequestBody User user);
 }

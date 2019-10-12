@@ -67,3 +67,4 @@ INSERT INTO  USER_INFO (ID, USERNAME, PASSWORD, NAME, BIRTHDAY, ADDRESS, MOBILE_
 
 alter table USER_INFO add( avatar VARCHAR(500) default NULL) ;
 
+alter table USER_INFO add( url VARCHAR(500) default NULL) ;

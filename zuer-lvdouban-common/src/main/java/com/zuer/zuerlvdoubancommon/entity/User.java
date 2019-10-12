@@ -35,6 +35,8 @@ public class User {
 
     private String avatar;
 
+    private String url;
+
     private String type;
 
     private String description;

@@ -34,9 +34,14 @@ public class UploadFile {
         if (file!=null) {
             String type = null;// 文件类型
             String fileName = file.getOriginalFilename();// 文件原名称
+            System.out.println("文件原名称:"+fileName);
             // 判断文件类型
-            type = fileName.indexOf(".")!=-1?fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()):null;
-            if (type!=null) {// 判断文件类型是否为空
+            if("blob".equals(fileName) ){//可能是前端截取生成的图片
+                type="jpg";
+            }else{
+                type = fileName.indexOf(".")!=-1?fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()):null;
+            }
+            if (type!=null){// 判断文件类型是否为空
 
                 File path=new File(ResourceUtils.getURL("classpath:").getPath());
                 if(!path.exists()){

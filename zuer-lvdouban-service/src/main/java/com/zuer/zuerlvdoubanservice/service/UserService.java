@@ -11,4 +11,6 @@ public interface UserService extends Mapper<User> {
     List<User> queryUserLeaderByGroupId(String groupId);
 
     List<User> queryUserMemberByGroupId(String groupId);
+
+    String getUserAvatarUrl(String id);
 }

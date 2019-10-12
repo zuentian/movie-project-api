@@ -6,6 +6,7 @@ import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.*;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.utils.TreeUtil;
+import com.zuer.zuerlvdoubancommon.utils.UploadFile;
 import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import com.zuer.zuerlvdoubancommon.vo.EntireUser;
 import com.zuer.zuerlvdoubancommon.vo.MenuTree;
@@ -14,9 +15,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,6 +31,7 @@ import java.util.stream.Collectors;
  */
 @EnableAutoConfiguration
 @RequestMapping(value = "/UserController")
+@PropertySource("classpath:avatarUpload.properties")
 @RestController
 public class UserController {
 
@@ -246,5 +253,26 @@ public class UserController {
                 userGroupMemberFeignService.insertUserGroupMember(userGroupMember);
             }
         }
+    }
+
+    @Value("${local.vueIp}")
+    private String vueIp;
+    @Value("${local.uploadImagesPath}")
+    private String uploadImagesPath;
+
+    @RequestMapping(value="/avatarUpload", method= RequestMethod.POST)
+    public String avatarUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
+        String id=request.getParameter("id");
+        String url=userFeignService.getUserAvatarUrl(id);
+        if(url==null||UploadFile.deleteFile(url)){
+            User user=new User();
+            user.setId(id);
+            String path=UploadFile.uploadMultipartFile(file,UUID.randomUUID().toString(),uploadImagesPath);
+            user.setAvatar(File.separator+vueIp+ File.separator+ path);
+            user.setUrl(File.separator+ path);
+            userFeignService.updateUserAvatarById(user);
+            return user.getAvatar();
+        }
+        return null;
     }
 }

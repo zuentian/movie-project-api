@@ -115,4 +115,14 @@ public class UserServiceClient  {
         return userService.queryUserMemberByGroupId(groupId);
     }
 
+    @RequestMapping(value = "/getUserAvatarUrl",method = RequestMethod.GET)
+    public String getUserAvatarUrl(@RequestParam("id") String id){
+        return userService.getUserAvatarUrl(id);
+    }
+
+
+    @RequestMapping(value = "/updateUserAvatarById",method = RequestMethod.POST)
+    public void updateUserAvatarById(@RequestBody User user){
+        userService.updateByPrimaryKeySelective(user);
+    }
 }

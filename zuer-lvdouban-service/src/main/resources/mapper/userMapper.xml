@@ -16,6 +16,7 @@
         <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="description" jdbcType="VARCHAR" property="description" />
         <result column="AVATAR" jdbcType="VARCHAR" property="avatar" />
+        <result column="URL" jdbcType="VARCHAR" property="url" />
         <result column="NAME_BAK" jdbcType="VARCHAR" property="nameBak" />
         <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
@@ -61,6 +62,14 @@
         on  ug.USER_ID=u.ID
         where
         ug.GROUP_ID=#{groupId,jdbcType=VARCHAR}
+
+    </select>
+
+    <select id="getUserAvatarUrl" parameterType="String" resultType="String">
+
+        SELECT URL FROM USER_INFO
+        WHERE
+        ID=#{id,jdbcType=VARCHAR}
 
     </select>
 </mapper>
