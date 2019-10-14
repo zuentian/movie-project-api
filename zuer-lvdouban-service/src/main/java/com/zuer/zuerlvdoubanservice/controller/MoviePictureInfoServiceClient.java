@@ -48,6 +48,7 @@ public class MoviePictureInfoServiceClient {
     @RequestMapping(value = "/queryMoviePictureInfoByMovieId",method = RequestMethod.GET)
     public List<MoviePictureInfo> queryMoviePictureInfoByMovieId(@RequestParam("movieId")  String movieId){
         Example example=new Example(MoviePictureInfo.class);
+        example.setOrderByClause("CRT_TIME DESC");//实现排序
         example.createCriteria().andEqualTo("movieId",movieId);
         return moviePictureInfoService.selectByExample(example);
 

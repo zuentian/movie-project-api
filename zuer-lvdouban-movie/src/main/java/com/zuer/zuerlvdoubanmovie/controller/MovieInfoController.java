@@ -346,4 +346,37 @@ public class MovieInfoController {
         return resultMap;
     }
 
+
+
+    @RequestMapping(value="/moviePictureBillUpload", method= RequestMethod.POST)
+    public String moviePictureBillUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
+        String movieId=request.getParameter("id");
+        String name=request.getParameter("name");
+
+        //上传新的海报不用删除原来的海报
+
+        MoviePictureInfo moviePictureInfo=new MoviePictureInfo();
+        String id=UUID.randomUUID().toString();
+
+        moviePictureInfo.setId(id);
+        moviePictureInfo.setMovieId(movieId);
+        moviePictureInfo.setType("B");
+        moviePictureInfo.setFileName(name);
+        String path=UploadFile.uploadMultipartFile(file,id,uploadImagesPath);
+        moviePictureInfo.setFileUri(File.separator+vueIp+ File.separator+ path);
+        moviePictureInfo.setFileUrl(File.separator+ path);
+        EntityUtils.setCreateInfo(moviePictureInfo);
+        moviePictureInfoFeignService.insertMoviePictureInfo(moviePictureInfo);
+        return moviePictureInfo.getFileUri();
+
+    }
+    @RequestMapping(value = "/queryMoviePictureBillOne/{id}",method = RequestMethod.GET)
+    public MoviePictureInfo queryMoviePictureBillOne(@PathVariable String id)  {
+         List<MoviePictureInfo> moviePictureInfoList=moviePictureInfoFeignService.queryMoviePictureInfoByMovieId(id);
+         if(null!=moviePictureInfoList&&moviePictureInfoList.size()>0){
+             return moviePictureInfoList.get(0);
+         }
+         return new MoviePictureInfo();
+    }
+
 }
