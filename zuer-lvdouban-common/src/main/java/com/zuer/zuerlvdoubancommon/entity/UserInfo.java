@@ -13,4 +13,5 @@ public class UserInfo {
     private String description;
     private Date updTime;
     private String avatar;
+    private String level;
 }
