@@ -173,6 +173,16 @@ public class UserController {
         DefaultPasswordService defaultPasswordService=new DefaultPasswordService();
         String password = defaultPasswordService.encryptPassword(user.getPassword());
         user.setPassword(password);
+
+        List<DictValue> dictValueList=dictFeignService.queryDictByDictType("AVATARSYSTEM");
+        if(dictValueList!=null){
+            for(DictValue dictValue:dictValueList){
+                if(user.getSex().equals(dictValue.getValue())){
+                    user.setAvatar(File.separator+vueIp+dictValue.getLabel());
+                }
+            }
+        }
+
         EntityUtils.setCreatAndUpdatInfo(user);
         userFeignService.insertUser(user);
 

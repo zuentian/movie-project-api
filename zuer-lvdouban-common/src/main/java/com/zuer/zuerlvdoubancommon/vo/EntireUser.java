@@ -14,6 +14,7 @@ public class EntireUser {
     private String image;
     private String nameBak;
     private String avatar;
+    private String level;
     private List<Element> elements;//功能属性
     private List<MenuTree> menuTrees;//菜单树状结构
     private List<RouterTree> routerTrees;//动态路由

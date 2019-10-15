@@ -41,6 +41,10 @@ public class User {
 
     private String description;
 
+
+    @Column(name = "USER_LEVEL")
+    private String level;
+
     @Column(name = "crt_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date crtTime;

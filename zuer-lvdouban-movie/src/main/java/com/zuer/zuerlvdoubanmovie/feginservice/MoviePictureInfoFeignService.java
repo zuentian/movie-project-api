@@ -31,4 +31,7 @@ public interface MoviePictureInfoFeignService {
     Map<String,Object> queryMoviePictureByParam(@RequestBody  Map<String,Object> map);
     @RequestMapping(value = "/MoviePictureInfo/queryMoviePictureInfoById",method = RequestMethod.GET)
     MoviePictureInfo queryMoviePictureInfoById(@RequestParam("id") String id);
+
+    @RequestMapping(value = "/MoviePictureInfo/queryMoviePictureInfoByMovieIdFromType",method = RequestMethod.GET)
+    List<MoviePictureInfo> queryMoviePictureInfoByMovieIdFromType(@RequestParam("movieId")String movieId,@RequestParam("type") String type);
 }

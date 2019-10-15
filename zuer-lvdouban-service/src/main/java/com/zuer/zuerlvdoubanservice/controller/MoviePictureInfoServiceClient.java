@@ -95,4 +95,14 @@ public class MoviePictureInfoServiceClient {
     public MoviePictureInfo queryMoviePictureInfoById(@RequestParam("id") String id){
         return moviePictureInfoService.selectByPrimaryKey(id);
     }
+
+
+    @RequestMapping(value = "/queryMoviePictureInfoByMovieIdFromType",method = RequestMethod.GET)
+    List<MoviePictureInfo> queryMoviePictureInfoByMovieIdFromType(@RequestParam("movieId")String movieId,@RequestParam("type") String type){
+        Example example=new Example(MoviePictureInfo.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("movieId",movieId);
+        criteria.andEqualTo("type",type);
+        return moviePictureInfoService.selectByExample(example);
+    }
 }

@@ -17,6 +17,7 @@
         <result column="description" jdbcType="VARCHAR" property="description" />
         <result column="AVATAR" jdbcType="VARCHAR" property="avatar" />
         <result column="URL" jdbcType="VARCHAR" property="url" />
+        <result column="USER_LEVEL" jdbcType="VARCHAR" property="level" />
         <result column="NAME_BAK" jdbcType="VARCHAR" property="nameBak" />
         <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />

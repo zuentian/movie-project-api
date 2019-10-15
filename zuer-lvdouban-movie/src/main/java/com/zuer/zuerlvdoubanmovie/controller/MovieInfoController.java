@@ -372,7 +372,7 @@ public class MovieInfoController {
     }
     @RequestMapping(value = "/queryMoviePictureBillOne/{id}",method = RequestMethod.GET)
     public MoviePictureInfo queryMoviePictureBillOne(@PathVariable String id)  {
-         List<MoviePictureInfo> moviePictureInfoList=moviePictureInfoFeignService.queryMoviePictureInfoByMovieId(id);
+         List<MoviePictureInfo> moviePictureInfoList=moviePictureInfoFeignService.queryMoviePictureInfoByMovieIdFromType(id,"B");
          if(null!=moviePictureInfoList&&moviePictureInfoList.size()>0){
              return moviePictureInfoList.get(0);
          }
