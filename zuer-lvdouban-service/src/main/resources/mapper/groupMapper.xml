@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zuer.zuerlvdoubanservice.service.GroupService">
+    <resultMap id="BaseResultMap" type="com.zuer.zuerlvdoubancommon.entity.Group">
+
+        <id column="ID" jdbcType="VARCHAR" property="id" />
+        <result column="CODE" jdbcType="VARCHAR" property="code" />
+        <result column="NAME" jdbcType="VARCHAR" property="name" />
+        <result column="PARENT_ID" jdbcType="VARCHAR" property="parentId" />
+        <result column="PATH" jdbcType="VARCHAR" property="path" />
+        <result column="TYPE" jdbcType="VARCHAR" property="type" />
+        <result column="GROUP_TYPE_ID" jdbcType="VARCHAR" property="groupTypeId" />
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+        <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
+        <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
+        <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
+        <result column="crt_host" jdbcType="VARCHAR" property="crtHost" />
+        <result column="upd_time" jdbcType="TIMESTAMP" property="updTime" />
+        <result column="upd_user" jdbcType="VARCHAR" property="updUser" />
+        <result column="upd_name" jdbcType="VARCHAR" property="updName" />
+        <result column="upd_host" jdbcType="VARCHAR" property="updHost" />
+        <result column="attr1" jdbcType="VARCHAR" property="attr1" />
+        <result column="attr2" jdbcType="VARCHAR" property="attr2" />
+        <result column="attr3" jdbcType="VARCHAR" property="attr3" />
+        <result column="attr4" jdbcType="VARCHAR" property="attr4" />
+    </resultMap>
+
+    <select id="queryGroupByUserId" parameterType="String" resultMap="BaseResultMap">
+
+        SELECT gi1.NAME AS NAME,gi1.CODE AS CODE,gt.NAME as GROUP_TYPE_ID  FROM
+
+        (select gi.NAME AS NAME,gi.CODE AS CODE,gi.GROUP_TYPE_ID  from  GROUP_INFO  gi
+        where gi.ID in (
+            select ugl.GROUP_ID from USER_INFO ui
+
+            left join USER_GROUP_LEADER ugl on ui.id=ugl.USER_ID
+            left join USER_GROUP_MEMBER ugm on ui.id=ugm.USER_ID
+            where ui.id=#{userId,jdbcType=VARCHAR}
+        )) gi1
+
+        left join GROUP_TYPE gt on gi1.GROUP_TYPE_ID=gt.ID
+
+    </select>
+
+</mapper>

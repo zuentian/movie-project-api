@@ -46,6 +46,9 @@ public class UserController {
     @Autowired
     private DictFeignService dictFeignService;
 
+    @Autowired
+    private GroupFeignService groupFeignService;
+
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
     @ResponseBody
     public EntireUser getUserInfo(String token) throws Exception {
@@ -86,7 +89,9 @@ public class UserController {
         List<MenuTree> menuTreeList=createrMenuTree(menus,root);
         entireUser.setMenuTrees(menuTreeList);
 
-
+        //获取roles
+        List<Group> groupList=groupFeignService.queryGroupByUserId(userInfo.getId());
+        entireUser.setGroupList(groupList);
 
         List<RouterTree> routerTrees=createrRouterTree(menus,root);
         //因为这是VUE的动态路由，所以开头的path前面都要写先加上“/”
@@ -179,6 +184,7 @@ public class UserController {
             for(DictValue dictValue:dictValueList){
                 if(user.getSex().equals(dictValue.getValue())){
                     user.setAvatar(File.separator+vueIp+dictValue.getLabel());
+                    break;
                 }
             }
         }

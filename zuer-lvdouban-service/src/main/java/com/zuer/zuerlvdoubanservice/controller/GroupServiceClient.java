@@ -56,4 +56,12 @@ public class GroupServiceClient {
         return groupService.deleteByPrimaryKey(id);
     }
 
+
+    @RequestMapping(value = "/queryGroupByUserId",method = RequestMethod.GET)
+    public List<Group> queryGroupByUserId(@RequestParam("userId")String userId){
+        return groupService.queryGroupByUserId(userId);
+    }
+
+
+
 }

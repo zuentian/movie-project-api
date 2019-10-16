@@ -28,4 +28,7 @@ public interface GroupFeignService {
 
     @RequestMapping(value = "/Group/deleteGroupById",method = RequestMethod.GET)
     int deleteGroupById(@RequestParam("id")String id);
+
+    @RequestMapping(value = "/Group/queryGroupByUserId",method = RequestMethod.GET)
+    List<Group> queryGroupByUserId(@RequestParam("userId")String userId);
 }
