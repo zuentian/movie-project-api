@@ -22,21 +22,25 @@ public class MovieChartsController {
     private MovieChartsFeignService movieChartsFeignService;
 
     @RequestMapping(value = "/queryCalendarMovieShowCount",method = RequestMethod.POST)
-    public List<CalendarMovieShowCount> queryCalendarMovieShowCount(@RequestParam Map<String,Object> param) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        int nowYear=c.get(Calendar.YEAR);//当前年份
+    public List<Object[]>  queryCalendarMovieShowCount(@RequestParam Map<String,Object> param) {
+        Calendar car = Calendar.getInstance();
+        car.setTime(new Date());
+        int nowYear=car.get(Calendar.YEAR);//当前年份
 
         String id =(String) param.get("id");
-        int year=param.get("year")==null?nowYear:Integer.valueOf((String)param.get("year"));
+        String year=param.get("year")==null?nowYear+"":(String)param.get("year");
 
         Map<String ,Object> map=new HashMap<String,Object>();
         map.put("userId",id);
-        map.put("stateYear",year+"-01-01");
-        map.put("endYear",(year+1)+"-01-01");
-
+        map.put("year",year);
         List<CalendarMovieShowCount> calendarMovieShowCounts=movieChartsFeignService.queryCalendarMovieShowCount(map);
-        System.out.println("calendarMovieShowCounts"+calendarMovieShowCounts);
-        return null;
+        List<Object[]> list=new ArrayList<Object[]>();
+        for(CalendarMovieShowCount c:calendarMovieShowCounts){
+            Object [] obj=new Object[2];
+            obj[0]=c.getDay();
+            obj[1]=c.getCount();
+            list.add(obj);
+        }
+        return list;
     }
 }

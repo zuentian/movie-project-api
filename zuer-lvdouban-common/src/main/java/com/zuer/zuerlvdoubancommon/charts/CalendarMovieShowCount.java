@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class CalendarMovieShowCount {
 
-    private String count;
+    private Integer count;
     private String day;
 }

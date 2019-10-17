@@ -2,22 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zuer.zuerlvdoubanservice.service.MovieChartsService">
     <resultMap id="CalendarMovieShowCountBaseResultMap" type="com.zuer.zuerlvdoubancommon.charts.CalendarMovieShowCount">
-        <result column="count" jdbcType="VARCHAR" property="count" />
+        <result column="count" jdbcType="NUMERIC" property="count" />
         <result column="day" jdbcType="VARCHAR" property="day" />
     </resultMap>
 
     <!--查询一年之中每一天的观影量-->
     <select id="queryCalendarMovieShowCount" parameterType="java.util.Map" resultMap="CalendarMovieShowCountBaseResultMap">
-
-        select count(m.MOVIE_ID) as count,d1.daylist as day from MOVIE_USER m right join
-        (SELECT to_char(TO_DATE(#{stateYear,jdbcType=VARCHAR}, 'yyyy-MM-dd') + ROWNUM - 1,'yyyy-MM-dd') as daylist
-        FROM  DUAL
-        CONNECT BY ROWNUM &lt;=
-        to_date(#{endYear,jdbcType=VARCHAR}, 'yyyy-MM-dd') -
-        to_date(#{stateYear,jdbcType=VARCHAR}, 'yyyy-MM-dd')) d1 on  to_char(m.UPD_TIME,'yyyy-MM-dd')=d1.daylist
-        and m.USER_ID=#{userId,jdbcType=VARCHAR} and m.STATE='2'
-        group by daylist
-        order by daylist desc ;
+        select count(*) as count ,day from (
+        select to_char(UPD_TIME,'yyyy-MM-dd') as day from MOVIE_USER where STATE='2' and USER_ID=#{userId,jdbcType=VARCHAR}
+        and to_char(UPD_TIME,'yyyy')=#{year,jdbcType=VARCHAR}) A
+        group by A.day
 
     </select>
 </mapper>
