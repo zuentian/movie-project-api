@@ -1,5 +1,6 @@
 package com.zuer.zuerlvdoubancommon.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,7 +12,8 @@ public class UserInfo {
     public String name;
     public String nameBak;
     private String description;
-    private Date updTime;
     private String avatar;
     private String level;
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+    private Date crtTime;
 }
