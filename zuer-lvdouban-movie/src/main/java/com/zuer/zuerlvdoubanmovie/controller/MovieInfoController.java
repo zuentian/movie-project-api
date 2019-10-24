@@ -226,11 +226,10 @@ public class MovieInfoController {
         EntityUtils.setUpdatedInfo(movieInfo);
         movieInfoFeignService.updateMovieInfoById(movieInfo);
         int count=0;
-
         count=movieRelNameFeignService.deleteMovieRelNameByMovieId(movieInfo.getId());
         if(count>=0){
             String movieRelName=param.get("movieRelName")==null?null:(String)param.get("movieRelName");
-            if(movieRelName!=null){
+            if(StringUtils.isNotBlank(movieRelName)){
                 String[] movieRelNames = movieRelName.trim().split(",");
                 for(String str:movieRelNames){
                     MovieRelName movieRelNameNew=new MovieRelName();
