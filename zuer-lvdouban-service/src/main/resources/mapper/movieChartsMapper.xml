@@ -29,7 +29,7 @@
         WHERE MT.MOVIE_ID IN (
             SELECT MI.ID FROM MOVIE_USER MU LEFT JOIN MOVIE_INFO MI ON MI.ID=MU.MOVIE_ID
 
-            WHERE MU.USER_ID=#{userId,jdbcType=VARCHAR}
+            WHERE MU.USER_ID=#{userId,jdbcType=VARCHAR} AND MU.STATE='2'
         )
         GROUP BY MT.TYPE order by count
 
@@ -38,7 +38,7 @@
     <select id="queryPieShowMovieYearCount" parameterType="String" resultMap="PieShowMovieYearCountBaseResultMap">
 
         SELECT TO_CHAR(MOVIE_SHOW_TIME,'YYYY') year FROM MOVIE_INFO WHERE ID IN (
-        SELECT MOVIE_ID FROM MOVIE_USER WHERE USER_ID=#{userId,jdbcType=VARCHAR}
+        SELECT MOVIE_ID FROM MOVIE_USER WHERE USER_ID=#{userId,jdbcType=VARCHAR} AND STATE='2'
         )
 
     </select>

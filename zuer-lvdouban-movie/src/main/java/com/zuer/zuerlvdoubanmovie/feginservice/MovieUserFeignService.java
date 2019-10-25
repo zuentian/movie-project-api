@@ -43,5 +43,6 @@ public interface MovieUserFeignService {
     @RequestMapping(value = "/MovieUser/queryShortCommandByMovieId",method = RequestMethod.GET)
     List<MovieUserCommand> queryShortCommandByMovieId(@RequestParam("movieId")String movieId);
 
-
+    @RequestMapping(value = "/MovieUser/queryMovieUserCountByUserIdFromState",method = RequestMethod.GET)
+    int queryMovieUserCountByUserIdFromState(@RequestParam("userId")String userId, @RequestParam("state")String state);
 }
