@@ -10,10 +10,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/MovieUserController")
@@ -110,4 +107,16 @@ public class MovieUserController {
         String movieId = param.get("movieId") == null ? null : (String) param.get("movieId");
         return movieUserFeignService.queryShortCommandByMovieId(movieId);
     }
+
+    @RequestMapping(value = "/queryWatchMovieCount/{id}", method = RequestMethod.GET)
+    public Map<String,Object> queryWatchMovieCount(@PathVariable String id) {
+        Map<String,Object> resultMap=new HashMap<String, Object>();
+        int watchBeforeCount = movieUserFeignService.queryMovieUserCountByUserIdFromState(id,"1");
+        int watchAfterCount = movieUserFeignService.queryMovieUserCountByUserIdFromState(id,"2");
+        resultMap.put("watchBeforeCount",watchBeforeCount);
+        resultMap.put("watchAfterCount",watchAfterCount);
+        return resultMap;
+    }
+
+
 }

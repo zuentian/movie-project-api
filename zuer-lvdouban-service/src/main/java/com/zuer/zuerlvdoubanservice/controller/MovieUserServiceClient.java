@@ -91,4 +91,13 @@ public class MovieUserServiceClient {
     public List<MovieUserCommand> queryShortCommandByMovieId(@RequestParam("movieId")String movieId){
         return movieUserService.queryShortCommandByMovieId(movieId);
     }
+
+    @RequestMapping(value = "/queryMovieUserCountByUserIdFromState",method = RequestMethod.GET)
+    public int queryMovieUserCountByUserIdFromState(@RequestParam("userId")String userId, @RequestParam("state")String state){
+        Example example=new Example(MovieUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId",userId);
+        criteria.andEqualTo("state",state);
+        return movieUserService.selectCountByExample(example);
+    }
 }
