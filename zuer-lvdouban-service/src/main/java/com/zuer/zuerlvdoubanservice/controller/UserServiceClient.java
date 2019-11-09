@@ -38,6 +38,8 @@ public class UserServiceClient  {
             userInfo=new UserInfo();
             BeanUtils.copyProperties(user,userInfo);
         }
+        System.out.println("UserInfo-------"+user);
+        System.out.println("UserInfo---------"+userInfo);
         return  userInfo;
     }
 
