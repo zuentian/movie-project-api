@@ -21,6 +21,8 @@ public class DemoServiceClient {
 
     @RequestMapping(value = "/query",method = RequestMethod.GET)
     public List<Demo> query(){
-        return demoService.selectAll();
+        List<Demo> demoList=demoService.selectAll();
+        System.out.println("测试demoList："+demoList);
+        return demoList;
     }
 }

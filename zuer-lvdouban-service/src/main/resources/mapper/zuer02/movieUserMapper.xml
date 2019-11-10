@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zuer.zuerlvdoubanservice.service.MovieUserService">
+    <resultMap id="BaseResultMap" type="com.zuer.zuerlvdoubancommon.entity.MovieUser">
+        <id column="ID" jdbcType="VARCHAR" property="id" />
+        <result column="MOVIE_ID" jdbcType="VARCHAR" property="movieId" />
+        <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+        <result column="SCORE" jdbcType="VARCHAR" property="score" />
+        <result column="SHORT_COMMAND" jdbcType="CLOB" property="shortCommand" />
+        <result column="WATCH_AFTER_TIME" jdbcType="TIMESTAMP" property="watchAfterTime" />
+        <result column="WATCH_BEFORE_TIME" jdbcType="TIMESTAMP" property="watchBeforeTime" />
+        <result column="STATE" jdbcType="VARCHAR" property="state" />
+        <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
+        <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
+        <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
+        <result column="crt_host" jdbcType="VARCHAR" property="crtHost" />
+        <result column="upd_time" jdbcType="TIMESTAMP" property="updTime" />
+        <result column="upd_user" jdbcType="VARCHAR" property="updUser" />
+        <result column="upd_name" jdbcType="VARCHAR" property="updName" />
+        <result column="upd_host" jdbcType="VARCHAR" property="updHost" />
+    </resultMap>
+
+    <resultMap id="BaseResultMapShortCommand" type="com.zuer.zuerlvdoubancommon.vo.MovieUserCommand">
+        <result column="MOVIE_ID" jdbcType="VARCHAR" property="movieId" />
+        <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+        <result column="SCORE" jdbcType="NUMERIC" property="score" />
+        <result column="SHORT_COMMAND" jdbcType="CLOB" property="shortCommand" />
+        <result column="WATCH_AFTER_TIME" jdbcType="TIMESTAMP" property="watchAfterTime" />
+        <result column="WATCH_BEFORE_TIME" jdbcType="TIMESTAMP" property="watchBeforeTime" />
+        <result column="STATE" jdbcType="VARCHAR" property="state" />
+        <result column="AVATAR" jdbcType="VARCHAR" property="avatar" />
+        <result column="NAME" jdbcType="VARCHAR" property="name" />
+    </resultMap>
+
+    <select id="queryMovieUserScoreCountByMovieIdAndScore" parameterType="String" resultType="Integer">
+
+        SELECT COUNT(*) FROM MOVIE_USER WHERE
+        MOVIE_ID=#{movieId,jdbcType=VARCHAR}
+        AND SCORE=#{score,jdbcType=VARCHAR}
+        AND STATE='2'
+
+    </select>
+
+    <select id="queryShortCommandByMovieId" parameterType="String" resultMap="BaseResultMapShortCommand">
+
+        SELECT
+        MU.MOVIE_ID,
+        MU.USER_ID,
+        MU.STATE,
+        TO_NUMBER(MU.SCORE) AS SCORE,
+        MU.SHORT_COMMAND,
+        UI.NAME,
+        UI.AVATAR,
+        MU.WATCH_AFTER_TIME,
+        MU.WATCH_BEFORE_TIME
+        FROM MOVIE_USER MU
+        LEFT JOIN USER_INFO UI ON MU.USER_ID=UI.ID
+        WHERE MOVIE_ID=#{movieId,jdbcType=VARCHAR}
+        AND STATE='2'
+
+    </select>
+
+</mapper>

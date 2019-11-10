@@ -30,12 +30,17 @@ public class ZuerLvdoubanAuthApplicationTests {
 
         （1）缓存机制：将查询结果保存到内存中
 
-        （2）内存饱满，需要移出时，MyBatis就会自动将内存中的内容进行移除，但是文件很重要，不能，此时就需要进行序列化，以文件的形式将内容从内存保存到硬盘上，一个内容保存成文件的读写，必须实现序列化。
+        （2）内存饱满，需要移出时，MyBatis就会自动将内存中的内容进行移除，
+        但是文件很重要，不能，此时就需要进行序列化，以文件的形式将内容从内存保存到硬盘上，
+        一个内容保存成文件的读写，必须实现序列化。
         **/
         System.out.println("第一次查询数据库");
         System.out.println(demoController.query());
         System.out.println("第二次查询数据库");
         System.out.println(demoController.query());
+        /*
+        如果强行手动在数据库中修改数据，查询的时候依然还是要取缓存，所以采用二级缓存就不要手动数据库
+         */
     }
 
 }

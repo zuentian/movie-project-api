@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zuer.zuerlvdoubanservice.service.UserService">
+    <resultMap id="BaseResultMap" type="com.zuer.zuerlvdoubancommon.entity.User">
+
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="birthday" jdbcType="VARCHAR" property="birthday" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+        <result column="tel_phone" jdbcType="VARCHAR" property="telPhone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="AVATAR" jdbcType="VARCHAR" property="avatar" />
+        <result column="URL" jdbcType="VARCHAR" property="url" />
+        <result column="USER_LEVEL" jdbcType="VARCHAR" property="level" />
+        <result column="NAME_BAK" jdbcType="VARCHAR" property="nameBak" />
+        <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
+        <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
+        <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
+        <result column="crt_host" jdbcType="VARCHAR" property="crtHost" />
+        <result column="upd_time" jdbcType="TIMESTAMP" property="updTime" />
+        <result column="upd_user" jdbcType="VARCHAR" property="updUser" />
+        <result column="upd_name" jdbcType="VARCHAR" property="updName" />
+        <result column="upd_host" jdbcType="VARCHAR" property="updHost" />
+        <result column="attr1" jdbcType="VARCHAR" property="attr1" />
+        <result column="attr2" jdbcType="VARCHAR" property="attr2" />
+        <result column="attr3" jdbcType="VARCHAR" property="attr3" />
+        <result column="attr4" jdbcType="VARCHAR" property="attr4" />
+        <result column="attr5" jdbcType="VARCHAR" property="attr5" />
+        <result column="attr6" jdbcType="VARCHAR" property="attr6" />
+        <result column="attr7" jdbcType="VARCHAR" property="attr7" />
+        <result column="attr8" jdbcType="VARCHAR" property="attr8" />
+    </resultMap>
+
+    <select id="queryUserByQueryParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT * FROM USER_INFO
+        WHERE 1=1
+            <if test="name!=null and name!=''">
+                AND (USERNAME LIKE '%'||#{name,jdbcType=VARCHAR}||'%'
+                OR NAME LIKE '%'||#{name,jdbcType=VARCHAR}||'%')
+            </if>
+    </select>
+
+    <select id="queryUserLeaderByGroupId" parameterType="String" resultMap="BaseResultMap">
+
+        select * from USER_INFO u
+        left join USER_GROUP_LEADER ug
+        on  ug.USER_ID=u.ID
+        where
+        ug.GROUP_ID=#{groupId,jdbcType=VARCHAR}
+
+    </select>
+
+    <select id="queryUserMemberByGroupId" parameterType="String" resultMap="BaseResultMap">
+
+        select * from USER_INFO u
+        left join USER_GROUP_MEMBER ug
+        on  ug.USER_ID=u.ID
+        where
+        ug.GROUP_ID=#{groupId,jdbcType=VARCHAR}
+
+    </select>
+
+    <select id="getUserAvatarUrl" parameterType="String" resultType="String">
+
+        SELECT URL FROM USER_INFO
+        WHERE
+        ID=#{id,jdbcType=VARCHAR}
+
+    </select>
+</mapper>
