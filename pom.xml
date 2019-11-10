@@ -27,7 +27,7 @@
         <springcloud-parent.version>2.0.0-SNAPSHOT</springcloud-parent.version>
 
         <druid.version>1.0.31</druid.version>
-        <jackson.version>2.8.8</jackson.version>
+        <jackson.version>2.9.5</jackson.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <ehcache.version>3.1.4</ehcache.version>
         <hibernate.version>5.0.12.Final</hibernate.version>
@@ -133,8 +133,8 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
-            <version>11.2.0.4.0</version>
-            <!--<version>11.2.0.1.0</version>-->
+            <version>11.2.0.1.0</version>
+            <!--<version>11.2.0.4.0</version>-->
         </dependency>
 
 
