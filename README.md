@@ -20,3 +20,5 @@ shiro权限的初步整合
 开启mybatis二级缓存
 
 auth增加热启动配置（电脑性能不好，不想每次修改类都要启动SpringBoot）
+
+logback功能
