@@ -5,6 +5,8 @@ import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
 import com.zuer.zuerlvdoubancommon.entity.Dict;
 import com.zuer.zuerlvdoubancommon.utils.DateUtil;
 import com.zuer.zuerlvdoubancommon.vo.DictValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,7 @@ import java.util.UUID;
 @RestController
 public class DictController {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(DictController.class);
     @Autowired
     DictFeignService dictFeignService;
 
@@ -38,6 +40,7 @@ public class DictController {
     @RequestMapping(value = "/queryPageFromDict",method = RequestMethod.POST)
     @ResponseBody
     public  Map<String,Object> queryPageFromDict(@RequestParam Map<String,Object> param) throws Exception{
+        logger.info("开始查询数据字典queryPageFromDict："+param);
         try{
             Map<String,Object> map=new HashMap<String, Object>();
             String pageSize=(String)param.get("pageSize");
