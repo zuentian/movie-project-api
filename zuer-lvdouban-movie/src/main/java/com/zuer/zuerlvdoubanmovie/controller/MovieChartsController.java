@@ -69,7 +69,6 @@ public class MovieChartsController {
     public List<PieMovieShowCount> queryPieShowMovieYearCount(@PathVariable String id) {
         Map<String,Integer> map=new LinkedHashMap<String, Integer>();
         List<PieMovieShowCount> pieMovieShowCountList=movieChartsFeignService.queryPieShowMovieYearCount(id);
-        System.out.println(pieMovieShowCountList);
         Calendar c=Calendar.getInstance();
         c.setTime(new Date());
 

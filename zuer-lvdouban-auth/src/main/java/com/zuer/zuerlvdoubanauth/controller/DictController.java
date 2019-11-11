@@ -38,20 +38,20 @@ public class DictController {
     @RequestMapping(value = "/queryPageFromDict",method = RequestMethod.POST)
     @ResponseBody
     public  Map<String,Object> queryPageFromDict(@RequestParam Map<String,Object> param) throws Exception{
-            try{
-                Map<String,Object> map=new HashMap<String, Object>();
-                String pageSize=(String)param.get("pageSize");
-                String pageIndex=(String)param.get("currentPage");
-                String dictType =param.get("dictType")==null?null:(String) param.get("dictType");
-                if(dictType!=null&&!"".equals(dictType)){
-                    map.put("dictType",dictType);
-                }
-                Map<String,Object> resultMap = dictFeignService.queryPageFromDict(map,pageSize,pageIndex);
-                return resultMap;
-
-            }catch (Exception e){
-                throw new Exception("查询数据字典失败！");
+        try{
+            Map<String,Object> map=new HashMap<String, Object>();
+            String pageSize=(String)param.get("pageSize");
+            String pageIndex=(String)param.get("currentPage");
+            String dictType =param.get("dictType")==null?null:(String) param.get("dictType");
+            if(dictType!=null&&!"".equals(dictType)){
+                map.put("dictType",dictType);
             }
+            Map<String,Object> resultMap = dictFeignService.queryPageFromDict(map,pageSize,pageIndex);
+            return resultMap;
+
+        }catch (Exception e){
+            throw new Exception("查询数据字典失败！");
+        }
 
     }
 

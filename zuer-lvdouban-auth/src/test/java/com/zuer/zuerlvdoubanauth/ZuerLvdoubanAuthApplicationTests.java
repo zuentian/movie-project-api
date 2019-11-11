@@ -1,11 +1,15 @@
 package com.zuer.zuerlvdoubanauth;
 
 import com.zuer.zuerlvdoubanauth.demo.DemoController;
+import com.zuer.zuerlvdoubancommon.demo.Demo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Random;
+import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -37,6 +41,15 @@ public class ZuerLvdoubanAuthApplicationTests {
         System.out.println("第一次查询数据库");
         System.out.println(demoController.query());
         System.out.println("第二次查询数据库");
+        System.out.println(demoController.query());
+        Demo demo=new Demo();
+        String id=UUID.randomUUID().toString();
+        demo.setId(id);
+        demo.setName("琪亚娜"+id.substring(id.length()-3,id.length()));
+        Random rn=new Random();
+        demo.setAge(rn.nextInt(100)+"");
+        demoController.insertDemo(demo);
+        System.out.println("第三次查询数据库");
         System.out.println(demoController.query());
         /*
         如果强行手动在数据库中修改数据，查询的时候依然还是要取缓存，所以采用二级缓存就不要手动数据库

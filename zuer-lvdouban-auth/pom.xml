@@ -25,6 +25,13 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <!--热启动
+            这个功能在修改类之后，就可以自动重新启动springboot容器，和手动启动似乎没有区别，但速度貌似提高了-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 
@@ -34,8 +41,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>${start-class}</mainClass>
-                    <layout>ZIP</layout>
+                    <!--<mainClass>${start-class}</mainClass>
+                    <layout>ZIP</layout>-->
+                    <fork>true</fork>
                 </configuration>
                 <executions>
                     <execution>

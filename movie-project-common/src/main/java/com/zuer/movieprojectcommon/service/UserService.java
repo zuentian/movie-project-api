@@ -3,7 +3,7 @@ package com.zuer.movieprojectcommon.service;
 import com.zuer.movieprojectcommon.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

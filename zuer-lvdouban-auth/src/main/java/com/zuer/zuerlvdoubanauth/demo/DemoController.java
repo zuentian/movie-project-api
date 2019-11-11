@@ -17,8 +17,12 @@ public class DemoController {
     @Autowired
     DemoFeignService demoFeignService;
     public List<Demo> query(){
-        System.out.println("--------------进入controller层-------------");
+        System.out.println("--------------进入controller层query()-------------");
         return demoFeignService.query();
     }
 
+    public void insertDemo(Demo demo) {
+        System.out.println("--------------进入controller层insertDemo()-------------");
+        demoFeignService.insertDemo(demo);
+    }
 }
