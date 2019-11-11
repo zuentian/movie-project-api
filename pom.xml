@@ -42,7 +42,6 @@
 
     <!--&lt;!&ndash; 引入SpringCloud微服务常用组件&ndash;&gt;-->
     <modules>
-        <module>mj-user</module>
         <module>movie-project-user</module>
         <module>movie-project-eureka</module>
         <module>movie-project-common</module>
