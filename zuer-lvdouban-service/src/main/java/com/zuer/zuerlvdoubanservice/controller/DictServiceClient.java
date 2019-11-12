@@ -9,6 +9,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
@@ -62,8 +63,10 @@ public class DictServiceClient {
 
 
     @RequestMapping(value = "/addDict",method = RequestMethod.POST)
+    @Transactional
     public int addDict(@RequestBody Dict dict){
-        return dictService.insert(dict);
+        int i = dictService.insert(dict);
+        return i;
     }
 
 

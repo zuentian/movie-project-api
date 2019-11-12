@@ -1,9 +1,11 @@
 package com.zuer.zuerlvdoubanservice.demo;
 
 import com.zuer.zuerlvdoubancommon.demo.Demo;
+import io.lettuce.core.ScriptOutputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,8 +30,12 @@ public class DemoServiceClient {
     }
 
 
+
     @RequestMapping(value = "/insertDemo",method = RequestMethod.POST)
+    @Transactional
     public void insertDemo(@RequestBody Demo demo){
         demoService.insertSelective(demo);
+        System.out.println("+++++++++=+++"+demo);
+        int i = 1 / 0;
     }
 }
