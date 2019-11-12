@@ -4,7 +4,7 @@ package com.zuer.zuerlvdoubanservice;
 /*
 
 测试spring事务
-首先执行方法的地方不要加@service
+Transaction有传播性，注意事务的作用域
 
 */
 
