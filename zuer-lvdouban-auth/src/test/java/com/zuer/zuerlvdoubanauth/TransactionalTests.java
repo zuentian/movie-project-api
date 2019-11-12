@@ -31,7 +31,5 @@ public class TransactionalTests {
         demo.setId(UUID.randomUUID().toString());
         demo.setName("测试加事务111");
         demo.setAge("11");
-        demoFeignService.insertDemo(demo);
-        int i = 1 / 0;
     }
 }

@@ -21,6 +21,8 @@ shiro权限的初步整合
 
 auth增加热启动配置（电脑性能不好，不想每次修改类都要启动SpringBoot）
 
-logback日志功能
+增添logback日志功能
 
 Transactional事务
+
+增添redis缓存（部分使用）
