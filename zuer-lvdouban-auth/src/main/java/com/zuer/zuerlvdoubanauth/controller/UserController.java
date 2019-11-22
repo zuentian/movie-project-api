@@ -298,7 +298,7 @@ public class UserController {
             User user=new User();
             user.setId(id);
             String fileName=UploadFile.uploadMultipartFile(file,UUID.randomUUID().toString(),path);
-            user.setAvatar(File.separator+vueIp+ File.separator+ uploadImagesPath+File.separator+datePath+File.separator+fileName);
+            user.setAvatar(File.separator+vueIp+ uploadImagesPath+File.separator+datePath+File.separator+fileName);
             user.setUrl(uploadImagesPath+File.separator+datePath+File.separator+fileName);
             logger.info("avatarUpload user.getAvatar=["+user.getAvatar()+"]");
             logger.info("avatarUpload user.getUrl=["+user.getUrl()+"]");
@@ -309,6 +309,9 @@ public class UserController {
     }
 
 
+    /*
+    获取带日期的路径
+     */
     public String getDatePath(){
 
         Calendar cal = Calendar.getInstance();

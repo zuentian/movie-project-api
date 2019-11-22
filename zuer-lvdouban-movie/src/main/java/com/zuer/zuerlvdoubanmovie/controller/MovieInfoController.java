@@ -7,6 +7,8 @@ import com.zuer.zuerlvdoubancommon.utils.UploadFile;
 import com.zuer.zuerlvdoubancommon.vo.MovieInfoExp;
 import com.zuer.zuerlvdoubanmovie.feginservice.*;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,10 +26,12 @@ import java.util.stream.Collectors;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/MovieInfoController")
-@PropertySource("classpath:uploadFile.properties")
+@PropertySource("classpath:uploadMovieImage.properties")
 @RestController
 @Transactional(rollbackFor = {Exception.class})
 public class MovieInfoController {
+
+    private static final Logger logger= LoggerFactory.getLogger(MovieInfoController.class);
 
     @Autowired
     private MovieInfoFeignService movieInfoFeignService;
@@ -283,7 +287,7 @@ public class MovieInfoController {
 
 
     @RequestMapping(value = "/deleteMovieInfoById/{id}",method = RequestMethod.GET)
-    public void deleteMovieInfoById(@PathVariable String id) throws FileNotFoundException {
+    public void deleteMovieInfoById(@PathVariable String id) {
         movieInfoFeignService.deleteMovieInfoById(id);
         movieRelNameFeignService.deleteMovieRelNameByMovieId(id);//删除电影相关人物
         movieTypeFeignService.deleteMovieTypeByMovieId(id);//删除电影的类型
@@ -291,31 +295,39 @@ public class MovieInfoController {
 
         List<MoviePictureInfo>  moviePictureInfoList=moviePictureInfoFeignService.queryMoviePictureInfoByMovieId(id);
         for(MoviePictureInfo moviePictureInfo:moviePictureInfoList){
-            if(UploadFile.deleteFile(moviePictureInfo.getFileUrl())){//删除硬盘中储存的电影海报和剧照
+            if(UploadFile.deleteFile(rootPath+moviePictureInfo.getFileUrl())){//删除硬盘中储存的电影海报和剧照
                 moviePictureInfoFeignService.deleteMoviePictureInfoById(moviePictureInfo.getId());//删除电影海报和剧照的所有信息
             }
         }
     }
 
     @RequestMapping(value = "/deletePictureById/{id}",method = RequestMethod.GET)
-    public void deletePictureById(@PathVariable String id) throws FileNotFoundException {
+    public void deletePictureById(@PathVariable String id) {
         MoviePictureInfo moviePictureInfo=moviePictureInfoFeignService.queryMoviePictureInfoById(id);
-        if(UploadFile.deleteFile(moviePictureInfo.getFileUrl())){
+        if(UploadFile.deleteFile(rootPath+moviePictureInfo.getFileUrl())){
             moviePictureInfoFeignService.deleteMoviePictureInfoById(id);
         }
     }
 
     @Value("${local.vueIp}")
     private String vueIp;
-    @Value("${local.uploadImagesPath}")
+    @Value("${local.upload.images.path}")
     private String uploadImagesPath;
-
+    @Value("${static.image.path}")
+    private String rootPath;
     @Autowired
     private MoviePictureInfoFeignService moviePictureInfoFeignService;
 
     @RequestMapping(value="/insertMovieInfoPictureStage", method= RequestMethod.POST)
     public void insertMovieInfoPictureStage(@RequestParam("files") MultipartFile[] files,HttpServletRequest request) throws Exception {
         String id=request.getParameter("id");
+
+        String datePath=getDatePath();
+        logger.info("insertMovieInfoPictureStage 电影剧照上传的根路径:rootPath=["+rootPath+"] 文件的放置路径：uploadImagesPath=["+uploadImagesPath+"] 日期格式的文件路径：datePath=["+datePath+"]");
+
+        String path=rootPath+uploadImagesPath+File.separator+datePath;
+        logger.info("insertMovieInfoPictureStage 电影剧照上传全路径path=["+path+"]");
+
         //电影剧照
         if(files!=null&&files.length>0){
             for(MultipartFile file:files){
@@ -325,9 +337,13 @@ public class MovieInfoController {
                 moviePictureInfo.setMovieId(id);
                 moviePictureInfo.setFileName(file.getOriginalFilename());
                 moviePictureInfo.setType("S");
-                String path=UploadFile.uploadMultipartFile(file,moviePictureId,uploadImagesPath);
-                moviePictureInfo.setFileUri(File.separator+vueIp+ File.separator+ path);
-                moviePictureInfo.setFileUrl(File.separator+ path);
+                String fileName=UploadFile.uploadMultipartFile(file,moviePictureId,path);
+                moviePictureInfo.setFileUri(File.separator+vueIp+ uploadImagesPath+File.separator+datePath+File.separator+fileName);
+                moviePictureInfo.setFileUrl(uploadImagesPath+File.separator+datePath+File.separator+fileName);
+
+                logger.info("insertMovieInfoPictureStage moviePictureInfo.getFileUri()=["+moviePictureInfo.getFileUri()+"]");
+                logger.info("insertMovieInfoPictureStage moviePictureInfo.getFileUrl()=["+moviePictureInfo.getFileUrl()+"]");
+
                 EntityUtils.setCreateInfo(moviePictureInfo);
                 moviePictureInfoFeignService.insertMoviePictureInfo(moviePictureInfo);
             }
@@ -336,6 +352,19 @@ public class MovieInfoController {
     }
 
 
+    /*
+    获取带日期的路径
+     */
+    public String getDatePath(){
+
+        Calendar cal = Calendar.getInstance();
+        String year=cal.get(Calendar.YEAR)+"";
+        String month=cal.get(Calendar.MONTH)+1<10?"0"+(cal.get(Calendar.MONTH)+1):(cal.get(Calendar.MONTH)+1)+"";
+        String day=cal.get(Calendar.DAY_OF_MONTH)<10?"0"+cal.get(Calendar.DAY_OF_MONTH):cal.get(Calendar.DAY_OF_MONTH)+"";
+        return year+ File.separator+month+ File.separator+day;
+
+
+    }
 
 
     @RequestMapping(value = "/queryMoviePictureByParam",method = RequestMethod.POST)
@@ -352,6 +381,12 @@ public class MovieInfoController {
         String movieId=request.getParameter("id");
         String name=request.getParameter("name");
 
+        String datePath=getDatePath();
+        logger.info("moviePictureBillUpload 电影海报上传的根路径:rootPath=["+rootPath+"] 文件的放置路径：uploadImagesPath=["+uploadImagesPath+"] 日期格式的文件路径：datePath=["+datePath+"]");
+
+        String path=rootPath+uploadImagesPath+File.separator+datePath;
+        logger.info("moviePictureBillUpload 电影海报上传全路径path=["+path+"]");
+
         //上传新的海报不用删除原来的海报
 
         MoviePictureInfo moviePictureInfo=new MoviePictureInfo();
@@ -361,9 +396,13 @@ public class MovieInfoController {
         moviePictureInfo.setMovieId(movieId);
         moviePictureInfo.setType("B");
         moviePictureInfo.setFileName(name);
-        String path=UploadFile.uploadMultipartFile(file,id,uploadImagesPath);
-        moviePictureInfo.setFileUri(File.separator+vueIp+ File.separator+ path);
-        moviePictureInfo.setFileUrl(File.separator+ path);
+        String fileName=UploadFile.uploadMultipartFile(file,id,path);
+        moviePictureInfo.setFileUri(File.separator+vueIp+ uploadImagesPath+File.separator+datePath+File.separator+fileName);
+        moviePictureInfo.setFileUrl(uploadImagesPath+File.separator+datePath+File.separator+fileName);
+
+        logger.info("moviePictureBillUpload moviePictureInfo.getFileUri()=["+moviePictureInfo.getFileUri()+"]");
+        logger.info("moviePictureBillUpload moviePictureInfo.getFileUrl()=["+moviePictureInfo.getFileUrl()+"]");
+
         EntityUtils.setCreateInfo(moviePictureInfo);
         moviePictureInfoFeignService.insertMoviePictureInfo(moviePictureInfo);
         return moviePictureInfo.getFileUri();
