@@ -31,9 +31,9 @@ public class DemoServiceClient {
 
 
 
-    @RequestMapping(value = "/insertDemo",method = RequestMethod.POST)
+    //@RequestMapping(value = "/insertDemo",method = RequestMethod.POST)
     @Transactional
-    public void insertDemo(@RequestBody Demo demo){
+    public void insertDemo(@RequestBody Demo demo) throws Exception{
         demoService.insertSelective(demo);
         System.out.println("+++++++++=+++"+demo);
         int i = 1 / 0;

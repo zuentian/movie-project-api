@@ -1,6 +1,6 @@
 package com.zuer.zuerlvdoubanauth.shiro;
 
-import com.zuer.zuerlvdoubanauth.FeginService.UserFeignService;
+import com.zuer.zuerlvdoubanauth.feginService.UserFeignService;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.DefaultPasswordService;

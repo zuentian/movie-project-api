@@ -1,7 +1,7 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuer.zuerlvdoubanauth.FeginService.*;
+import com.zuer.zuerlvdoubanauth.feginService.*;
 import com.zuer.zuerlvdoubanauth.jwt.JWTUtil;
 import com.zuer.zuerlvdoubancommon.entity.*;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
@@ -13,6 +13,8 @@ import com.zuer.zuerlvdoubancommon.vo.MenuTree;
 import com.zuer.zuerlvdoubancommon.vo.RouterTree;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
 @PropertySource("classpath:avatarUpload.properties")
 @RestController
 public class UserController {
-
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserFeignService userFeignService;
     @Autowired
@@ -273,22 +275,48 @@ public class UserController {
 
     @Value("${local.vueIp}")
     private String vueIp;
-    @Value("${local.uploadImagesPath}")
+
+    @Value("${local.upload.images.path}")
     private String uploadImagesPath;
+
+    @Value("${static.image.path}")
+    private String rootPath;
 
     @RequestMapping(value="/avatarUpload", method= RequestMethod.POST)
     public String avatarUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
         String id=request.getParameter("id");
         String url=userFeignService.getUserAvatarUrl(id);
-        if(url==null||UploadFile.deleteFile(url)){
+
+        String datePath=getDatePath();
+        logger.info("avatarUpload 头像上传的根路径:rootPath=["+rootPath+"] 文件的放置路径：uploadImagesPath=["+uploadImagesPath+"] 日期格式的文件路径：datePath=["+datePath+"]");
+
+        String path=rootPath+uploadImagesPath+File.separator+datePath;
+
+        logger.info("avatarUpload 头像上传全路径path=["+path+"]");
+
+        if(url==null||UploadFile.deleteFile(rootPath+url)){
             User user=new User();
             user.setId(id);
-            String path=UploadFile.uploadMultipartFile(file,UUID.randomUUID().toString(),uploadImagesPath);
-            user.setAvatar(File.separator+vueIp+ File.separator+ path);
-            user.setUrl(File.separator+ path);
+            String fileName=UploadFile.uploadMultipartFile(file,UUID.randomUUID().toString(),path);
+            user.setAvatar(File.separator+vueIp+ File.separator+ uploadImagesPath+File.separator+datePath+File.separator+fileName);
+            user.setUrl(uploadImagesPath+File.separator+datePath+File.separator+fileName);
+            logger.info("avatarUpload user.getAvatar=["+user.getAvatar()+"]");
+            logger.info("avatarUpload user.getUrl=["+user.getUrl()+"]");
             userFeignService.updateUserAvatarById(user);
             return user.getAvatar();
         }
         return null;
+    }
+
+
+    public String getDatePath(){
+
+        Calendar cal = Calendar.getInstance();
+        String year=cal.get(Calendar.YEAR)+"";
+        String month=cal.get(Calendar.MONTH)+1<10?"0"+(cal.get(Calendar.MONTH)+1):(cal.get(Calendar.MONTH)+1)+"";
+        String day=cal.get(Calendar.DAY_OF_MONTH)<10?"0"+cal.get(Calendar.DAY_OF_MONTH):cal.get(Calendar.DAY_OF_MONTH)+"";
+        return year+ File.separator+month+ File.separator+day;
+
+
     }
 }

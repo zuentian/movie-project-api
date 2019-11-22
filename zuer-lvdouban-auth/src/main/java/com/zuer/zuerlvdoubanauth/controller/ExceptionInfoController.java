@@ -1,6 +1,6 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
-import com.zuer.zuerlvdoubanauth.FeginService.ExceptionInfoFeignService;
+import com.zuer.zuerlvdoubanauth.feginService.ExceptionInfoFeignService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

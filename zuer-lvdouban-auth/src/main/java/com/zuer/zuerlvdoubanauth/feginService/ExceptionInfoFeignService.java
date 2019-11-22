@@ -1,4 +1,4 @@
-package com.zuer.zuerlvdoubanauth.FeginService;
+package com.zuer.zuerlvdoubanauth.feginService;
 
 import com.zuer.zuerlvdoubancommon.entity.ExceptionInfo;
 import org.springframework.cloud.openfeign.FeignClient;

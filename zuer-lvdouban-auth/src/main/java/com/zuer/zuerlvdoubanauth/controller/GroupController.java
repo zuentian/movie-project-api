@@ -1,8 +1,8 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
-import com.zuer.zuerlvdoubanauth.FeginService.GroupFeignService;
+import com.zuer.zuerlvdoubanauth.feginService.DictFeignService;
+import com.zuer.zuerlvdoubanauth.feginService.GroupFeignService;
 import com.zuer.zuerlvdoubancommon.entity.Group;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.utils.TreeUtil;

@@ -27,11 +27,11 @@
         </dependency>
         <!--热启动
             这个功能在修改类之后，就可以自动重新启动springboot容器，和手动启动似乎没有区别，但速度貌似提高了-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 

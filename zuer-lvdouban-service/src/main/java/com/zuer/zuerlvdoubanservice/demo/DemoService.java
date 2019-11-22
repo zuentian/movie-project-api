@@ -5,7 +5,8 @@ import org.apache.ibatis.annotations.CacheNamespace;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
-@CacheNamespace//开启二级缓存
-@Transactional
+@Service
+//@CacheNamespace//开启二级缓存
+
 public interface DemoService extends Mapper<Demo> {
 }

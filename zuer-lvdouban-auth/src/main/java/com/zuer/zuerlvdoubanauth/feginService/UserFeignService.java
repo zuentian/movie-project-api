@@ -1,4 +1,4 @@
-package com.zuer.zuerlvdoubanauth.FeginService;
+package com.zuer.zuerlvdoubanauth.feginService;
 
 import com.zuer.zuerlvdoubancommon.entity.User;
 import com.zuer.zuerlvdoubancommon.entity.UserInfo;

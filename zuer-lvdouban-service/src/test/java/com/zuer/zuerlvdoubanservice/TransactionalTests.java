@@ -34,7 +34,7 @@ public class TransactionalTests {
         demo.setId(UUID.randomUUID().toString());
         demo.setName("service事务测试第2轮");
         demo.setAge("11");
-        demoServiceClient.insertDemo(demo);
+        //demoServiceClient.insertDemo(demo);
     }
 
     /*

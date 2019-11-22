@@ -1,7 +1,7 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuer.zuerlvdoubanauth.FeginService.DictFeignService;
+import com.zuer.zuerlvdoubanauth.feginService.DictFeignService;
 import com.zuer.zuerlvdoubancommon.entity.Dict;
 import com.zuer.zuerlvdoubancommon.utils.DateUtil;
 import com.zuer.zuerlvdoubancommon.vo.DictValue;
