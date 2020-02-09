@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -48,5 +49,10 @@ public class TransactionalTests {
     4、持久性
         一个事务一旦提交，它在数据库里的改变就是永久的，接下来即使数据库发生异常也不应该对其有任何影响
      */
-
+    @Test
+    public void queryDemo(){
+        Demo demo=new Demo();
+        List<Demo> list=demoServiceClient.query();
+        System.out.println("查询到的demo:"+list);
+    }
 }

@@ -77,7 +77,7 @@
                 AND MT.TYPE =#{movieType}
             </if>
             <if test="movieCountry!=null and movieCountry!=''">
-                AND MT.COUNTRY_CODE =#{movieCountry}
+                AND MC.COUNTRY_CODE =#{movieCountry}
             </if>
 
         ORDER BY UPD_TIME DESC

@@ -83,7 +83,6 @@ public class MovieCalculateScoreController {
         int count1=movieUserFeignService.queryMovieUserScoreCountByMovieIdAndScore(movieId,"1");
 
         int count=count1+count2+count3+count4+count5;
-        System.out.println("评分分段：count=["+count+"] count1=["+count1+"] count2=["+count2+"] count3=["+count3+"] count4=["+count4+"] count5=["+count5+"] ");
         if(count>0){
             MovieScoreSection movieScoreSection5=new MovieScoreSection();
             movieScoreSection5.setScore("5星");
