@@ -18,4 +18,6 @@ public class CommonConstants {
     public static final String JWT_KEY_USER_ID = "userId";
     public static final String JWT_KEY_NAME = "name";
 
+    //豆瓣爬虫报错信息
+    public static final String DB_LOGIN_PASSWORD_ERROR = "failed";
 }
