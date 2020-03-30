@@ -28,7 +28,7 @@ public class Menu {
     private String type;
 
     @Column(name = "ORDER_NUM")
-    private Integer orderNum;
+    private Integer orderNum =0;
 
     private String description;
 

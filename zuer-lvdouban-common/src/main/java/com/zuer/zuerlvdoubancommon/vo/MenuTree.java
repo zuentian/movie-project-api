@@ -13,6 +13,6 @@ public class MenuTree extends TreeNode{
     String redirect;
     String code;
     String type;
-    int orderNum;
+    Integer orderNum;
     String label;
 }
