@@ -1,21 +1,15 @@
 package com.zuer.zuerlvdoubanauth;
 
-import com.zuer.zuerlvdoubanauth.demo.DemoController;
-import com.zuer.zuerlvdoubancommon.demo.Demo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Random;
-import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ZuerLvdoubanAuthApplicationTests {
-   @Autowired
-   DemoController demoController;
+   /*@Autowired
+   DemoController demoController;*/
     @Test
     public void tt() throws Exception {
 
@@ -38,7 +32,7 @@ public class ZuerLvdoubanAuthApplicationTests {
         但是文件很重要，不能，此时就需要进行序列化，以文件的形式将内容从内存保存到硬盘上，
         一个内容保存成文件的读写，必须实现序列化。
         **/
-        System.out.println("第一次查询数据库");
+        /*System.out.println("第一次查询数据库");
         System.out.println(demoController.query());
         System.out.println("第二次查询数据库");
         System.out.println(demoController.query());
@@ -50,7 +44,7 @@ public class ZuerLvdoubanAuthApplicationTests {
         demo.setAge(rn.nextInt(100)+"");
         demoController.insertDemo(demo);
         System.out.println("第三次查询数据库");
-        System.out.println(demoController.query());
+        System.out.println(demoController.query());*/
         /*
         如果强行手动在数据库中修改数据，查询的时候依然还是要取缓存，所以采用二级缓存就不要手动数据库
          */

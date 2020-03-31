@@ -7,29 +7,14 @@ spring事务测试
 
 */
 
-import com.zuer.zuerlvdoubanauth.demo.DemoFeignService;
-import com.zuer.zuerlvdoubancommon.demo.Demo;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TransactionalTests {
 
 
-    @Autowired
-    DemoFeignService demoFeignService;
 
-    @Test
-    public void test01(){
-        Demo demo=new Demo();
-        demo.setId(UUID.randomUUID().toString());
-        demo.setName("测试加事务111");
-        demo.setAge("11");
-    }
 }

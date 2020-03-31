@@ -1,4 +1,4 @@
-package com.zuer.zuerlvdoubanservice.demo.dataSourceConfig;
+package com.zuer.zuerlvdoubanservice.datasourceconfig;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,8 +17,8 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan(basePackages = Zuer03DataSourceConfig.PACKAGE, sqlSessionFactoryRef = "zuer03SqlSessionFactory")
 public class Zuer03DataSourceConfig {
-    static final String PACKAGE = "com.zuer.zuerlvdoubanservice.demo";
-    static final String MAPPER_LOCATION = "classpath:mapper/zuer03/*.xml";
+    static final String PACKAGE = "com.zuer.zuerlvdoubanservice.service";
+    static final String MAPPER_LOCATION = "classpath:mapper/zuer02/*.xml";
     @Value("${zuer03.spring.datasource.url}")
     private String url;
 
@@ -33,6 +33,7 @@ public class Zuer03DataSourceConfig {
 
     @Bean(name = "zuer03DataSource")
     public DataSource zuer03DataSource() {
+        System.out.println("加载zuer03数据库");
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setDriverClassName(driverClass);
         dataSource.setUrl(url);

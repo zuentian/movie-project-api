@@ -1,4 +1,4 @@
-package com.zuer.zuerlvdoubanservice.demo.dataSourceConfig;
+package com.zuer.zuerlvdoubanservice.datasourceconfig;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -37,6 +37,7 @@ public class Zuer02DataSourceConfig {
     @Bean(name = "zuer02DataSource")
     @Primary
     public DataSource zuer02DataSource() {
+        System.out.println("加载zuer02数据库");
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setDriverClassName(driverClass);
         dataSource.setUrl(url);
