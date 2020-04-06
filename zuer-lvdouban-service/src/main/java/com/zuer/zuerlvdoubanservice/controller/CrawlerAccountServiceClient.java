@@ -3,6 +3,7 @@ package com.zuer.zuerlvdoubanservice.controller;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
 import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
 import com.zuer.zuerlvdoubanservice.service.CrawlerAccountService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -47,5 +48,32 @@ public class CrawlerAccountServiceClient {
         int count = crawlerAccountService.selectCountByExample(example);
         resultMap.put("count",count);
         return resultMap;
+    }
+    @RequestMapping(value = "/queryCrawlerAccountById",method = RequestMethod.GET)
+    public CrawlerAccount queryCrawlerAccountById(@RequestParam("id") String id){
+        return crawlerAccountService.selectByPrimaryKey(id);
+    }
+
+    @RequestMapping(value = "/updateById",method = RequestMethod.POST)
+    public void updateById(@RequestBody CrawlerAccount crawlerAccount){
+        crawlerAccountService.updateByPrimaryKey(crawlerAccount);
+    }
+    @RequestMapping(value = "/deleteById",method = RequestMethod.GET)
+    public void deleteById(@RequestParam("id") String id){
+        crawlerAccountService.deleteByPrimaryKey(id);
+    }
+
+    @RequestMapping(value = "/queryCrawlerAccountByWebAndFlag",method = RequestMethod.GET)
+    public CrawlerAccount queryCrawlerAccountByWebAndFlag(@RequestParam("web") String web,
+                                                   @RequestParam("flag") String flag)throws Exception{
+        Example example = new Example(CrawlerAccount.class);
+        Example.Criteria criteria = example.createCriteria();
+        if(StringUtils.isNotBlank(web)){
+            criteria.andEqualTo(web);
+        }
+        if(StringUtils.isNotBlank(flag)){
+            criteria.andEqualTo(flag);
+        }
+        return crawlerAccountService.selectOneByExample(criteria);
     }
 }

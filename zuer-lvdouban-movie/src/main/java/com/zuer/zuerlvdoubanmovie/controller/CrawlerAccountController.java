@@ -2,6 +2,7 @@ package com.zuer.zuerlvdoubanmovie.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
+import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -9,12 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -34,14 +31,23 @@ public class CrawlerAccountController {
         try {
             CrawlerAccount crawlerAccount = mapper.readValue((String) param.get("crawlerAccountInfoAdd"), CrawlerAccount.class);
             crawlerAccount.setId(UUID.randomUUID().toString());
-            crawlerAccount.setAltDate(new Date());
-            crawlerAccount.setCrtDate(new Date());
+            EntityUtils.setCreatAndUpdatInfo(crawlerAccount);
             crawlerAccountFeignService.insert(crawlerAccount);
         } catch (Exception e) {
             throw new Exception("添加账户信息失败！");
         }
     }
-
+    @RequestMapping(value = "/updateCrawlerAccountInfoById",method = RequestMethod.POST)
+    public void updateCrawlerAccountInfoById(@RequestParam Map<String, Object> param) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            CrawlerAccount crawlerAccount = mapper.readValue((String) param.get("crawlerAccountInfoEdit"), CrawlerAccount.class);
+            EntityUtils.setUpdatedInfo(crawlerAccount);
+            crawlerAccountFeignService.updateById(crawlerAccount);
+        } catch (Exception e) {
+            throw new Exception("修改账户信息失败！");
+        }
+    }
 
     @RequestMapping(value = "/queryPage",method = RequestMethod.POST)
     public Map<String,Object> queryPage(@RequestParam Map<String, Object> param) throws Exception {
@@ -59,5 +65,15 @@ public class CrawlerAccountController {
         }catch (Exception e){
             throw new Exception("查询账号信息失败！");
         }
+    }
+
+    @RequestMapping(value = "/queryById/{id}",method = RequestMethod.GET)
+    public CrawlerAccount queryById(@PathVariable String id) throws Exception {
+        return crawlerAccountFeignService.queryCrawlerAccountById(id);
+    }
+
+    @RequestMapping(value = "/deleteById/{id}",method = RequestMethod.GET)
+    public void deleteById(@PathVariable String id) throws Exception {
+        crawlerAccountFeignService.deleteById(id);
     }
 }

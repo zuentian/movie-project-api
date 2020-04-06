@@ -13,8 +13,9 @@ import java.util.Map;
 @FeignClient("zuer-lvdouban-service")
 public interface CrawlerAccountFeignService {
 
-    @RequestMapping(value = "/CrawlerAccount/queryCrawlerAccountByWeb",method = RequestMethod.GET)
-    CrawlerAccount queryCrawlerAccountByWeb(@RequestParam("web") String web)throws Exception;
+    @RequestMapping(value = "/CrawlerAccount/queryCrawlerAccountByWebAndFlag",method = RequestMethod.GET)
+    CrawlerAccount queryCrawlerAccountByWebAndFlag(@RequestParam("web") String web,
+                                                   @RequestParam("flag") String flag)throws Exception;
 
     @RequestMapping(value = "/CrawlerAccount/insert",method = RequestMethod.POST)
     int insert(@RequestBody CrawlerAccount crawlerAccount) throws Exception;
@@ -23,4 +24,11 @@ public interface CrawlerAccountFeignService {
     Map<String,Object> queryPage(@RequestBody Map<String,Object> map,
                                  @RequestParam("pageSize") String pageSize,
                                  @RequestParam("pageIndex") String pageIndex);
+    @RequestMapping(value = "/CrawlerAccount/queryCrawlerAccountById",method = RequestMethod.GET)
+    CrawlerAccount queryCrawlerAccountById(@RequestParam("id") String id);
+
+    @RequestMapping(value = "/CrawlerAccount/updateById",method = RequestMethod.POST)
+    void updateById(@RequestBody CrawlerAccount crawlerAccount);
+    @RequestMapping(value = "/CrawlerAccount/deleteById",method = RequestMethod.GET)
+    void deleteById(@RequestParam("id") String id);
 }

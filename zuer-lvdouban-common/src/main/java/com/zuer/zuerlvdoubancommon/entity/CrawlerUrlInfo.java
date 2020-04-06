@@ -1,29 +1,27 @@
 package com.zuer.zuerlvdoubancommon.entity;
 
 import lombok.Data;
-
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
 @Data
-@Table(name = "CRAWLER_ACCOUNT")
-public class CrawlerAccount {
+@Table(name="CRAWLER_URL_INFO")
+public class CrawlerUrlInfo {
 
     @Id
     private String id;
 
-    private String web;
+    private String url;
 
-    @Column(name = "WEB_NAME")
-    private String webName;
+    @Column(name = "URL_NAME")
+    private String urlName;
 
-    private String account;
+    private String type;
 
-    private String password;
-
-    private String flag;
+    @Column(name = "TYPE_NAME")
+    private String typeName;
 
     @Column(name = "CRT_TIME")
     private Date crtTime;
@@ -37,10 +35,9 @@ public class CrawlerAccount {
     @Column(name = "CRT_USER")
     private String crtUser;
 
-
     @Column(name = "UPD_NAME")
     private String updName;
 
-    @Column(name = "CRT_Name")
+    @Column(name = "CRT_NAME")
     private String crtName;
 }
