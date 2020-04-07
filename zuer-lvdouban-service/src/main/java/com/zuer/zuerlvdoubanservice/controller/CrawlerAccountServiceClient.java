@@ -69,11 +69,12 @@ public class CrawlerAccountServiceClient {
         Example example = new Example(CrawlerAccount.class);
         Example.Criteria criteria = example.createCriteria();
         if(StringUtils.isNotBlank(web)){
-            criteria.andEqualTo(web);
+            criteria.andEqualTo("web",web);
         }
         if(StringUtils.isNotBlank(flag)){
-            criteria.andEqualTo(flag);
+            criteria.andEqualTo("flag",flag);
         }
-        return crawlerAccountService.selectOneByExample(criteria);
+        List<CrawlerAccount> list=crawlerAccountService.selectByExample(example);
+        return null==list?null:list.get(0);
     }
 }

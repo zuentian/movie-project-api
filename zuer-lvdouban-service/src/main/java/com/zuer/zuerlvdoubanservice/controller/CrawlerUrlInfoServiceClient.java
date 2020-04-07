@@ -3,6 +3,7 @@ package com.zuer.zuerlvdoubanservice.controller;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerUrlInfo;
 import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
 import com.zuer.zuerlvdoubanservice.service.CrawlerUrlInfoService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -59,5 +60,16 @@ public class CrawlerUrlInfoServiceClient {
     @RequestMapping(value = "/queryCrawlerUrlInfoById",method = RequestMethod.GET)
     public CrawlerUrlInfo queryCrawlerUrlInfoById(@RequestParam("id") String id){
         return crawlerUrlInfoService.selectByPrimaryKey(id);
+    }
+
+    @RequestMapping(value = "/queryCrawlerUrlInfoByUrlName",method = RequestMethod.GET)
+    public CrawlerUrlInfo queryCrawlerUrlInfoByUrlName(@RequestParam("urlName") String urlName){
+        Example example=new Example(CrawlerUrlInfo.class);
+        Example.Criteria criteria=example.createCriteria();
+        if(StringUtils.isNotBlank(urlName)){
+            criteria.andEqualTo("urlName");
+        }
+        List<CrawlerUrlInfo> list=crawlerUrlInfoService.selectByExample(example);
+        return null==list?null:list.get(0);
     }
 }

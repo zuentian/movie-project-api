@@ -1,8 +1,10 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
+import com.zuer.zuerlvdoubancommon.entity.CrawlerUrlInfo;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerUrlInfoFeignService;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -45,39 +47,48 @@ public class CrawlerController {
         String account = crawlerAccount.getAccount();
         String password = crawlerAccount.getPassword();
         logger.info("-->>CrawlerController searchTags() account=["+account+"] password=["+password+"]");
-
+        //模拟登陆
         simulateLogin(account, password);
 
         return null;
     }
 
     private void simulateLogin(String account, String password) throws Exception {
-        String DB_LOGIN_URL="";
-        Map<String,String> data = new HashMap<>();
-        data.put("name",account);
-        data.put("password",password);
-        data.put("remember","false");
-        data.put("ticket","");
-        data.put("ck","");
-        Connection.Response login = null;
-        try {
-            login = Jsoup.connect(DB_LOGIN_URL)
-                    .ignoreContentType(true) // 忽略类型验证
-                    .followRedirects(false) // 禁止重定向
-                    .postDataCharset("utf-8")
-                    .header("Upgrade-Insecure-Requests","1")
-                    .header("Accept","application/json")
-                    .header("Content-Type","application/x-www-form-urlencoded")
-                    .header("X-Requested-With","XMLHttpRequest")
-                    .header(USER_AGENT,USER_AGENT_VALUE)
-                    .data(data)
-                    .method(Connection.Method.POST)
-                    .execute();
-        } catch (Exception e) {
-            throw new Exception("登录初始化失败！");
+        CrawlerUrlInfo crawlerUrlInfo=crawlerUrlInfoFeignService.queryCrawlerUrlInfoByUrlName("DB_LOGIN_URL");
+        if(crawlerUrlInfo!=null&&StringUtils.isNotBlank(crawlerUrlInfo.getUrl())){
+
+            String DB_LOGIN_URL=crawlerUrlInfo.getUrl();
+
+            Map<String,String> data = new HashMap<>();
+            data.put("name",account);
+            data.put("password",password);
+            data.put("remember","false");
+            data.put("ticket","");
+            data.put("ck","");
+            Connection.Response login = null;
+            try {
+                login = Jsoup.connect(DB_LOGIN_URL)
+                        .ignoreContentType(true) // 忽略类型验证
+                        .followRedirects(false) // 禁止重定向
+                        .postDataCharset("utf-8")
+                        .header("Upgrade-Insecure-Requests","1")
+                        .header("Accept","application/json")
+                        .header("Content-Type","application/x-www-form-urlencoded")
+                        .header("X-Requested-With","XMLHttpRequest")
+                        .header(USER_AGENT,USER_AGENT_VALUE)
+                        .data(data)
+                        .method(Connection.Method.POST)
+                        .execute();
+            } catch (Exception e) {
+                throw new Exception("登录初始化失败！");
+            }
+            login.charset(CHARSET_CODE);
+            String loginHtml = login.body();
+
+        }else {
+            throw new Exception("没有配置有效的地址");
         }
-        login.charset(CHARSET_CODE);
-        String loginHtml = login.body();
+
     }
 
 }

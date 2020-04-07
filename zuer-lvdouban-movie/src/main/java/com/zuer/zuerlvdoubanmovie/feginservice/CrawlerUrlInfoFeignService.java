@@ -29,4 +29,7 @@ public interface CrawlerUrlInfoFeignService {
 
     @RequestMapping(value = "/CrawlerUrlInfo/updateById",method = RequestMethod.POST)
     void updateById(@RequestBody CrawlerUrlInfo crawlerUrlInfo);
+
+    @RequestMapping(value = "/CrawlerUrlInfo/queryCrawlerUrlInfoByUrlName",method = RequestMethod.GET)
+    CrawlerUrlInfo queryCrawlerUrlInfoByUrlName(@RequestParam("urlName") String urlName);
 }
