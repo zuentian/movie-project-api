@@ -1,27 +1,28 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
-import com.zuer.zuerlvdoubancommon.entity.CrawlerUrlInfo;
+import com.zuer.zuerlvdoubanmovie.common.SimulateLoginService;
+import com.zuer.zuerlvdoubanmovie.config.MapCache;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerUrlInfoFeignService;
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.HashMap;
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
+@Component
 @EnableAutoConfiguration
 @RequestMapping(value = "/CrawlerController")
 @RestController
@@ -29,10 +30,8 @@ import java.util.Map;
 public class CrawlerController {
     private static final Logger logger= LoggerFactory.getLogger(CrawlerController.class);
 
-    public static String USER_AGENT = "User-Agent";
-    public static String USER_AGENT_VALUE = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36";
-    //public static String USER_AGENT_VALUE = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0";
-    public static String CHARSET_CODE = "UTF-8";
+    @Resource(name="SimulateLoginService")
+    private SimulateLoginService simulateLoginService;
 
     @Autowired
     private CrawlerUrlInfoFeignService crawlerUrlInfoFeignService;
@@ -47,48 +46,38 @@ public class CrawlerController {
         String account = crawlerAccount.getAccount();
         String password = crawlerAccount.getPassword();
         logger.info("-->>CrawlerController searchTags() account=["+account+"] password=["+password+"]");
-        //模拟登陆
-        simulateLogin(account, password);
-
-        return null;
-    }
-
-    private void simulateLogin(String account, String password) throws Exception {
-        CrawlerUrlInfo crawlerUrlInfo=crawlerUrlInfoFeignService.queryCrawlerUrlInfoByUrlName("DB_LOGIN_URL");
-        if(crawlerUrlInfo!=null&&StringUtils.isNotBlank(crawlerUrlInfo.getUrl())){
-
-            String DB_LOGIN_URL=crawlerUrlInfo.getUrl();
-
-            Map<String,String> data = new HashMap<>();
-            data.put("name",account);
-            data.put("password",password);
-            data.put("remember","false");
-            data.put("ticket","");
-            data.put("ck","");
-            Connection.Response login = null;
-            try {
-                login = Jsoup.connect(DB_LOGIN_URL)
-                        .ignoreContentType(true) // 忽略类型验证
-                        .followRedirects(false) // 禁止重定向
-                        .postDataCharset("utf-8")
-                        .header("Upgrade-Insecure-Requests","1")
-                        .header("Accept","application/json")
-                        .header("Content-Type","application/x-www-form-urlencoded")
-                        .header("X-Requested-With","XMLHttpRequest")
-                        .header(USER_AGENT,USER_AGENT_VALUE)
-                        .data(data)
-                        .method(Connection.Method.POST)
-                        .execute();
-            } catch (Exception e) {
-                throw new Exception("登录初始化失败！");
+        Map<String, String> cookies = (Map<String, String>) MapCache.get("dbLoginCookies");
+        if(null == cookies){
+            //模拟登陆
+            Connection.Response response = simulateLoginService.login(account,password,"DB_LOGIN_URL");
+            String loginHtml = response.body();
+            Map maps = (Map) JSON.parse(loginHtml);
+            if(maps!=null&&"success".equals(maps.get("status"))){
+                MapCache.set("dbLoginCookies",cookies);
             }
-            login.charset(CHARSET_CODE);
-            String loginHtml = login.body();
-
         }else {
-            throw new Exception("没有配置有效的地址");
+
         }
 
+           /* // login 中已经获取到登录成功之后的cookies
+            // 构造访问个人中心的请求
+            Document document = Jsoup.connect(DB_USER_MOVIE)
+                    //取出login对象里面的cookies
+                    .cookies(login.cookies())
+                    .get();
+            if (document != null) {
+                Elements elements = document.select(".article .pl a");
+                for(Element e:elements){
+                    String text=e.text();
+                    System.out.println(text);
+                }
+            } else {
+                throw new Exception("出错啦！！！！！");
+            }*//*
+        }else{
+            throw new Exception("登陆失败！");
+        }*/
+        return null;
     }
 
 }

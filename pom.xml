@@ -132,8 +132,8 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
-            <version>11.2.0.4.0</version>
-            <!--<version>11.2.0.1.0</version>-->
+            <!--<version>11.2.0.4.0</version>-->
+            <version>11.2.0.1.0</version>
         </dependency>
 
 
@@ -159,17 +159,17 @@
         </dependency>
 
         <!--有很多简化代码的操作，勿删-->
-        <dependency>
+        <!--<dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>25.0-jre</version>
-        </dependency>
+        </dependency>-->
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.diffplug.guava</groupId>
             <artifactId>guava-cache</artifactId>
             <version>19.0.0</version>
-        </dependency>
+        </dependency>-->
         <!--shiro安全验证-->
         <dependency>
             <groupId>org.apache.shiro</groupId>
@@ -328,6 +328,22 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.62</version>
         </dependency>
+        <!--caffeine缓存在springboot2.0里取代了guava-->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>-->
+        <!-- Spring boot Cache-->
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>-->
     </dependencies>
     <dependencyManagement>
         <dependencies>
