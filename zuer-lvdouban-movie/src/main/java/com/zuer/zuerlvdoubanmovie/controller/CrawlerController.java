@@ -7,7 +7,6 @@ import com.zuer.zuerlvdoubanmovie.config.MapCache;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerUrlInfoFeignService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/CrawlerController")
@@ -47,8 +48,8 @@ public class CrawlerController {
     private CrawlerAccountFeignService crawlerAccountFeignService;
 
     @RequestMapping(value = "/searchTags",method = RequestMethod.GET)
-    public String searchTags(@RequestParam Map<String,Object> param) throws Exception {
-
+    public Map<String,Object> searchTags(@RequestParam Map<String, Object> param) throws Exception {
+        Map<String,Object> resultMap = new HashMap<String,Object>();
         CrawlerAccount crawlerAccount=crawlerAccountFeignService.queryCrawlerAccountByWebAndFlag("dbmovie","1");
         if(crawlerAccount==null){
             throw new Exception("未配置有效的登录账号！");
@@ -62,29 +63,30 @@ public class CrawlerController {
             throw new Exception("未配置登录密码！");
         }
         logger.info("-->>CrawlerController searchTags() account=["+account+"] password=["+password+"]");
-        Map<String, String> cookies ;
+        Map<String, String> cookies = null;
         String loginName = "";
         //先取缓存中的cookies
         Map<String, Object> dbLoginParam = (Map<String, Object>) MapCache.get("DBLOGINPARAM");
         if(null != dbLoginParam){
             if(StringUtils.isNotEmpty((String)dbLoginParam.get("account"))&&account.equals(dbLoginParam.get("account"))){
                 Date date = (Date)dbLoginParam.get("time");
-                long time = new Date().getTime()-date.getTime()/(1000*60);
+                long time = (new Date().getTime()-date.getTime())/(1000*60);
                 if(time<30){
                     logger.info("-->>CrawlerController searchTags() cookies有效，跳过登陆");
-                    cookies = (Map<String, String>) MapCache.get("cookies");
-                    loginName = (String) MapCache.get("loginName");
+                    cookies = (Map<String, String>) dbLoginParam.get("cookies");
+                    loginName = (String) dbLoginParam.get("loginName");
                 }
             }
-        }else {
+        }
+        if(cookies == null ){
             logger.info("-->>CrawlerController searchTags() cookies失效，重新登陆");
             //模拟登陆
-            Connection.Response response = simulateLoginService.login(account,password,"DB_LOGIN_URL");
-            String loginHtml = response.body();
+            Connection.Response loginResponse = simulateLoginService.login(account,password,"DB_LOGIN_URL");
+            String loginHtml = loginResponse.body();
 
             Map maps = (Map) JSON.parse(loginHtml);
             if(maps!=null&&"success".equals(maps.get("status"))){
-                cookies = response.cookies();
+                cookies = loginResponse.cookies();
                 loginName = (String) ((Map)((Map)maps.get("payload")).get("account_info")).get("name");
                 Map<String,Object> map = new HashMap<String,Object>();
                 map.put("cookies",cookies);
@@ -92,14 +94,17 @@ public class CrawlerController {
                 map.put("account",account);
                 map.put("loginName",loginName);
                 MapCache.set("DBLOGINPARAM",map);
-
-                Map<String,String> data = new HashMap<String, String>();
-                data.put("type","movie");
-                simulateLoginService.requestByGet(cookies,data,"DB_SEARCH_TAG");
             }
         }
         logger.info("-->>CrawlerController searchTags() 登录账号网名 loginName=["+loginName+"]");
-        return loginName;
+        Map<String,String> data = new HashMap<String, String>();
+        data.put("type","movie");
+        Connection.Response response = simulateLoginService.requestByGet(cookies,data,"DB_SEARCH_TAG");
+        Map resMap = (Map) JSON.parse(response.body());
+        List<String> tags = (List) resMap.get("tags");
+        resultMap.put("tags",tags);
+        resultMap.put("loginName",loginName);
+        return resultMap;
     }
 
     public static void main(String[] args) throws ParseException {

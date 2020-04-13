@@ -55,7 +55,7 @@ public class CrawlerUrlInfoServiceClient {
 
     @RequestMapping(value = "/updateById",method = RequestMethod.POST)
     public void updateById(@RequestBody CrawlerUrlInfo crawlerUrlInfo){
-        crawlerUrlInfoService.updateByPrimaryKey(crawlerUrlInfo);
+        crawlerUrlInfoService.updateByPrimaryKeySelective(crawlerUrlInfo);
     }
     @RequestMapping(value = "/queryCrawlerUrlInfoById",method = RequestMethod.GET)
     public CrawlerUrlInfo queryCrawlerUrlInfoById(@RequestParam("id") String id){
@@ -68,6 +68,6 @@ public class CrawlerUrlInfoServiceClient {
         Example.Criteria criteria=example.createCriteria();
         criteria.andEqualTo("urlName",urlName);
         List<CrawlerUrlInfo> list=crawlerUrlInfoService.selectByExample(example);
-        return null==list?null:list.get(0);
+        return null!=list&&list.size()>0?list.get(0):null;
     }
 }

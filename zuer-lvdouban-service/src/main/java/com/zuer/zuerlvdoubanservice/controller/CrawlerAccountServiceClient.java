@@ -56,7 +56,7 @@ public class CrawlerAccountServiceClient {
 
     @RequestMapping(value = "/updateById",method = RequestMethod.POST)
     public void updateById(@RequestBody CrawlerAccount crawlerAccount){
-        crawlerAccountService.updateByPrimaryKey(crawlerAccount);
+        crawlerAccountService.updateByPrimaryKeySelective(crawlerAccount);
     }
     @RequestMapping(value = "/deleteById",method = RequestMethod.GET)
     public void deleteById(@RequestParam("id") String id){

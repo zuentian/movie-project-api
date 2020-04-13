@@ -37,10 +37,9 @@ public class CrawlerAccount {
     @Column(name = "CRT_USER")
     private String crtUser;
 
-
     @Column(name = "UPD_NAME")
     private String updName;
 
-    @Column(name = "CRT_Name")
+    @Column(name = "CRT_NAME")
     private String crtName;
 }

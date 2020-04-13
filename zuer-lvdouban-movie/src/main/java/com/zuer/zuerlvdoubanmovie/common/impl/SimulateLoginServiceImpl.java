@@ -69,7 +69,7 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
     }
 
     @Override
-    public void requestByGet(Map<String, String> cookies,Map<String,String> data, String urlCode) throws Exception {
+    public Connection.Response requestByGet(Map<String, String> cookies,Map<String,String> data, String urlCode) throws Exception {
         logger.info("-->>SimulateLoginServiceImpl requestByGet start urlCode=["+urlCode+"]");
 
         CrawlerUrlInfo crawlerUrlInfo = crawlerUrlInfoFeignService.queryCrawlerUrlInfoByUrlName(urlCode);
@@ -78,14 +78,23 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
             String url=crawlerUrlInfo.getUrl();
             logger.info("-->>SimulateLoginServiceImpl login start urlCode=["+urlCode+"] url=["+url+"]");
 
-            Document document = Jsoup.connect(url)
-                    //取出login对象里面的cookies
-                    .cookies(cookies).data(data)
-                    .get();
+            Connection.Response response = Jsoup.connect(url)
+                    .ignoreContentType(true) // 忽略类型验证
+                    .followRedirects(false) // 禁止重定向
+                    .postDataCharset("utf-8")
+                    .header("Upgrade-Insecure-Requests","1")
+                    .header("Accept","application/json")
+                    .header("Content-Type","application/x-www-form-urlencoded")
+                    .header("X-Requested-With","XMLHttpRequest")
+                    .header(USER_AGENT,USER_AGENT_VALUE)
+                    .cookies(cookies)
+                    .data(data)
+                    .method(Connection.Method.GET)
+                    .execute();
+            return response;
         }else {
             throw new Exception("没有配置有效的请求地址");
         }
-        return;
     }
 
 }
