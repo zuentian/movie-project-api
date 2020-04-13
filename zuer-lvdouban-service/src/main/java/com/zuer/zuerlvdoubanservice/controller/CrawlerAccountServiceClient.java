@@ -75,6 +75,6 @@ public class CrawlerAccountServiceClient {
             criteria.andEqualTo("flag",flag);
         }
         List<CrawlerAccount> list=crawlerAccountService.selectByExample(example);
-        return null==list?null:list.get(0);
+        return null!=list&&list.size()>0?list.get(0):null;
     }
 }

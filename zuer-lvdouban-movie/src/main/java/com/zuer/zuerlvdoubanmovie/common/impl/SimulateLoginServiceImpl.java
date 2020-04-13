@@ -6,11 +6,13 @@ import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerUrlInfoFeignService;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 @Service("SimulateLoginService")
@@ -26,13 +28,15 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
     private CrawlerUrlInfoFeignService crawlerUrlInfoFeignService;
 
     public Connection.Response login(String account,String password,String urlCode) throws Exception {
-        logger.info("-->>SimulateLoginServiceImpl login start");
+        logger.info("-->>SimulateLoginServiceImpl login start urlCode=["+urlCode+"]");
         CrawlerUrlInfo crawlerUrlInfo = crawlerUrlInfoFeignService.queryCrawlerUrlInfoByUrlName(urlCode);
 
         Connection.Response login = null;
         if(crawlerUrlInfo!=null&&StringUtils.isNotBlank(crawlerUrlInfo.getUrl())){
 
-            String DB_LOGIN_URL=crawlerUrlInfo.getUrl();
+            String url=crawlerUrlInfo.getUrl();
+            logger.info("-->>SimulateLoginServiceImpl login start urlCode=["+urlCode+"] url=["+url+"]");
+
             Map<String,String> data = new HashMap<>();
             data.put("name",account);
             data.put("password",password);
@@ -41,7 +45,7 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
             data.put("ck","");
 
             try {
-                login = Jsoup.connect(DB_LOGIN_URL)
+                login = Jsoup.connect(url)
                         .ignoreContentType(true) // 忽略类型验证
                         .followRedirects(false) // 禁止重定向
                         .postDataCharset("utf-8")
@@ -60,8 +64,28 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
             return login;
 
         }else {
-            throw new Exception("没有配置有效的地址");
+            throw new Exception("没有配置有效的请求地址");
         }
+    }
+
+    @Override
+    public void requestByGet(Map<String, String> cookies,Map<String,String> data, String urlCode) throws Exception {
+        logger.info("-->>SimulateLoginServiceImpl requestByGet start urlCode=["+urlCode+"]");
+
+        CrawlerUrlInfo crawlerUrlInfo = crawlerUrlInfoFeignService.queryCrawlerUrlInfoByUrlName(urlCode);
+        if(crawlerUrlInfo!=null&&StringUtils.isNotBlank(crawlerUrlInfo.getUrl())){
+
+            String url=crawlerUrlInfo.getUrl();
+            logger.info("-->>SimulateLoginServiceImpl login start urlCode=["+urlCode+"] url=["+url+"]");
+
+            Document document = Jsoup.connect(url)
+                    //取出login对象里面的cookies
+                    .cookies(cookies).data(data)
+                    .get();
+        }else {
+            throw new Exception("没有配置有效的请求地址");
+        }
+        return;
     }
 
 }

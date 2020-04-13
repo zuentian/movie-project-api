@@ -66,9 +66,7 @@ public class CrawlerUrlInfoServiceClient {
     public CrawlerUrlInfo queryCrawlerUrlInfoByUrlName(@RequestParam("urlName") String urlName){
         Example example=new Example(CrawlerUrlInfo.class);
         Example.Criteria criteria=example.createCriteria();
-        if(StringUtils.isNotBlank(urlName)){
-            criteria.andEqualTo("urlName");
-        }
+        criteria.andEqualTo("urlName",urlName);
         List<CrawlerUrlInfo> list=crawlerUrlInfoService.selectByExample(example);
         return null==list?null:list.get(0);
     }
