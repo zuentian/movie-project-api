@@ -85,7 +85,9 @@ public class CrawlerController {
             String loginHtml = loginResponse.body();
 
             Map maps = (Map) JSON.parse(loginHtml);
+            logger.info("-->>CrawlerController  登陆 status = ["+maps.get("status")+"]");
             if(maps!=null&&"success".equals(maps.get("status"))){
+                logger.info("-->>CrawlerController  登陆成功!");
                 cookies = loginResponse.cookies();
                 loginName = (String) ((Map)((Map)maps.get("payload")).get("account_info")).get("name");
                 Map<String,Object> map = new HashMap<String,Object>();
@@ -94,6 +96,9 @@ public class CrawlerController {
                 map.put("account",account);
                 map.put("loginName",loginName);
                 MapCache.set("DBLOGINPARAM",map);
+            }else{
+                logger.info("-->>CrawlerController  登陆失败! 原因 description=["+maps.get("description")+"]");
+                throw new Exception((String) maps.get("description"));
             }
         }
         logger.info("-->>CrawlerController searchTags() 登录账号网名 loginName=["+loginName+"]");
