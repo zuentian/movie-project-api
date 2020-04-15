@@ -1,4 +1,4 @@
-package com.zuer.zuerlvdoubanmovie.common;
+package com.zuer.zuerlvdoubanmovie.common.service;
 
 import org.jsoup.Connection;
 

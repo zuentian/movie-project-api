@@ -1,18 +1,16 @@
-package com.zuer.zuerlvdoubanmovie.common.impl;
+package com.zuer.zuerlvdoubanmovie.common.service.impl;
 
 import com.zuer.zuerlvdoubancommon.entity.CrawlerUrlInfo;
-import com.zuer.zuerlvdoubanmovie.common.SimulateLoginService;
+import com.zuer.zuerlvdoubanmovie.common.service.SimulateLoginService;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerUrlInfoFeignService;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 @Service("SimulateLoginService")

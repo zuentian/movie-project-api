@@ -2,7 +2,8 @@ package com.zuer.zuerlvdoubanmovie.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
-import com.zuer.zuerlvdoubanmovie.common.SimulateLoginService;
+import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbRequestInfo;
+import com.zuer.zuerlvdoubanmovie.common.service.SimulateLoginService;
 import com.zuer.zuerlvdoubanmovie.config.MapCache;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerUrlInfoFeignService;
@@ -13,13 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +110,10 @@ public class CrawlerController {
         return resultMap;
     }
 
-    public static void main(String[] args) throws ParseException {
+    @ResponseBody
+    @RequestMapping(value = "/getDbMovieInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String,Object> getDbMovieInfo(@RequestBody CrawlerDbRequestInfo crawlerDbRequestInfo) throws Exception {
 
+        return null;
     }
 }
