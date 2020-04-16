@@ -95,4 +95,24 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
         }
     }
 
+    @Override
+    public Connection.Response requestByGetFromUrl(Map<String, String> cookies,Map<String,String> data, String url) throws Exception {
+        logger.info("-->>SimulateLoginServiceImpl requestByGet start url=["+url+"]");
+        Connection.Response response = Jsoup.connect(url)
+                .ignoreContentType(true) // 忽略类型验证
+                .followRedirects(false) // 禁止重定向
+                .postDataCharset("utf-8")
+                .header("Upgrade-Insecure-Requests","1")
+                .header("Accept","application/json")
+                .header("Content-Type","application/x-www-form-urlencoded")
+                .header("X-Requested-With","XMLHttpRequest")
+                .header(USER_AGENT,USER_AGENT_VALUE)
+                .cookies(cookies)
+                .data(data)
+                .method(Connection.Method.GET)
+                .execute();
+        return response;
+
+    }
+
 }

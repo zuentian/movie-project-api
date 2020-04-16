@@ -1,23 +1,30 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
+import com.zuer.zuerlvdoubanmovie.common.em.MovieInfoHtml;
+import com.zuer.zuerlvdoubanmovie.common.util.CleanHtml;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbRequestInfo;
+import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbResponseInfo;
 import com.zuer.zuerlvdoubanmovie.common.service.SimulateLoginService;
 import com.zuer.zuerlvdoubanmovie.config.MapCache;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
-import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerUrlInfoFeignService;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +45,6 @@ public class CrawlerController {
     @Autowired
     @Qualifier("SimulateLoginService")
     private SimulateLoginService simulateLoginService;
-
-    @Autowired
-    private CrawlerUrlInfoFeignService crawlerUrlInfoFeignService;
 
     @Autowired
     private CrawlerAccountFeignService crawlerAccountFeignService;
@@ -111,9 +115,79 @@ public class CrawlerController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/getDbMovieInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getDbMovieInfo", method = RequestMethod.POST)
     public Map<String,Object> getDbMovieInfo(@RequestBody CrawlerDbRequestInfo crawlerDbRequestInfo) throws Exception {
 
+        logger.info("-->>CrawlerController getDbMovieInfo() start");
+
+        Map<String, Object> dbLoginParam = (Map<String, Object>) MapCache.get("DBLOGINPARAM");
+        Map<String, String> cookies = null;
+        String loginName ="";
+        if(null != dbLoginParam){
+            cookies = (Map<String, String>) dbLoginParam.get("cookies");
+            loginName = (String) dbLoginParam.get("loginName");
+
+        }else{
+            throw new Exception("登录失效，请刷新页面！");
+        }
+        Map map = JSONObject.parseObject(JSONObject.toJSONString(crawlerDbRequestInfo), Map.class);
+        Connection.Response response = simulateLoginService.requestByGet(cookies,map,"DB_SEARCH_SUBJECTS");
+        Map resMap = (Map) JSON.parse(response.body());
+        List<JSONObject> subjects = (List) resMap.get("subjects");
+        if(subjects!=null&&subjects.size()>0){
+            for(JSONObject jsonObject : subjects){
+                String url = (String) jsonObject.get("url");
+                logger.info("-->>CrawlerController getDbMovieInfo()  url=["+url+"]");
+                Connection.Response responseinfo = simulateLoginService.requestByGetFromUrl(cookies,map,url);
+                String html = responseinfo.body();
+                //解析html获取信息
+                analysisByHtml(html);
+            }
+        }
         return null;
+    }
+
+    public void analysisByHtml(String html) throws Exception {
+        Document document = Jsoup.parse(html);
+        CrawlerDbResponseInfo crawlerDbResponseInfo = new CrawlerDbResponseInfo();
+        //电影名,包括制片地区的语言
+        String movieNameHtml = document.select("[property=v:itemreviewed]").text().trim();
+        String[] movieNames = movieNameHtml.split(" ", 2);//只会分割两个元素
+        int movieNamesLen = movieNames.length;
+        if (movieNamesLen == 1){
+            crawlerDbResponseInfo.setMovieName(movieNames[0]);
+        }else{
+            crawlerDbResponseInfo.setMovieName(movieNames[0]);
+            crawlerDbResponseInfo.setMovieLocalName(movieNames[1]);
+        }
+        //年份
+        String year = document.getElementsByClass("year").text().trim().
+                replace("(","").replace(")","");
+        crawlerDbResponseInfo.setYear(year);
+        String info = document.select("[id=info]").text();
+        //处理html获取电影信息
+        Map<String,String> infos = CleanHtml.cleanHtmlMovieInfo(info);
+        //片长
+        //crawlerDbResponseInfo.setLength(infos.get(MovieInfoHtml.LENGTH.getValue()).split("/"));
+
+
+
+        System.out.println();
+
+    }
+
+
+    public static void main(String[] args) throws Exception {
+        String xmlString ="";
+        File file =new File("C:\\Users\\Zuer\\Desktop\\qqqi.txt");
+
+            InputStream in = new FileInputStream(file);
+            int flen = (int)file.length();
+        byte[] strBuffer = new byte[flen];
+            in.read(strBuffer, 0, flen);
+                xmlString = new String(strBuffer);
+
+        CrawlerController c = new CrawlerController();
+        c.analysisByHtml(xmlString);
     }
 }
