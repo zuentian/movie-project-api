@@ -3,7 +3,9 @@ package com.zuer.zuerlvdoubanmovie.common.util;
 import com.zuer.zuerlvdoubanmovie.common.em.MovieInfoHtml;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 public class CleanHtml {
 
@@ -18,7 +20,7 @@ public class CleanHtml {
             MovieInfoHtml.NAME_OTHER.getValue(),
             MovieInfoHtml.LENGTH.getValue(),
             MovieInfoHtml.TYPE.getValue(),
-            MovieInfoHtml.ADDRES.getValue(),
+            MovieInfoHtml.ADDRESS.getValue(),
     };
 
     public static Map<String, String> cleanHtmlMovieInfo(String info) {
@@ -39,5 +41,16 @@ public class CleanHtml {
             }
         }
         return resultInfo;
+    }
+
+    public static List<String> splitToArray(String [] strs){
+        if(strs!=null&&strs.length>0){
+            List<String> list = new ArrayList<String>();
+            for(String s: strs){
+                list.add(s);
+            }
+            return list;
+        }
+        return null;
     }
 }

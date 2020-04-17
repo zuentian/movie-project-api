@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/CrawlerController")
@@ -116,8 +113,8 @@ public class CrawlerController {
 
     @ResponseBody
     @RequestMapping(value = "/getDbMovieInfo", method = RequestMethod.POST)
-    public Map<String,Object> getDbMovieInfo(@RequestBody CrawlerDbRequestInfo crawlerDbRequestInfo) throws Exception {
-
+    public CrawlerDbResponseInfo [] getDbMovieInfo(@RequestBody CrawlerDbRequestInfo crawlerDbRequestInfo) throws Exception {
+        CrawlerDbResponseInfo [] list = null;
         logger.info("-->>CrawlerController getDbMovieInfo() start");
 
         Map<String, Object> dbLoginParam = (Map<String, Object>) MapCache.get("DBLOGINPARAM");
@@ -134,20 +131,26 @@ public class CrawlerController {
         Connection.Response response = simulateLoginService.requestByGet(cookies,map,"DB_SEARCH_SUBJECTS");
         Map resMap = (Map) JSON.parse(response.body());
         List<JSONObject> subjects = (List) resMap.get("subjects");
+
         if(subjects!=null&&subjects.size()>0){
+            list = new CrawlerDbResponseInfo[subjects.size()];
+            int i = 0;
             for(JSONObject jsonObject : subjects){
+
                 String url = (String) jsonObject.get("url");
                 logger.info("-->>CrawlerController getDbMovieInfo()  url=["+url+"]");
                 Connection.Response responseinfo = simulateLoginService.requestByGetFromUrl(cookies,map,url);
                 String html = responseinfo.body();
                 //解析html获取信息
-                analysisByHtml(html);
+                CrawlerDbResponseInfo crawlerDbResponseInfo = analysisByHtml(html);
+                list[i] =crawlerDbResponseInfo;
+                i++;
             }
         }
-        return null;
+        return list;
     }
 
-    public void analysisByHtml(String html) throws Exception {
+    public CrawlerDbResponseInfo analysisByHtml(String html) throws Exception {
         Document document = Jsoup.parse(html);
         CrawlerDbResponseInfo crawlerDbResponseInfo = new CrawlerDbResponseInfo();
         //电影名,包括制片地区的语言
@@ -168,11 +171,18 @@ public class CrawlerController {
         //处理html获取电影信息
         Map<String,String> infos = CleanHtml.cleanHtmlMovieInfo(info);
         //片长
-        //crawlerDbResponseInfo.setLength(infos.get(MovieInfoHtml.LENGTH.getValue()).split("/"));
-
-
-
-        System.out.println();
+        crawlerDbResponseInfo.setLengths(CleanHtml.splitToArray(infos.get(MovieInfoHtml.LENGTH.getType()).split("/")));
+        //上映时间
+        crawlerDbResponseInfo.setTimes(CleanHtml.splitToArray(infos.get(MovieInfoHtml.TIME.getType()).split("/")));
+        //制片国家或地区
+        crawlerDbResponseInfo.setAreas(CleanHtml.splitToArray(infos.get(MovieInfoHtml.AREA.getType()).split("/")));
+        crawlerDbResponseInfo.setLanguages(CleanHtml.splitToArray(infos.get(MovieInfoHtml.LANGUAGE.getType()).split("/")));
+        crawlerDbResponseInfo.setNameOthers(CleanHtml.splitToArray(infos.get(MovieInfoHtml.NAME_OTHER.getType()).split("/")));
+        crawlerDbResponseInfo.setTypes(CleanHtml.splitToArray(infos.get(MovieInfoHtml.TYPE.getType()).split("/")));
+        crawlerDbResponseInfo.setActors(CleanHtml.splitToArray(infos.get(MovieInfoHtml.ACTOR.getType()).split("/")));
+        //评分
+        String score = document.select("[property=v:average]").text().trim();
+        return crawlerDbResponseInfo;
 
     }
 
