@@ -77,14 +77,25 @@ public class CrawlerController {
                 }
             }
         }
+        Map<String,String> tagsData = new HashMap<String, String>();
+        tagsData.put("type","movie");
+        Connection.Response response= null ;
+
         if(cookies == null ){
             logger.info("-->>CrawlerController searchTags() cookies失效，重新登陆");
+            Map<String,String> data = new HashMap<String,String>();
+            data.put("name",account);
+            data.put("password",password);
+            data.put("remember","false");
+            data.put("ticket","");
+            data.put("ck","");
             //模拟登陆
-            Connection.Response loginResponse = simulateLoginService.login(account,password,"DB_LOGIN_URL");
+            Connection.Response loginResponse = simulateLoginService.login(data,"DB_LOGIN_URL");
             String loginHtml = loginResponse.body();
-
             Map maps = (Map) JSON.parse(loginHtml);
+
             logger.info("-->>CrawlerController  登陆 status = ["+maps.get("status")+"]");
+
             if(maps!=null&&"success".equals(maps.get("status"))){
                 logger.info("-->>CrawlerController  登陆成功!");
                 cookies = loginResponse.cookies();
@@ -95,15 +106,19 @@ public class CrawlerController {
                 map.put("account",account);
                 map.put("loginName",loginName);
                 MapCache.set("DBLOGINPARAM",map);
+
+                resultMap.put("status",maps.get("status"));
+                resultMap.put("description",maps.get("description"));
+                logger.info("-->>CrawlerController searchTags() 登录账号网名 loginName=["+loginName+"]");
+
             }else{
                 logger.info("-->>CrawlerController  登陆失败! 原因 description=["+maps.get("description")+"]");
-                throw new Exception((String) maps.get("description"));
+                resultMap.put("status",maps.get("status"));
+                resultMap.put("description",maps.get("description"));
+                logger.info("-->>CrawlerController searchTags() 登录账号网名 loginName=["+loginName+"]");
             }
         }
-        logger.info("-->>CrawlerController searchTags() 登录账号网名 loginName=["+loginName+"]");
-        Map<String,String> data = new HashMap<String, String>();
-        data.put("type","movie");
-        Connection.Response response = simulateLoginService.requestByGet(cookies,data,"DB_SEARCH_TAG");
+        response = simulateLoginService.requestByGet(cookies,tagsData,"DB_SEARCH_TAG");
         Map resMap = (Map) JSON.parse(response.body());
         List<String> tags = (List) resMap.get("tags");
         resultMap.put("tags",tags);
@@ -120,15 +135,18 @@ public class CrawlerController {
         Map<String, Object> dbLoginParam = (Map<String, Object>) MapCache.get("DBLOGINPARAM");
         Map<String, String> cookies = null;
         String loginName ="";
+        Connection.Response response = null;
+        Map map = JSONObject.parseObject(JSONObject.toJSONString(crawlerDbRequestInfo), Map.class);
         if(null != dbLoginParam){
             cookies = (Map<String, String>) dbLoginParam.get("cookies");
             loginName = (String) dbLoginParam.get("loginName");
-
+            logger.info("-->>CrawlerController getDbMovieInfo() 爬虫带cookies获取豆瓣电影信息 loginName=["+loginName+"]");
+            response = simulateLoginService.requestByGet(cookies,map,"DB_SEARCH_SUBJECTS");
         }else{
-            throw new Exception("登录失效，请刷新页面！");
+            logger.info("-->>CrawlerController getDbMovieInfo() 爬虫无cookies获取豆瓣电影信息 ");
+            response = simulateLoginService.requestByGet(cookies,map,"DB_SEARCH_SUBJECTS");
         }
-        Map map = JSONObject.parseObject(JSONObject.toJSONString(crawlerDbRequestInfo), Map.class);
-        Connection.Response response = simulateLoginService.requestByGet(cookies,map,"DB_SEARCH_SUBJECTS");
+
         Map resMap = (Map) JSON.parse(response.body());
         List<JSONObject> subjects = (List) resMap.get("subjects");
 
@@ -171,21 +189,25 @@ public class CrawlerController {
         //处理html获取电影信息
         Map<String,String> infos = CleanHtml.cleanHtmlMovieInfo(info);
         //片长
-        crawlerDbResponseInfo.setLengths(CleanHtml.splitToArray(infos.get(MovieInfoHtml.LENGTH.getType()).split("/")));
+        crawlerDbResponseInfo.setLengths(CleanHtml.splitToArray(split(infos.get(MovieInfoHtml.LENGTH.getType()))));
         //上映时间
-        crawlerDbResponseInfo.setTimes(CleanHtml.splitToArray(infos.get(MovieInfoHtml.TIME.getType()).split("/")));
+        crawlerDbResponseInfo.setTimes(CleanHtml.splitToArray(split(infos.get(MovieInfoHtml.TIME.getType()))));
         //制片国家或地区
-        crawlerDbResponseInfo.setAreas(CleanHtml.splitToArray(infos.get(MovieInfoHtml.AREA.getType()).split("/")));
-        crawlerDbResponseInfo.setLanguages(CleanHtml.splitToArray(infos.get(MovieInfoHtml.LANGUAGE.getType()).split("/")));
-        crawlerDbResponseInfo.setNameOthers(CleanHtml.splitToArray(infos.get(MovieInfoHtml.NAME_OTHER.getType()).split("/")));
-        crawlerDbResponseInfo.setTypes(CleanHtml.splitToArray(infos.get(MovieInfoHtml.TYPE.getType()).split("/")));
-        crawlerDbResponseInfo.setActors(CleanHtml.splitToArray(infos.get(MovieInfoHtml.ACTOR.getType()).split("/")));
+        crawlerDbResponseInfo.setAreas(CleanHtml.splitToArray(split(infos.get(MovieInfoHtml.AREA.getType()))));
+        crawlerDbResponseInfo.setLanguages(CleanHtml.splitToArray(split(infos.get(MovieInfoHtml.LANGUAGE.getType()))));
+        crawlerDbResponseInfo.setNameOthers(CleanHtml.splitToArray(split(infos.get(MovieInfoHtml.NAME_OTHER.getType()))));
+        crawlerDbResponseInfo.setTypes(CleanHtml.splitToArray(split(infos.get(MovieInfoHtml.TYPE.getType()))));
+        crawlerDbResponseInfo.setActors(CleanHtml.splitToArray(split(infos.get(MovieInfoHtml.ACTOR.getType()))));
         //评分
         String score = document.select("[property=v:average]").text().trim();
+        crawlerDbResponseInfo.setScore(score);
         return crawlerDbResponseInfo;
 
     }
 
+    private String[] split(String str){
+        return str==null?null:str.split("/");
+    }
 
     public static void main(String[] args) throws Exception {
         String xmlString ="";

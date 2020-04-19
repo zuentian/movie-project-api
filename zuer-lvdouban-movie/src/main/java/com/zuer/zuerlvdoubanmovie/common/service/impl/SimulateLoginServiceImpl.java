@@ -18,14 +18,13 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
 
     private static final Logger logger= LoggerFactory.getLogger(SimulateLoginServiceImpl.class);
     public static String USER_AGENT = "User-Agent";
-    public static String USER_AGENT_VALUE = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36";
-    //public static String USER_AGENT_VALUE = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0";
+    public static String USER_AGENT_VALUE = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36";
     public static String CHARSET_CODE = "UTF-8";
 
     @Autowired
     private CrawlerUrlInfoFeignService crawlerUrlInfoFeignService;
 
-    public Connection.Response login(String account,String password,String urlCode) throws Exception {
+    public Connection.Response login(Map<String,String> data,String urlCode) throws Exception {
         logger.info("-->>SimulateLoginServiceImpl login start urlCode=["+urlCode+"]");
         CrawlerUrlInfo crawlerUrlInfo = crawlerUrlInfoFeignService.queryCrawlerUrlInfoByUrlName(urlCode);
 
@@ -34,13 +33,6 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
 
             String url=crawlerUrlInfo.getUrl();
             logger.info("-->>SimulateLoginServiceImpl login start urlCode=["+urlCode+"] url=["+url+"]");
-
-            Map<String,String> data = new HashMap<>();
-            data.put("name",account);
-            data.put("password",password);
-            data.put("remember","false");
-            data.put("ticket","");
-            data.put("ck","");
 
             try {
                 login = Jsoup.connect(url)
@@ -52,6 +44,14 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
                         .header("Content-Type","application/x-www-form-urlencoded")
                         .header("X-Requested-With","XMLHttpRequest")
                         .header(USER_AGENT,USER_AGENT_VALUE)
+                        .header("Host","accounts.douban.com")
+                        .header("Origin","https://accounts.douban.com")
+                        .header("Referer","https://accounts.douban.com/passport/login")
+                        .header("Sec-Fetch-Mode","cors")
+                        .header("Sec-Fetch-Site","same-origin")
+                        //.header("Accept-Encoding","gzip, deflate, br")
+                        //.header("Accept-Language","zh-CN,zh;q=0.9")
+                        //.header("X-Requested-With","XMLHttpRequest")
                         .data(data)
                         .method(Connection.Method.POST)
                         .execute();
@@ -72,11 +72,63 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
 
         CrawlerUrlInfo crawlerUrlInfo = crawlerUrlInfoFeignService.queryCrawlerUrlInfoByUrlName(urlCode);
         if(crawlerUrlInfo!=null&&StringUtils.isNotBlank(crawlerUrlInfo.getUrl())){
-
             String url=crawlerUrlInfo.getUrl();
             logger.info("-->>SimulateLoginServiceImpl login start urlCode=["+urlCode+"] url=["+url+"]");
+            Connection.Response response = null;
+            if(cookies==null){
+                response = Jsoup.connect(url)
+                        .ignoreContentType(true) // 忽略类型验证
+                        .followRedirects(false) // 禁止重定向
+                        .postDataCharset("utf-8")
+                        .header("Upgrade-Insecure-Requests","1")
+                        .header("Accept","application/json")
+                        .header("Content-Type","application/x-www-form-urlencoded")
+                        .header("X-Requested-With","XMLHttpRequest")
+                        .header(USER_AGENT,USER_AGENT_VALUE)
+                        .data(data)
+                        .method(Connection.Method.GET)
+                        .execute();
 
-            Connection.Response response = Jsoup.connect(url)
+            }else {
+                response = Jsoup.connect(url)
+                        .ignoreContentType(true) // 忽略类型验证
+                        .followRedirects(false) // 禁止重定向
+                        .postDataCharset("utf-8")
+                        .header("Upgrade-Insecure-Requests","1")
+                        .header("Accept","application/json")
+                        .header("Content-Type","application/x-www-form-urlencoded")
+                        .header("X-Requested-With","XMLHttpRequest")
+                        .header(USER_AGENT,USER_AGENT_VALUE)
+                        .cookies(cookies)
+                        .data(data)
+                        .method(Connection.Method.GET)
+                        .execute();
+            }
+            return response;
+        }else {
+            throw new Exception("没有配置有效的请求地址");
+        }
+    }
+
+    @Override
+    public Connection.Response requestByGetFromUrl(Map<String, String> cookies,Map<String,String> data, String url) throws Exception {
+        logger.info("-->>SimulateLoginServiceImpl requestByGet start url=["+url+"]");
+        Connection.Response response = null;
+        if(cookies==null){
+            response = Jsoup.connect(url)
+                    .ignoreContentType(true) // 忽略类型验证
+                    .followRedirects(false) // 禁止重定向
+                    .postDataCharset("utf-8")
+                    .header("Upgrade-Insecure-Requests","1")
+                    .header("Accept","application/json")
+                    .header("Content-Type","application/x-www-form-urlencoded")
+                    .header("X-Requested-With","XMLHttpRequest")
+                    .header(USER_AGENT,USER_AGENT_VALUE)
+                    .data(data)
+                    .method(Connection.Method.GET)
+                    .execute();
+        }else {
+            response = Jsoup.connect(url)
                     .ignoreContentType(true) // 忽略类型验证
                     .followRedirects(false) // 禁止重定向
                     .postDataCharset("utf-8")
@@ -89,28 +141,8 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
                     .data(data)
                     .method(Connection.Method.GET)
                     .execute();
-            return response;
-        }else {
-            throw new Exception("没有配置有效的请求地址");
         }
-    }
 
-    @Override
-    public Connection.Response requestByGetFromUrl(Map<String, String> cookies,Map<String,String> data, String url) throws Exception {
-        logger.info("-->>SimulateLoginServiceImpl requestByGet start url=["+url+"]");
-        Connection.Response response = Jsoup.connect(url)
-                .ignoreContentType(true) // 忽略类型验证
-                .followRedirects(false) // 禁止重定向
-                .postDataCharset("utf-8")
-                .header("Upgrade-Insecure-Requests","1")
-                .header("Accept","application/json")
-                .header("Content-Type","application/x-www-form-urlencoded")
-                .header("X-Requested-With","XMLHttpRequest")
-                .header(USER_AGENT,USER_AGENT_VALUE)
-                .cookies(cookies)
-                .data(data)
-                .method(Connection.Method.GET)
-                .execute();
         return response;
 
     }
