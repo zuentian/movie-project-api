@@ -49,9 +49,7 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
                         .header("Referer","https://accounts.douban.com/passport/login")
                         .header("Sec-Fetch-Mode","cors")
                         .header("Sec-Fetch-Site","same-origin")
-                        //.header("Accept-Encoding","gzip, deflate, br")
-                        //.header("Accept-Language","zh-CN,zh;q=0.9")
-                        //.header("X-Requested-With","XMLHttpRequest")
+                        .header("Cookie","bid=SPuyS8ldU9s")//豆瓣登录需要加这个东西，这个东西具体是一个账号对应一个还是会过期，尚不明确。
                         .data(data)
                         .method(Connection.Method.POST)
                         .execute();

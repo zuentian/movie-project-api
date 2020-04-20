@@ -3,7 +3,9 @@ package com.zuer.zuerlvdoubanmovie.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
+import com.zuer.zuerlvdoubancommon.entity.CrawlerUrlInfo;
 import com.zuer.zuerlvdoubanmovie.common.em.MovieInfoHtml;
+import com.zuer.zuerlvdoubanmovie.common.service.impl.SimulateLoginServiceImpl;
 import com.zuer.zuerlvdoubanmovie.common.util.CleanHtml;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbRequestInfo;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbResponseInfo;
@@ -33,6 +35,8 @@ import java.util.*;
 @Transactional(rollbackFor = {Exception.class})
 public class CrawlerController {
     private static final Logger logger= LoggerFactory.getLogger(CrawlerController.class);
+
+    private static final String COLLECTIONS = "collections";
 
     /*
      * @Resource是名称装配注入，指定哪个service即可
@@ -155,13 +159,13 @@ public class CrawlerController {
             int i = 0;
             for(JSONObject jsonObject : subjects){
 
-                String url = (String) jsonObject.get("url");
+                String url = ((String) jsonObject.get("url")).concat(COLLECTIONS);
                 logger.info("-->>CrawlerController getDbMovieInfo()  url=["+url+"]");
                 Connection.Response responseinfo = simulateLoginService.requestByGetFromUrl(cookies,map,url);
                 String html = responseinfo.body();
                 //解析html获取信息
-                CrawlerDbResponseInfo crawlerDbResponseInfo = analysisByHtml(html);
-                list[i] =crawlerDbResponseInfo;
+                //CrawlerDbResponseInfo crawlerDbResponseInfo = analysisByHtml(html);
+                //list[i] =crawlerDbResponseInfo;
                 i++;
             }
         }
@@ -210,7 +214,7 @@ public class CrawlerController {
     }
 
     public static void main(String[] args) throws Exception {
-        String xmlString ="";
+        /*String xmlString ="";
         File file =new File("C:\\Users\\Zuer\\Desktop\\qqqi.txt");
 
             InputStream in = new FileInputStream(file);
@@ -220,6 +224,17 @@ public class CrawlerController {
                 xmlString = new String(strBuffer);
 
         CrawlerController c = new CrawlerController();
-        c.analysisByHtml(xmlString);
+        c.analysisByHtml(xmlString);*/
+        /*Map<String,String> data = new HashMap<String,String>();
+        data.put("name","1974900537");
+        data.put("password","qq1974900537");
+        data.put("remember","false");
+        data.put("ticket","");
+        data.put("ck","");
+        Connection.Response loginResponse =login(data,"DB_LOGIN_URL");
+        String loginHtml = loginResponse.body();
+        Map maps = (Map) JSON.parse(loginHtml);
+        System.out.println(maps);*/
     }
+
 }
