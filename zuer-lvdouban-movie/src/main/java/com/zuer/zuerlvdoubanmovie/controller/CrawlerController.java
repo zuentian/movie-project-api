@@ -166,10 +166,15 @@ public class CrawlerController {
                 //解析html获取信息
                 //CrawlerDbResponseInfo crawlerDbResponseInfo = analysisByHtml(html);
                 //list[i] =crawlerDbResponseInfo;
+                analysisByScoreHtml(html);
                 i++;
             }
         }
         return list;
+    }
+
+    public void analysisByScoreHtml(String html) {
+        Document document = Jsoup.parse(html);
     }
 
     public CrawlerDbResponseInfo analysisByHtml(String html) throws Exception {
