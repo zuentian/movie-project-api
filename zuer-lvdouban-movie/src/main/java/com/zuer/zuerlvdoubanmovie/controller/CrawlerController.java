@@ -3,13 +3,12 @@ package com.zuer.zuerlvdoubanmovie.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
-import com.zuer.zuerlvdoubancommon.entity.CrawlerUrlInfo;
 import com.zuer.zuerlvdoubanmovie.common.em.MovieInfoHtml;
-import com.zuer.zuerlvdoubanmovie.common.service.impl.SimulateLoginServiceImpl;
-import com.zuer.zuerlvdoubanmovie.common.util.CleanHtml;
+import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbMovieSimpleInfo;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbRequestInfo;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbResponseInfo;
 import com.zuer.zuerlvdoubanmovie.common.service.SimulateLoginService;
+import com.zuer.zuerlvdoubanmovie.common.util.CleanHtml;
 import com.zuer.zuerlvdoubanmovie.config.MapCache;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
 import org.apache.commons.lang3.StringUtils;
@@ -24,10 +23,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/CrawlerController")
@@ -132,10 +131,8 @@ public class CrawlerController {
 
     @ResponseBody
     @RequestMapping(value = "/getDbMovieInfo", method = RequestMethod.POST)
-    public CrawlerDbResponseInfo [] getDbMovieInfo(@RequestBody CrawlerDbRequestInfo crawlerDbRequestInfo) throws Exception {
-        CrawlerDbResponseInfo [] list = null;
+    public List<CrawlerDbMovieSimpleInfo> getDbMovieInfo(@RequestBody CrawlerDbRequestInfo crawlerDbRequestInfo) throws Exception {
         logger.info("-->>CrawlerController getDbMovieInfo() start");
-
         Map<String, Object> dbLoginParam = (Map<String, Object>) MapCache.get("DBLOGINPARAM");
         Map<String, String> cookies = null;
         String loginName ="";
@@ -152,24 +149,7 @@ public class CrawlerController {
         }
 
         Map resMap = (Map) JSON.parse(response.body());
-        List<JSONObject> subjects = (List) resMap.get("subjects");
-
-        if(subjects!=null&&subjects.size()>0){
-            list = new CrawlerDbResponseInfo[subjects.size()];
-            int i = 0;
-            for(JSONObject jsonObject : subjects){
-
-                String url = ((String) jsonObject.get("url")).concat(COLLECTIONS);
-                logger.info("-->>CrawlerController getDbMovieInfo()  url=["+url+"]");
-                Connection.Response responseinfo = simulateLoginService.requestByGetFromUrl(cookies,map,url);
-                String html = responseinfo.body();
-                //解析html获取信息
-                //CrawlerDbResponseInfo crawlerDbResponseInfo = analysisByHtml(html);
-                //list[i] =crawlerDbResponseInfo;
-                analysisByScoreHtml(html);
-                i++;
-            }
-        }
+        List<CrawlerDbMovieSimpleInfo> list = (List) resMap.get("subjects");
         return list;
     }
 
