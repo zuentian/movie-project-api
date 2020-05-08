@@ -1,6 +1,7 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
 import com.zuer.zuerlvdoubanmovie.common.em.MovieInfoHtml;
@@ -11,6 +12,7 @@ import com.zuer.zuerlvdoubanmovie.common.service.SimulateLoginService;
 import com.zuer.zuerlvdoubanmovie.common.util.CleanHtml;
 import com.zuer.zuerlvdoubanmovie.config.MapCache;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -23,10 +25,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/CrawlerController")
@@ -45,7 +45,6 @@ public class CrawlerController {
     @Autowired
     @Qualifier("SimulateLoginService")
     private SimulateLoginService simulateLoginService;
-
     @Autowired
     private CrawlerAccountFeignService crawlerAccountFeignService;
 
@@ -149,9 +148,39 @@ public class CrawlerController {
         }
 
         Map resMap = (Map) JSON.parse(response.body());
-        List<CrawlerDbMovieSimpleInfo> list = (List) resMap.get("subjects");
+        List<JSONObject> subjects =(List<JSONObject>)resMap.get("subjects");
+        System.out.println(subjects);
+        List<CrawlerDbMovieSimpleInfo> list =subjects.parallelStream().map(
+                s->{
+                    CrawlerDbMovieSimpleInfo c = JSONObject.toJavaObject(s,CrawlerDbMovieSimpleInfo.class);
+                    try {
+                        c.setBase64Photo(getBase64MoviePhoto(c.getUrl()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return c;
+                }).collect(Collectors.toList());
         return list;
     }
+
+
+    public String getBase64MoviePhoto(String url) throws Exception {
+        logger.info("-->>CrawlerController getBase64MoviePhoto() url=["+url+"]");
+        Connection.Response response = null;
+        String base64Photo = "";
+        try {
+            response = Jsoup.connect(url).ignoreContentType(true).execute();
+            byte[] data = response.bodyAsBytes();
+            Base64 base64 = new Base64();
+            base64Photo = base64.encodeToString(data);
+
+        } catch (Exception e) {
+            throw new Exception("爬取图片失败！");
+        }
+        return base64Photo;
+    }
+
+
 
     public void analysisByScoreHtml(String html) {
         Document document = Jsoup.parse(html);
