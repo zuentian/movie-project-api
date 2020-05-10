@@ -14,5 +14,5 @@ public class CrawlerDbMovieSimpleInfo {
     private String cover_y;
     private String cover_x;
     private String base64Photo;
-
+    private String syncFlag;
 }

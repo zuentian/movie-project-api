@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
 import com.zuer.zuerlvdoubanmovie.common.em.MovieInfoHtml;
+import com.zuer.zuerlvdoubanmovie.common.em.MovieSyncFlag;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbMovieSimpleInfo;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbRequestInfo;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbResponseInfo;
@@ -11,6 +12,7 @@ import com.zuer.zuerlvdoubanmovie.common.service.SimulateLoginService;
 import com.zuer.zuerlvdoubanmovie.common.util.CleanHtml;
 import com.zuer.zuerlvdoubanmovie.config.MapCache;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
+import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerMovieSyncInfoFeignService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
@@ -153,12 +155,23 @@ public class CrawlerController {
                     CrawlerDbMovieSimpleInfo c = JSONObject.toJavaObject(s,CrawlerDbMovieSimpleInfo.class);
                     try {
                         c.setBase64Photo(getBase64MoviePhoto(c.getCover()));
+                        String syncFlag = getSyncFlagById(c.getId());
+                        c.setSyncFlag(syncFlag);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     return c;
                 }).collect(Collectors.toList());
         return list;
+    }
+
+    @Autowired
+    private CrawlerMovieSyncInfoFeignService crawlerMovieSyncInfoFeignService;
+
+    private String getSyncFlagById(String id) {
+        logger.info("-->>CrawlerController getSyncFlagById() id=["+id+"]");
+        String syncFlag = crawlerMovieSyncInfoFeignService.getSyncFlagByIdFromCrawlerMovieSyncInfo(id);
+        return StringUtils.isNotEmpty(syncFlag)?syncFlag: MovieSyncFlag.SYNC_0.getType();
     }
 
 

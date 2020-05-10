@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zuer.zuerlvdoubanservice.service.CrawlerMovieSyncInfoService">
+    <resultMap id="BaseResultMap" type="com.zuer.zuerlvdoubancommon.entity.CrawlerMovieSyncInfo">
+
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="sync_flag" jdbcType="VARCHAR" property="syncFlag" />
+        <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
+        <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
+        <result column="crt_name" jdbcType="VARCHAR" property="crtName" />
+        <result column="crt_host" jdbcType="VARCHAR" property="crtHost" />
+        <result column="upd_time" jdbcType="TIMESTAMP" property="updTime" />
+        <result column="upd_user" jdbcType="VARCHAR" property="updUser" />
+        <result column="upd_name" jdbcType="VARCHAR" property="updName" />
+        <result column="upd_host" jdbcType="VARCHAR" property="updHost" />
+    </resultMap>
+
+    <select id="getSyncFlagByIdFromCrawlerMovieSyncInfo" parameterType="String" resultType="String">
+        SELECT SYNC_FLAG FROM CRAWLER_MOVIE_SYNC_INFO
+        WHERE ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+</mapper>
