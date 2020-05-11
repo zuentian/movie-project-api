@@ -235,7 +235,11 @@ public class CrawlerController {
         return crawlerDbResponseInfo;
 
     }
-
+    @ResponseBody
+    @RequestMapping(value = "/syncBatch", method = RequestMethod.POST)
+    public void syncBatch(@RequestBody CrawlerDbRequestInfo crawlerDbRequestInfo) throws Exception {
+        logger.info("-->>CrawlerController syncBatch() 批量同步 start");
+    }
     private String[] split(String str){
         return str==null?null:str.split("/");
     }
