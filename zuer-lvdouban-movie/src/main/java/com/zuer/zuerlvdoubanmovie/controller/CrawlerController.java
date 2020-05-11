@@ -3,6 +3,7 @@ package com.zuer.zuerlvdoubanmovie.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
+import com.zuer.zuerlvdoubancommon.entity.CrawlerMovieSyncInfo;
 import com.zuer.zuerlvdoubanmovie.common.em.MovieInfoHtml;
 import com.zuer.zuerlvdoubanmovie.common.em.MovieSyncFlag;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbMovieSimpleInfo;
@@ -237,8 +238,9 @@ public class CrawlerController {
     }
     @ResponseBody
     @RequestMapping(value = "/syncBatch", method = RequestMethod.POST)
-    public void syncBatch(@RequestBody CrawlerDbRequestInfo crawlerDbRequestInfo) throws Exception {
+    public void syncBatch(@RequestBody List<CrawlerMovieSyncInfo> list) throws Exception {
         logger.info("-->>CrawlerController syncBatch() 批量同步 start");
+
     }
     private String[] split(String str){
         return str==null?null:str.split("/");

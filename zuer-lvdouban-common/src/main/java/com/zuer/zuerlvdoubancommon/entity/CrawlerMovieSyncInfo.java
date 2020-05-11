@@ -16,6 +16,8 @@ public class CrawlerMovieSyncInfo {
     @Column(name = "SYNC_FLAG")
     private String syncFlag;
 
+    private String url;
+
     @Column(name = "CRT_TIME")
     private Date crtTime;
 
