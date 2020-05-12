@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerAccount;
 import com.zuer.zuerlvdoubancommon.entity.CrawlerMovieSyncInfo;
+import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubanmovie.common.em.MovieInfoHtml;
 import com.zuer.zuerlvdoubanmovie.common.em.MovieSyncFlag;
 import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbMovieSimpleInfo;
@@ -12,8 +13,12 @@ import com.zuer.zuerlvdoubanmovie.common.entity.CrawlerDbResponseInfo;
 import com.zuer.zuerlvdoubanmovie.common.service.SimulateLoginService;
 import com.zuer.zuerlvdoubanmovie.common.util.CleanHtml;
 import com.zuer.zuerlvdoubanmovie.config.MapCache;
+import com.zuer.zuerlvdoubanmovie.executor.AnalysisMovieInfoExecutor;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerAccountFeignService;
 import com.zuer.zuerlvdoubanmovie.feginservice.CrawlerMovieSyncInfoFeignService;
+import com.zuer.zuerlvdoubanmovie.thread.common.ThreadPoolPriorityExecutor;
+import com.zuer.zuerlvdoubanmovie.thread.entity.ThreadType;
+import com.zuer.zuerlvdoubanmovie.thread.service.ExecutorBuilderService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
@@ -172,7 +177,7 @@ public class CrawlerController {
     private String getSyncFlagById(String id) {
         logger.info("-->>CrawlerController getSyncFlagById() id=["+id+"]");
         String syncFlag = crawlerMovieSyncInfoFeignService.getSyncFlagByIdFromCrawlerMovieSyncInfo(id);
-        return StringUtils.isNotEmpty(syncFlag)?syncFlag: MovieSyncFlag.SYNC_0.getType();
+        return StringUtils.isNotEmpty(syncFlag)?syncFlag: MovieSyncFlag.SYNC_0.getValue();
     }
 
 
@@ -236,12 +241,39 @@ public class CrawlerController {
         return crawlerDbResponseInfo;
 
     }
+
+
+    @Autowired
+    private AnalysisMovieInfoExecutor analysisMovieInfoExecutor;
+    @Autowired
+    @Qualifier("ExecutorBuilderService")
+    private ExecutorBuilderService executorBuilderService;
+
+
     @ResponseBody
     @RequestMapping(value = "/syncBatch", method = RequestMethod.POST)
     public void syncBatch(@RequestBody List<CrawlerMovieSyncInfo> list) throws Exception {
         logger.info("-->>CrawlerController syncBatch() 批量同步 start");
+        String type = ThreadType.ANALY_DB_MOVIE_INFO.getValue();
+        logger.info("-->>CrawlerController syncBatch() 设置当前线程的参数 start");
+        ThreadPoolPriorityExecutor executor = analysisMovieInfoExecutor.getThreadPoolPriorityExecutor();
+        executorBuilderService.updateExecutor(executor,type);//设置线程池的大小
+        logger.info("-->>CrawlerController syncBatch() 设置当前线程的参数 end");
+        for(CrawlerMovieSyncInfo crawlerMovieSyncInfo : list){
 
+            String syncFlag = getSyncFlagById(crawlerMovieSyncInfo.getId());
+            if(MovieSyncFlag.SYNC_0.getValue().equals(syncFlag)){//可以同步
+                crawlerMovieSyncInfo.setSyncFlag(MovieSyncFlag.SYNC_1.getValue());
+                EntityUtils.setCreatAndUpdatInfo(crawlerMovieSyncInfo);
+                crawlerMovieSyncInfoFeignService.insertCrawlerMovieSyncFlag(crawlerMovieSyncInfo);//落库
+                //此处调用多线程
+                analysisMovieInfoExecutor.analysis(crawlerMovieSyncInfo);
+            }
+        }
+        logger.info("-->>CrawlerController syncBatch() 批量同步 end");
     }
+
+
     private String[] split(String str){
         return str==null?null:str.split("/");
     }

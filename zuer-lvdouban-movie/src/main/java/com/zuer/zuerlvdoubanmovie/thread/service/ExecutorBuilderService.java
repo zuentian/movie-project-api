@@ -4,4 +4,6 @@ import com.zuer.zuerlvdoubanmovie.thread.common.ThreadPoolPriorityExecutor;
 
 public interface ExecutorBuilderService {
     ThreadPoolPriorityExecutor createPriorityExecutorInstance(String type);
+
+    void updateExecutor(ThreadPoolPriorityExecutor executor, String type);
 }

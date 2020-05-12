@@ -1,7 +1,6 @@
 package com.zuer.zuerlvdoubanmovie.thread.common;
 
 import com.zuer.zuerlvdoubanmovie.thread.entity.ThreadProperties;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 public class ExecutorFactory {
 
@@ -14,16 +13,22 @@ public class ExecutorFactory {
     　　BlockingQueue<Runnable> workQueue:持有等待执行的任务队列.
     　　RejectedExecutionHandler handler:拒绝策略
      */
-    public static ThreadPoolTaskExecutor create(ThreadProperties threadProperties){
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    public static ThreadPoolPriorityExecutor create(ThreadProperties threadProperties){
+        ThreadPoolPriorityExecutor executor = new ThreadPoolPriorityExecutor();
         executor.setThreadNamePrefix(threadProperties.getThreadNamePrefix());
         executor.setCorePoolSize(threadProperties.getCorePoolSize());
         executor.setMaxPoolSize(threadProperties.getMaxiPoolSize());
         executor.setKeepAliveSeconds(threadProperties.getKeepAliveSeconds());
+        executor.setQueueCapacity(threadProperties.getQueueCapacity());
         //拒绝策略的一种，如果添加到线程池失败，那么主线程会自己去执行该任务，不会等待线程池中的线程去执行。
         executor.setRejectedExecutionHandler(threadProperties.getRejectedExecutionHandler());
         executor.initialize();
         return executor;
     }
 
+    public static void update(ThreadPoolPriorityExecutor executor, ThreadProperties threadProperties) {
+        executor.setCorePoolSize(threadProperties.getCorePoolSize());
+        executor.setMaxPoolSize(threadProperties.getMaxiPoolSize());
+        executor.setQueueCapacity(threadProperties.getQueueCapacity());
+    }
 }
