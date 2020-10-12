@@ -27,4 +27,13 @@ public enum  MovieInfoHtml {
     public String getType(){
         return type;
     }
+
+    public static String getValue(String code){
+        for(MovieInfoHtml hero : MovieInfoHtml.values()){
+            if(code.equals(hero.getType())){
+                return hero.getValue();
+            }
+        }
+        return "";
+    }
 }
