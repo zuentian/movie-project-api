@@ -132,8 +132,8 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
-            <!--<version>11.2.0.4.0</version>-->
-            <version>11.2.0.1.0</version>
+            <version>11.2.0.4.0</version>
+            <!--<version>11.2.0.1.0</version>-->
         </dependency>
 
 
@@ -344,6 +344,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>-->
+
+        <!-- kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
