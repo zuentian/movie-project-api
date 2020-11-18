@@ -1,6 +1,6 @@
 package com.zuer.zuerlvdoubanauth.exception;
 
-import com.zuer.zuerlvdoubanauth.feginService.ExceptionInfoFeignService;
+import com.zuer.zuerlvdoubanauth.feginservice.ExceptionInfoFeignService;
 import com.zuer.zuerlvdoubancommon.entity.ExceptionInfo;
 import com.zuer.zuerlvdoubancommon.exception.BaseException;
 import com.zuer.zuerlvdoubancommon.exception.BaseHandleException;

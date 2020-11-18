@@ -1,7 +1,7 @@
 package com.zuer.zuerlvdoubanauth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zuer.zuerlvdoubanauth.feginService.GroupTypeFeignService;
+import com.zuer.zuerlvdoubanauth.feginservice.GroupTypeFeignService;
 import com.zuer.zuerlvdoubancommon.entity.GroupType;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;

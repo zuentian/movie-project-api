@@ -1,4 +1,4 @@
-package com.zuer.zuerlvdoubanauth.feginService;
+package com.zuer.zuerlvdoubanauth.feginservice;
 
 import com.zuer.zuerlvdoubancommon.entity.UserGroupMember;
 import org.springframework.cloud.openfeign.FeignClient;

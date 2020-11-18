@@ -12,6 +12,8 @@ import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -74,16 +76,17 @@ public class UpdateDataController {
     private void readTxtFileByFileUtilsAddBatch(String fileName) {
         File file = new File(fileName);
         conn = DataConnUtils.dbConnectionZuer03();
-        String sqlStr = "insert into DEMO_1 (ID, NAME, AGE, SEX, ADDRESS, NATION, PROVENANCE) VALUES (?,?,?,?,?,?,?)";
+        String sqlStr = "insert into DEMO_1 (ID, NAME, AGE, SEX, ADDRESS, NATION, PROVENANCE,CRT_DATE) VALUES (?,?,?,?,?,?,?,?)";
 
         try {
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(sqlStr);
             int i = 0;
             LineIterator lineIterator = null;
-
+            int n = 0;
             lineIterator = FileUtils.lineIterator(file, "GBK");
-
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
             while (lineIterator.hasNext()) {
                 i++;
                 idx = 1;
@@ -98,6 +101,13 @@ public class UpdateDataController {
                     pstmt.setString(idx++, custArray[3]);
                     pstmt.setString(idx++, custArray[4]);
                     pstmt.setString(idx++, custArray[5]);
+                    if (i % 100000 == 0) {
+                        n++;
+                        cal.set(Calendar.DAY_OF_MONTH,n);
+                    }
+
+                    pstmt.setTimestamp(idx++,new Timestamp(cal.getTimeInMillis()));
+
                     //10w提交一次
                     pstmt.addBatch();
                     if (i % 100000 == 0) {
@@ -107,6 +117,7 @@ public class UpdateDataController {
                     }
                 }
                 if (i % 100000 == 0) {
+                    System.out.println(n+":"+cal.getTimeInMillis());
                     System.out.println(new Date() + ">>>>成功数：" + i);
                 }
             }
@@ -130,7 +141,7 @@ public class UpdateDataController {
      */
     private void insertDemo(String[] strArray) {
         try {
-            String sqlStr = "insert into DEMO (ID, NAME, AGE, SEX, ADDRESS, NATION, PROVENANCE) VALUES (?,?,?,?,?,?,?)";
+            String sqlStr = "insert into DEMO_2 (ID, NAME, AGE, SEX, ADDRESS, NATION, PROVENANCE) VALUES (?,?,?,?,?,?,?)";
 
             pstmt = conn.prepareStatement(sqlStr);
             idx = 1;
@@ -255,8 +266,8 @@ public class UpdateDataController {
         UpdateDataController udc = new UpdateDataController();
         Long startTime = new Date().getTime();
         //udc.readTxtFileByFileUtils("C:\\Users\\Zuer\\Desktop\\3333.txt");
-        //udc.readTxtFileByFileUtilsAddBatch("C:\\Users\\Zuer\\Desktop\\3333.txt");
-        udc.ctlFileWriter();
+        udc.readTxtFileByFileUtilsAddBatch("C:\\Users\\Zuer\\Desktop\\3333.txt");
+        //udc.ctlFileWriter();
         System.out.println("导入数据总共耗时:" + (new Date().getTime() - startTime) / 1000 + "秒");
 
     }
