@@ -1,4 +1,4 @@
-package 生产者与消费者.多生产与多消费;
+package 生产者与消费者操作值.一生产一消费;
 
 public class ThreadP extends Thread {
     private P p;
