@@ -13,7 +13,7 @@ public class Run_1 {
         ThreadA a = new ThreadA(service,object);
         a.setName("a");
         a.start();
-        ThreadB b = new ThreadB(service,object);
+        方法join和sleep的区别.ThreadB b = new 方法join和sleep的区别.ThreadB(service,object);
         b.setName("b");
         b.start();*/
         //同步的原因是使用了同一个“对象监视器”,如果不使用同一个对象监视器

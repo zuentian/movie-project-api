@@ -26,7 +26,7 @@ public class Run {
         ThreadA a = new ThreadA(service1);
         a.setName("A");
         a.start();
-        ThreadB b = new ThreadB(service2);
+        方法join和sleep的区别.ThreadB b = new 方法join和sleep的区别.ThreadB(service2);
         b.setName("B");
         b.start();*/
     }
