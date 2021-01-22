@@ -13,7 +13,12 @@ public class ThreadA extends Thread{
         try {
             synchronized (b){
                 b.start();
-                Thread.sleep(6000);//不是锁
+                //Thread.sleep(6000);//不是锁
+                b.join();
+                for (int i = 0; i < Integer.MAX_VALUE; i++) {
+                    String newString = new String();
+                    Math.random();
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
