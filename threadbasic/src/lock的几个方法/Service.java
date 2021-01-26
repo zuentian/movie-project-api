@@ -1,5 +1,6 @@
 package lock的几个方法;
 
+import java.io.FileInputStream;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -76,5 +77,17 @@ public class Service {
         } finally {
             lock.unlock();
         }
+    }
+
+    public void waitMethod1(){
+        try {
+            lock.lock();
+            Thread.sleep(Integer.MAX_VALUE);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+
     }
 }

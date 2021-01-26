@@ -1,4 +1,4 @@
-package lock公平锁与非公平;
+package lock公平锁与非公平锁;
 
 import java.util.concurrent.locks.ReentrantLock;
 
