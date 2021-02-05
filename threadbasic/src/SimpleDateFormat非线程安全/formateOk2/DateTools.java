@@ -15,6 +15,7 @@ public class DateTools {
             sdf = new SimpleDateFormat(datePattern);
             t1.set(sdf);
         }
+        System.out.println(sdf.hashCode());
         return sdf;
     }
 
