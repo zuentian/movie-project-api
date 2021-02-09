@@ -1,3 +1,4 @@
+/*
 package com.zuer.zuerlvdoubanmovie.controller;
 
 import com.zuer.zuerlvdoubanmovie.common.util.DataConnUtils;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @RestController
 @Transactional(rollbackFor = {Exception.class})
 
+*/
 /**
  * 数据文件：371M大小的txt文件,一千亿条数据
  * 测试方案一 ：
@@ -34,19 +36,22 @@ import java.util.UUID;
  * 测试方案三 ：
  *           使用.ctl文件，执行sqlldr命令导入，设置提交128行，改成并行，效果并没有提升（不清楚为什么）
  *           花费时间：3h
- */
+ *//*
+
 
 public class UpdateDataController {
     int idx;
     Connection conn = null;
     PreparedStatement pstmt = null;
 
-    /**
+    */
+/**
      * 使用commons-io.jar包的FileUtils的类进行读取
      * txt中内容文件的分割必须为|，java中需要加转译符号
      *
      * @return void
-     */
+     *//*
+
     private void readTxtFileByFileUtils(String fileName) {
         File file = new File(fileName);
         conn = DataConnUtils.dbConnectionZuer03();
@@ -134,11 +139,13 @@ public class UpdateDataController {
         }
     }
 
-    /**
+    */
+/**
      * @return void
      * @Title: insertCustInfo
      * @date 2017年11月13日
-     */
+     *//*
+
     private void insertDemo(String[] strArray) {
         try {
             String sqlStr = "insert into DEMO_2 (ID, NAME, AGE, SEX, ADDRESS, NATION, PROVENANCE) VALUES (?,?,?,?,?,?,?)";
@@ -167,15 +174,19 @@ public class UpdateDataController {
         }
     }
 
-    /**
+    */
+/**
      * * 写控制文件.ctl
-     */
+     *//*
+
     public static void ctlFileWriter() {
         String fileRoute = "C:\\Users\\Zuer\\Desktop\\";        // 文件地址路径
         String fileName = "users.txt";        // 数据文件名
         String tableName = "DEMO_1";            // 表名
         String fieldName = "( " +
-                /* "ID FILLER ,"+*/
+                */
+/* "ID FILLER ,"+*//*
+
                 "NAME," +
                 "AGE," +
                 "SEX," +
@@ -216,7 +227,8 @@ public class UpdateDataController {
         executeDos(user, psw, database, fileRoute, ctlfileName, logfileName);
     }
 
-    /**
+    */
+/**
      * * 调用系统DOS命令
      *
      * @param user
@@ -224,7 +236,8 @@ public class UpdateDataController {
      * @param fileRoute
      * @param ctlfileName
      * @param logfileName
-     */
+     *//*
+
     public static void executeDos(String user, String psw, String database, String fileRoute, String ctlfileName,
                                   String logfileName) {
         InputStream ins = null;
@@ -273,3 +286,4 @@ public class UpdateDataController {
     }
 }
 
+*/
