@@ -30,6 +30,13 @@ class WriteLock implements Lock{
 
     @Override
     public void unlock() {
-
+        synchronized (readWriteLock.getMUTEX()){
+            //减少正在写入锁的线程计数器
+            readWriteLock.decrementWritingWriters();
+            //将偏好状态修改成false，可以使得读锁被最快速的获得
+            readWriteLock.changePrefer(false);
+            //通知唤醒其他在Mutext monitor waitset中的线程
+            readWriteLock.getMUTEX().notifyAll();
+        }
     }
 }
