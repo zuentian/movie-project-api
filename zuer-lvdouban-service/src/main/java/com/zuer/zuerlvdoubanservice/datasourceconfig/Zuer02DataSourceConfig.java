@@ -22,16 +22,16 @@ springboot默认启动的时候会选择其中一个数据源，所以需要默�
 public class Zuer02DataSourceConfig {
     static final String PACKAGE = "com.zuer.zuerlvdoubanservice.service";
     static final String MAPPER_LOCATION = "classpath:mapper/zuer02/*.xml";
-    @Value("${zuer02.spring.datasource.url}")
+    @Value("${zuer02.springstudy.datasource.url}")
     private String url;
 
-    @Value("${zuer02.spring.datasource.username}")
+    @Value("${zuer02.springstudy.datasource.username}")
     private String user;
 
-    @Value("${zuer02.spring.datasource.password}")
+    @Value("${zuer02.springstudy.datasource.password}")
     private String password;
 
-    @Value("${zuer02.spring.datasource.driver-class-name}")
+    @Value("${zuer02.springstudy.datasource.driver-class-name}")
     private String driverClass;
 
     @Bean(name = "zuer02DataSource")

@@ -15,7 +15,7 @@ public class CaptureThreadException {
                 e.printStackTrace();
             }
             System.out.println(1/0);
-        },"Test-Thread");
+        },"test-Thread");
         thread.start();
     }
 }

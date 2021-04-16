@@ -36,3 +36,6 @@ alter table test_part enable row movement;
 
 --这个时候就可以分区键更新
 update test_part set create_time = TO_DATE('2020-12-12','YYYY-MM-DD') WHERE ID = 111;
+
+--清理clob字段
+alter table 表名 move partition 分区名 lob(clob字段) store as (tablespace 空间名);

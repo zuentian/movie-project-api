@@ -1,5 +1,8 @@
 package JAVA高并发编程详解.chapter26;
 
+/**
+ * 传送带上的产品
+ */
 public class Production extends InstructionBook {
 
     //产品编号

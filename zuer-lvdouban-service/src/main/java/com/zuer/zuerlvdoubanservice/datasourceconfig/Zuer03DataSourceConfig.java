@@ -19,16 +19,16 @@ import javax.sql.DataSource;
 public class Zuer03DataSourceConfig {
     static final String PACKAGE = "com.zuer.zuerlvdoubanservice.service";
     static final String MAPPER_LOCATION = "classpath:mapper/zuer02/*.xml";
-    @Value("${zuer03.spring.datasource.url}")
+    @Value("${zuer03.springstudy.datasource.url}")
     private String url;
 
-    @Value("${zuer03.spring.datasource.username}")
+    @Value("${zuer03.springstudy.datasource.username}")
     private String user;
 
-    @Value("${zuer03.spring.datasource.password}")
+    @Value("${zuer03.springstudy.datasource.password}")
     private String password;
 
-    @Value("${zuer03.spring.datasource.driver-class-name}")
+    @Value("${zuer03.springstudy.datasource.driver-class-name}")
     private String driverClass;
 
     @Bean(name = "zuer03DataSource")
