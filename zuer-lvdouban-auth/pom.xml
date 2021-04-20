@@ -35,14 +35,14 @@
     </dependencies>
 
 
-    <build>
+    <!--<build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--<mainClass>${start-class}</mainClass>
-                    <layout>ZIP</layout>-->
+                    &lt;!&ndash;<mainClass>${start-class}</mainClass>
+                    <layout>ZIP</layout>&ndash;&gt;
                     <fork>true</fork>
                 </configuration>
                 <executions>
@@ -54,6 +54,6 @@
                 </executions>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
 
 </project>

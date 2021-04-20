@@ -13,7 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>movie-project-eureka</name>
     <description>Demo project for Spring Boot</description>
-    <packaging>jar</packaging>
+    <!--<packaging>jar</packaging>-->
 
     <properties>
         <start-class>com.zuer.movieprojecteureka.MovieProjectEurekaApplication</start-class>
@@ -24,24 +24,54 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>${start-class}</mainClass>
-                    <layout>ZIP</layout>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <resources>
+            <resource>
+                <!--项目的默认资源目录，但是要排除不必要的文件，想要指定加入的再下面的resource指定-->
+                <directory>/src/main/resources</directory>
+                <excludes>
+                    <exclude>dev/*</exclude>
+                    <exclude>uat/*</exclude>
+                    <exclude>pro/*</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources/${deploy.type}</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <!--<resources>
+            <resource>
+                &lt;!&ndash;deploy.type 指定部署类型：dev、uat、pro&ndash;&gt;
+                <directory>src/main/resources.${deploy.type}</directory>
+            </resource>
+        </resources>-->
     </build>
 
+    <!--定义全局的配置信息-->
+    <profiles>
+        <profile>
+            <id>dev</id>  <!--开发环境-->
+            <properties>
+                <deploy.type>dev</deploy.type>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>pro</id> <!--生产环境-->
+            <properties>
+                <deploy.type>pro</deploy.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>uat</id> <!--预生产环境-->
+            <properties>
+                <deploy.type>uat</deploy.type>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

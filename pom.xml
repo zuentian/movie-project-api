@@ -42,9 +42,9 @@
 
     <!--&lt;!&ndash; 引入SpringCloud微服务常用组件&ndash;&gt;-->
     <modules>
-        <module>movie-project-user</module>
+        <!--<module>movie-project-user</module>-->
         <module>movie-project-eureka</module>
-        <module>movie-project-common</module>
+        <!--<module>movie-project-common</module>-->
         <module>zuer-lvdouban-auth</module>
         <module>zuer-lvdouban-common</module>
         <module>zuer-lvdouban-service</module>
@@ -381,5 +381,47 @@
         </dependencies>
     </dependencyManagement>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+
+    </build>
+
+    <!--定义全局的配置信息-->
+    <profiles>
+        <profile>
+            <id>dev</id>  <!--开发环境-->
+            <properties>
+                <deploy.type>dev</deploy.type>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>pro</id> <!--生产环境-->
+            <properties>
+                <deploy.type>pro</deploy.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>uat</id> <!--预生产环境-->
+            <properties>
+                <deploy.type>uat</deploy.type>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>
