@@ -28,3 +28,5 @@ Transactional事务
 增添redis缓存（部分使用）
 
 重新规划每个模块的pom.xml，可以正常打包，并且暂时将movie-project-eureka模块能够进行不同环境的打包
+
+整合tx-lcn事务，处理分布式事务(待开发)
