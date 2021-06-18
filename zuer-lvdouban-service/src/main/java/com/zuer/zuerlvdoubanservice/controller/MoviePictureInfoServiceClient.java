@@ -1,7 +1,5 @@
 package com.zuer.zuerlvdoubanservice.controller;
 
-import com.zuer.zuerlvdoubancommon.entity.Element;
-import com.zuer.zuerlvdoubancommon.entity.GroupType;
 import com.zuer.zuerlvdoubancommon.entity.MoviePictureInfo;
 import com.zuer.zuerlvdoubancommon.utils.RowBoundUtil;
 import com.zuer.zuerlvdoubanservice.service.MoviePictureInfoService;
