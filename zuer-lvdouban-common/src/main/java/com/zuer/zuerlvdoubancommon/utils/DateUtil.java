@@ -2,8 +2,7 @@ package com.zuer.zuerlvdoubancommon.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * 描述:公共日期工具类
@@ -16,6 +15,22 @@ public class DateUtil {
 
     public static String DATE_FORMAT_CHINESE = "yyyy年M月d日";
 
+
+    private static ThreadLocal<Map<String,SimpleDateFormat>> sThreadLocal =
+            new ThreadLocal<>();
+    private static SimpleDateFormat getDateFormat(String patten){
+        Map<String,SimpleDateFormat> strDateFormatMap = sThreadLocal.get();
+        if(strDateFormatMap == null){
+            strDateFormatMap = new HashMap<>();
+        }
+        SimpleDateFormat sdf = strDateFormatMap.get(patten);
+        if(sdf == null){
+            sdf = new SimpleDateFormat(patten, Locale.getDefault());
+            strDateFormatMap.put(patten,sdf);
+            sThreadLocal.set(strDateFormatMap);
+        }
+        return sdf;
+    }
     /**
      * 获取当前日期
      *
@@ -25,8 +40,8 @@ public class DateUtil {
      */
     public static String getCurrentDate() {
         String datestr = null;
-        SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_FORMAT);
-        datestr = df.format(new Date());
+        //SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_FORMAT);
+        datestr = getDateFormat(DateUtil.DATE_FORMAT).format(new Date());
         return datestr;
     }
 
@@ -39,8 +54,8 @@ public class DateUtil {
      */
     public static String getCurrentDateTime() {
         String datestr = null;
-        SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
-        datestr = df.format(new Date());
+        //SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
+        datestr = getDateFormat(DateUtil.DATE_TIME_FORMAT).format(new Date());
         return datestr;
     }
 
@@ -51,17 +66,17 @@ public class DateUtil {
      * @return
      *
      */
-    public static String getCurrentDateTime(String Dateformat) {
+    public static String getCurrentDateTime(String dateformat) {
         String datestr = null;
-        SimpleDateFormat df = new SimpleDateFormat(Dateformat);
-        datestr = df.format(new Date());
+        //SimpleDateFormat df = new SimpleDateFormat(Dateformat);
+        datestr = getDateFormat(dateformat).format(new Date());
         return datestr;
     }
 
     public static String dateToDateTime(Date date) {
         String datestr = null;
-        SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
-        datestr = df.format(date);
+        //SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
+        datestr = getDateFormat(DateUtil.DATE_TIME_FORMAT).format(date);
         return datestr;
     }
     /**
@@ -78,9 +93,9 @@ public class DateUtil {
             return null;
         }
         Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_FORMAT);
+        //SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_FORMAT);
         try {
-            date = df.parse(datestr);
+            date = getDateFormat(DateUtil.DATE_FORMAT).parse(datestr);
         } catch (ParseException e) {
             date=DateUtil.stringToDate(datestr,"yyyyMMdd");
         }
@@ -97,9 +112,9 @@ public class DateUtil {
      */
     public static Date stringToDate(String datestr, String dateformat) {
         Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat(dateformat);
+        //SimpleDateFormat df = new SimpleDateFormat(dateformat);
         try {
-            date = df.parse(datestr);
+            date = getDateFormat(dateformat).parse(datestr);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -119,8 +134,8 @@ public class DateUtil {
      */
     public static String dateToString(Date date) {
         String datestr = null;
-        SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_FORMAT);
-        datestr = df.format(date);
+        //SimpleDateFormat df = new SimpleDateFormat(DateUtil.DATE_FORMAT);
+        datestr = getDateFormat(DateUtil.DATE_FORMAT).format(date);
         return datestr;
     }
 
@@ -133,8 +148,8 @@ public class DateUtil {
      */
     public static String dateToString(Date date, String dateformat) {
         String datestr = null;
-        SimpleDateFormat df = new SimpleDateFormat(dateformat);
-        datestr = df.format(date);
+        //SimpleDateFormat df = new SimpleDateFormat(dateformat);
+        datestr = getDateFormat(dateformat).format(date);
         return datestr;
     }
 
@@ -507,13 +522,8 @@ public class DateUtil {
      * @param args
      */
     public static void main(String[] args) {
-        //String temp = DateUtil.dateToString(getLastDayOfMonth(new Date()),
-        ///   DateUtil.DATE_FORMAT_CHINESE);
-        //String s=DateUtil.dateToString(DateUtil.addDay(DateUtil.addYear(new Date(),1),-1));
 
-
-        long s=DateUtil.getDayByMinusDate("2012-01-01", "2012-12-31");
-        System.err.println(s);
+        System.out.println(DateUtil.dateToString(new Date(),"yyyy-MM-dd"));
 
 
     }
