@@ -3,6 +3,9 @@ package com.zuer.zuerlvdoubancommon.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 描述:公共日期工具类
@@ -68,8 +71,9 @@ public class DateUtil {
      */
     public static String getCurrentDateTime(String dateformat) {
         String datestr = null;
-        //SimpleDateFormat df = new SimpleDateFormat(Dateformat);
+        //SimpleDateFormat df = new SimpleDateFormat(dateformat);
         datestr = getDateFormat(dateformat).format(new Date());
+        //datestr = df.format(new Date());
         return datestr;
     }
 
@@ -518,13 +522,52 @@ public class DateUtil {
     }
 
 
+
+    /*
+     测试SimpleDateFormate是线程不安全
+     */
+    //方法里每次创建SimpleDateFormat不会出现错误，可以保证线程安全，但是消耗内存
+    //100000次执行花费2431ms
+    public static Date test(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.parse(date);
+    }
+    //使用synchronized来实现线程安全
+    //100000次执行花费4231ms
+    private static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+    public static synchronized Date test1(String date) throws ParseException {
+
+        return sdf1.parse(date);
+    }
+    //100000次执行花费1099ms
+    //很明显，使用ThreadLocal的性能提高了一倍！！！
+    public static  Date test2(String date) throws ParseException {
+        return getDateFormat(DateUtil.DATE_FORMAT).parse(date);
+    }
     /**
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        ExecutorService executorService= Executors.newFixedThreadPool(100);
+        long start = System.currentTimeMillis();
 
-        System.out.println(DateUtil.dateToString(new Date(),"yyyy-MM-dd"));
+        for(int i=0;i<20;i++){
+            executorService.execute(
+                    ()->{
 
+                        for(int j=0;j<100000;j++) {
+                            try {
+                                DateUtil.test2("2021-06-28");
+                            } catch (ParseException e) {
+                                e.printStackTrace();
 
+                            }
+                        }
+                    }
+            );
+        }
+        executorService.shutdown();
+        executorService.awaitTermination(1, TimeUnit.DAYS);
+        System.out.println(System.currentTimeMillis()-start);
     }
 }
