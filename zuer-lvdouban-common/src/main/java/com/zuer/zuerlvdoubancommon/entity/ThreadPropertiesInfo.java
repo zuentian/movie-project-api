@@ -14,11 +14,11 @@ public class ThreadPropertiesInfo {
     private String type;
 
     @Column(name = "CORE_POOL_SIZE")
-    private int corePoolSize;
+    private Integer corePoolSize;
     @Column(name = "MAX_POOL_SIZE")
-    private int maxPoolSize;
+    private Integer maxPoolSize;
     @Column(name = "QUEUE_CAPACITY")
-    private int queueCapacity;
+    private Integer queueCapacity;
 
     @Column(name = "CRT_TIME")
     private Date crtTime;
