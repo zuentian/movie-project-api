@@ -1,0 +1,12 @@
+
+create table ROLE
+(
+    ROLE_ID   VARCHAR(36) not null comment '角色ID',
+    ROLE_NAME VARCHAR(20) comment '角色名字',
+    STATUS    VARCHAR(2) comment '角色状态',
+    CRT_TIME  VARCHAR(30),
+    ALT_TIME  VARCHAR(30),
+    PRIMARY KEY ( ROLE_ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+
+alter table ROLE comment '角色表';

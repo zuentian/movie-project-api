@@ -1,0 +1,33 @@
+
+create table MOVIE_INFO
+(
+    ID                  VARCHAR(36) not null,
+    MOVIE_NAME          VARCHAR(500),
+    MOVIE_NAME1         VARCHAR(500),
+    MOVIE_NAME2         VARCHAR(500),
+    MOVIE_TIME          VARCHAR(10) ,
+    MOVIE_SHOW_TIME     datetime(6),
+    WATCH_AFTER_NUMBER  VARCHAR(10),
+    WATCH_BEFORE_NUMBER VARCHAR(10),
+    SCORE               VARCHAR(10),
+    MOVIE_DESCRIPTION   BLOB,
+    CRT_TIME            datetime(6)  default NULL,
+    CRT_USER            VARCHAR(255) default NULL,
+    CRT_NAME            VARCHAR(255) default NULL,
+    CRT_HOST            VARCHAR(255) default NULL,
+    UPD_TIME            datetime(6)  default NULL,
+    UPD_USER            VARCHAR(255) default NULL,
+    UPD_NAME            VARCHAR(255) default NULL,
+    UPD_HOST            VARCHAR(255) default NULL,
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+
+alter table MOVIE_INFO comment '电影基本信息表';
+alter table MOVIE_INFO modify WATCH_AFTER_NUMBER DOUBLE(10,0);
+alter table MOVIE_INFO modify WATCH_BEFORE_NUMBER DOUBLE(10,0);
+alter table MOVIE_INFO alter WATCH_AFTER_NUMBER set default 0;
+alter table MOVIE_INFO alter WATCH_BEFORE_NUMBER set default 0;
+alter table MOVIE_INFO add PERSON_SCORE_COUNT DOUBLE(10,0)  default 0 ;
+
+
+

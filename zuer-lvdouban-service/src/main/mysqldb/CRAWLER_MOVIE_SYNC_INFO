@@ -1,0 +1,16 @@
+create table CRAWLER_MOVIE_SYNC_INFO
+(
+    ID        VARCHAR(36) not null,
+    SYNC_FLAG VARCHAR(500),
+    CRT_TIME  datetime(6)  default NULL,
+    CRT_USER  VARCHAR(255) default NULL,
+    CRT_NAME  VARCHAR(255) default NULL,
+    CRT_HOST  VARCHAR(255) default NULL,
+    UPD_TIME  datetime(6)  default NULL,
+    UPD_USER  VARCHAR(255) default NULL,
+    UPD_NAME  VARCHAR(255) default NULL,
+    UPD_HOST  VARCHAR(255) default NULL,
+    URL       VARCHAR(500),
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+alter table CRAWLER_MOVIE_SYNC_INFO comment '爬虫同步信息表';

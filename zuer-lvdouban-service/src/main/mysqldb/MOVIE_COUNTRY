@@ -1,0 +1,13 @@
+create table MOVIE_COUNTRY
+(
+    ID           VARCHAR(36) not null,
+    COUNTRY_CODE VARCHAR(10),
+    MOVIE_ID     VARCHAR(36),
+    CRT_TIME     datetime(6)  default NULL,
+    CRT_USER     VARCHAR(255) default NULL,
+    CRT_NAME     VARCHAR(255) default NULL,
+    CRT_HOST     VARCHAR(255) default NULL,
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+
+alter table MOVIE_COUNTRY comment '电影国家信息表';

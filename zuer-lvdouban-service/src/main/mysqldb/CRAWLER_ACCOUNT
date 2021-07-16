@@ -1,0 +1,14 @@
+create table CRAWLER_ACCOUNT
+(
+    ID VARCHAR(36) not null,
+    WEB VARCHAR(100),
+    WEB_NAME VARCHAR(100),
+    ACCOUNT VARCHAR(50) comment '账号',
+    PASSWORD VARCHAR(50) comment '密码',
+    UPD_TIME DATE,
+    CRT_TIME DATE,
+    FLAG VARCHAR(2) comment '0-未启用；1-已启用',
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+
+alter table CRAWLER_ACCOUNT comment '爬虫账号';

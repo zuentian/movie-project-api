@@ -1,0 +1,24 @@
+
+create table USER_GROUP_LEADER
+(
+    ID          VARCHAR(36) not null,
+    GROUP_ID    VARCHAR(36),
+    USER_ID     VARCHAR(36),
+    DESCRIPTION VARCHAR(255),
+    CRT_TIME    datetime(6),
+    CRT_USER    VARCHAR(255),
+    CRT_NAME    VARCHAR(255),
+    CRT_HOST    VARCHAR(20),
+    UPD_TIME    datetime(6),
+    UPD_USER    VARCHAR(255),
+    UPD_NAME    VARCHAR(255),
+    UPD_HOST    VARCHAR(20),
+    ATTR1       VARCHAR(255),
+    ATTR2       VARCHAR(255),
+    ATTR3       VARCHAR(255),
+    ATTR4       VARCHAR(255),
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table USER_GROUP_LEADER comment '角色和用户上级层关联表';
+

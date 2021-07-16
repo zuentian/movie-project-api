@@ -1,0 +1,19 @@
+
+create table THREAD_PROPERTIES_INFO
+(
+    TYPE           VARCHAR(36) not null comment '线程大小设置表',
+    CORE_POOL_SIZE DOUBLE(3,0) comment '核心线程数',
+    MAX_POOL_SIZE  DOUBLE(3,0) comment '最大线程数',
+    QUEUE_CAPACITY DOUBLE(3,0) comment '队列最大长度',
+    CRT_TIME       datetime(6)  default NULL,
+    CRT_USER       VARCHAR(255) default NULL,
+    CRT_NAME       VARCHAR(255) default NULL,
+    CRT_HOST       VARCHAR(255) default NULL,
+    UPD_TIME       datetime(6)  default NULL,
+    UPD_USER       VARCHAR(255) default NULL,
+    UPD_NAME       VARCHAR(255) default NULL,
+    UPD_HOST       VARCHAR(255) default NULL,
+        PRIMARY KEY ( TYPE )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table THREAD_PROPERTIES_INFO comment '线程大小设置表';

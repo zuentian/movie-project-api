@@ -1,0 +1,19 @@
+
+create table ELEMENT
+(
+    ID          VARCHAR(36) not null,
+    CODE        VARCHAR(255),
+    NAME        VARCHAR(255),
+    MENU_ID     VARCHAR(36),
+    METHOD      VARCHAR(255),
+    DESCRIPTION VARCHAR(255),
+    CRT_TIME    datetime(6) default NULL,
+    CRT_USER    VARCHAR(255),
+    CRT_NAME    VARCHAR(255),
+    CRT_HOST    VARCHAR(20),
+    ATTR1       VARCHAR(255),
+    ATTR2       VARCHAR(255),
+    ATTR3       VARCHAR(255),
+    ATTR4       VARCHAR(255),
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;

@@ -1,0 +1,13 @@
+create table DICT
+(
+    DICT_ID        VARCHAR(36) not null comment '数据字典ID',
+    DICT_TYPE      VARCHAR(50) comment '数据字典类型',
+    DICT_TYPE_NAME VARCHAR(50) comment '数据字典类型名称',
+    DICT_CODE      VARCHAR(50) comment '数据字典编码',
+    DICT_VALUE     VARCHAR(50) comment '数据字典数值',
+    CRT_TIME       VARCHAR(30),
+    ALT_TIME       VARCHAR(30),
+    PRIMARY KEY ( DICT_ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+
+alter table DICT comment '数据字典表';

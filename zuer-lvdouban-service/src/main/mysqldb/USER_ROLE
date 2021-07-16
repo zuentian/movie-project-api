@@ -1,0 +1,14 @@
+
+create table USER_ROLE
+(
+    ID       VARCHAR(36) not null comment '主键ID',
+    USER_ID  VARCHAR(36) comment '用户ID',
+    ROLE_ID  VARCHAR(36) comment '角色ID',
+    CRT_TIME VARCHAR(30),
+    ALT_TIME VARCHAR(30),
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table user_role comment '用户和角色关联表';
+
+

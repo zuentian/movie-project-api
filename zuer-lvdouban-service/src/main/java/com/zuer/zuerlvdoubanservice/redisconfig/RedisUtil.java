@@ -5,9 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -532,5 +530,39 @@ public class RedisUtil {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public static void main(String[] args) {
+
+
+        Stack<String> sta =  new Stack<String>();
+
+        sta.push("23");
+        sta.push("45");
+        sta.push("56");
+        sta.push("1");
+
+        System.out.println(sta);
+        System.out.println(sta.pop());
+        System.out.println(sta);
+        System.out.println(sta.peek());
+        System.out.println(sta);
+
+        Queue<String> queue = new LinkedList<>();
+        queue.add("r");
+        queue.add("t");
+        queue.add("y");
+        queue.add("c");
+        queue.add("t");
+        System.out.println(queue);
+        System.out.println(queue.poll());
+        System.out.println(queue);
+        System.out.println(queue.peek());
+        System.out.println(queue);
+        System.out.println(queue.offer("4"));
+        System.out.println(queue);
+
+        int a = 5;
+        System.out.println(Math.sqrt(16));
     }
 }

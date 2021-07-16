@@ -1,0 +1,17 @@
+
+
+create table MOVIE_PICTURE_INFO
+(
+    ID        VARCHAR(36) not null,
+    MOVIE_ID  VARCHAR(36),
+    FILE_NAME VARCHAR(100),
+    FILE_URL  VARCHAR(100) comment '图片具体存放路径',
+    FILE_URI  VARCHAR(100) comment '图片展示路径',
+    TYPE      VARCHAR(10) comment 'S:电影剧照 B:电影海报',
+    CRT_TIME datetime(6)  default NULL,
+    CRT_USER VARCHAR(255) default NULL,
+    CRT_NAME VARCHAR(255) default NULL,
+    CRT_HOST VARCHAR(255) default NULL,
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+

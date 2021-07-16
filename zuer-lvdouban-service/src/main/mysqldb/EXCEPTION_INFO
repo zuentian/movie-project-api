@@ -1,0 +1,19 @@
+
+create table EXCEPTION_INFO
+(
+    ID             VARCHAR(36) not null,
+    ERR_MESSAGE    VARCHAR(200) comment '错误信息',
+    ERR_TYPE       VARCHAR(255) comment '错误种类',
+    STATUS         VARCHAR(20) comment '错误状态',
+    ERR_CLASS      VARCHAR(500) comment '错误类路径',
+    ERR_FILENAME   VARCHAR(500) comment '错误类的文件名',
+    ERR_METHOD     VARCHAR(500) comment '错误方法、接口、请求',
+    ERR_LINENUMBER DOUBLE(8,0) comment '错误行数',
+    ERR_DETAIL     BLOB comment '错误具体信息',
+    CRT_TIME       VARCHAR(6),
+    CRT_USER       VARCHAR(255),
+    CRT_NAME       VARCHAR(255),
+    CRT_HOST       VARCHAR(20),
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+alter table EXCEPTION_INFO comment '错误信息表';

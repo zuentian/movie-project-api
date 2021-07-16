@@ -1,0 +1,16 @@
+
+create table MOVIE_RELNAME
+(
+    ID       VARCHAR(36) not null,
+    MOVIE_ID VARCHAR(36),
+    NAME     VARCHAR(50),
+    POSITION VARCHAR(20),
+    CRT_TIME datetime(6) default NULL,
+    CRT_USER VARCHAR(255) default NULL,
+    CRT_NAME VARCHAR(255) default NULL,
+    CRT_HOST VARCHAR(255) default NULL,
+    PRIMARY KEY ( ID )
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+
+alter table MOVIE_RELNAME comment '电影相关人物表';
+
