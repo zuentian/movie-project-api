@@ -234,10 +234,10 @@
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
             <version>2.1.1.RELEASE</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-okhttp</artifactId>
-        </dependency>-->
+        </dependency>
 
         <!--pagehelper分页依赖包（但是bug实在太多了，已弃用）-->
         <dependency>
@@ -381,6 +381,8 @@
             <artifactId>core</artifactId>
             <version>3.2.0</version>
         </dependency>
+
+
     </dependencies>
     <dependencyManagement>
         <dependencies>

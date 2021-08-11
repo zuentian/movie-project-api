@@ -17,8 +17,24 @@
     <!--查询一年之中每一天的观影量-->
     <select id="queryCalendarMovieShowCount" parameterType="java.util.Map" resultMap="CalendarMovieShowCountBaseResultMap">
         select count(*) as count ,day from (
-        select to_char(UPD_TIME,'yyyy-MM-dd') as day from MOVIE_USER where STATE='2' and USER_ID=#{userId,jdbcType=VARCHAR}
-        and to_char(UPD_TIME,'yyyy')=#{year,jdbcType=VARCHAR}) A
+        select
+        <if test="_databaseId == 'oracle'">
+            to_char(UPD_TIME,'yyyy-MM-dd') as day
+        </if>
+        <if test="_databaseId == 'mysql'">
+            DATE_FORMAT(UPD_TIME,'%Y-%m-%d') as day
+        </if>
+        from MOVIE_USER where STATE='2'
+        and
+        USER_ID=#{userId,jdbcType=VARCHAR}
+        and
+        <if test="_databaseId == 'oracle'">
+            to_char(UPD_TIME,'yyyy') = #{year,jdbcType=VARCHAR}
+        </if>
+        <if test="_databaseId == 'mysql'">
+            DATE_FORMAT(UPD_TIME,'%Y') = #{year,jdbcType=VARCHAR}
+        </if>
+        ) A
         group by A.day
 
     </select>
@@ -37,8 +53,22 @@
 
     <select id="queryPieShowMovieYearCount" parameterType="String" resultMap="PieShowMovieYearCountBaseResultMap">
 
-        SELECT TO_CHAR(MOVIE_SHOW_TIME,'YYYY') year FROM MOVIE_INFO WHERE ID IN (
-        SELECT MOVIE_ID FROM MOVIE_USER WHERE USER_ID=#{userId,jdbcType=VARCHAR} AND STATE='2'
+        SELECT
+        <if test="_databaseId == 'mysql'">
+            DATE_FORMAT(MOVIE_SHOW_TIME,'%Y') as year
+        </if>
+        <if test="_databaseId == 'oracle'">
+            TO_CHAR(MOVIE_SHOW_TIME,'YYYY') as year
+        </if>
+        FROM MOVIE_INFO WHERE
+        ID IN (
+        SELECT
+        MOVIE_ID
+        FROM MOVIE_USER
+        WHERE
+        USER_ID=#{userId,jdbcType=VARCHAR}
+        AND
+        STATE='2'
         )
 
     </select>

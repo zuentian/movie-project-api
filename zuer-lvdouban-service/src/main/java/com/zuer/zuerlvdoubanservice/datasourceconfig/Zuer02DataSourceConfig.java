@@ -1,6 +1,8 @@
 package com.zuer.zuerlvdoubanservice.datasourceconfig;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import org.apache.ibatis.mapping.DatabaseIdProvider;
+import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +15,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import tk.mybatis.spring.annotation.MapperScan;
 
 import javax.sql.DataSource;
+import java.util.Properties;
+
 /*
 springboot默认启动的时候会选择其中一个数据源，所以需要默认主数据源
 因此加注解@Primary
@@ -56,8 +60,26 @@ public class Zuer02DataSourceConfig {
     public SqlSessionFactory zuer02SqlSessionFactory(@Qualifier("zuer02DataSource") DataSource zuer02DataSource)throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(zuer02DataSource);
+        sessionFactory.setDatabaseIdProvider(databaseIdProvider());
         sessionFactory.setMapperLocations(
         new PathMatchingResourcePatternResolver().getResources(Zuer02DataSourceConfig.MAPPER_LOCATION));
         return sessionFactory.getObject();
+    }
+
+    /**
+     * 20210811 新增连接配置，可以实现一个mapper里执行不同的数据库sql语句
+     * @return
+     */
+    @Bean
+    public DatabaseIdProvider databaseIdProvider() {
+        DatabaseIdProvider databaseIdProvider = new VendorDatabaseIdProvider();
+        Properties p = new Properties();
+        p.setProperty("Oracle", "oracle");
+        p.setProperty("MySQL", "mysql");
+        p.setProperty("PostgreSQL", "postgresql");
+        p.setProperty("DB2", "db2");
+        p.setProperty("SQL Server", "sqlserver");
+        databaseIdProvider.setProperties(p);
+        return databaseIdProvider;
     }
 }
