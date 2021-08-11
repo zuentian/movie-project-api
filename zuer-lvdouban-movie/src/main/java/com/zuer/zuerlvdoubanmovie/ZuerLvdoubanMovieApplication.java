@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
 //@RestController
-@SpringBootApplication(exclude ={DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 //@MapperScan(basePackages = {"com.zuer.zuerlvdoubanmovie"})
 @EnableEurekaClient
 @EnableFeignClients

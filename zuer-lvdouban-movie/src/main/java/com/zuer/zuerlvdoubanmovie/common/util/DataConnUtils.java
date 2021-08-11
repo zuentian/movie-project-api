@@ -1,18 +1,14 @@
 package com.zuer.zuerlvdoubanmovie.common.util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
-public class DataConnUtils {
+public class DataConnUtils {/*
 
     private static Connection conn = null;
-    /**
+    *//**
      * 连接数据库的基本信息
      *
      * @return Connection
      * @Title: dbConnection
-     */
+     *//*
     public static Connection dbConnectionZuer02() {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -43,12 +39,12 @@ public class DataConnUtils {
         }
         return conn;
     }
-    /**
+    *//**
      * 关闭数据库的连接
      *
      * @return void
      * @Title: dbDisConnection
-     */
+     *//*
     public static void dbDisConnection() {
         if (conn != null) {
             try {
@@ -58,5 +54,5 @@ public class DataConnUtils {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }
