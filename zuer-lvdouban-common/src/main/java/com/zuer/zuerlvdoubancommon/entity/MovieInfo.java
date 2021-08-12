@@ -5,7 +5,6 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -44,8 +43,8 @@ public class MovieInfo {
     @Column(name = "PERSON_SCORE_COUNT")
     private Integer personScoreCount;
 
-    @Column(name = "MOVIE_DESCRIPTION",columnDefinition = "CLOB")
-    @Lob
+    @Column(name = "MOVIE_DESCRIPTION")
+    //@Lob
     private String movieDescription;
 
     @Column(name = "crt_time")

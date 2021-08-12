@@ -16,14 +16,22 @@
     </resultMap>
 
     <select id="queryMoviePictureInfoByMovieIdFromSix" parameterType="String" resultMap="BaseResultMap">
+        <if test="_databaseId == 'mysql'">
+            SELECT * FROM
+            (SELECT ROWNUM RN, MPI.* FROM
+            (SELECT * FROM MOVIE_PICTURE_INFO
+            WHERE MOVIE_ID=#{movieId,jdbcType=VARCHAR}
+            ORDER BY CRT_TIME DESC) MPI) MPI1
 
-        SELECT * FROM
-        (SELECT ROWNUM RN, MPI.* FROM
-        (SELECT * FROM MOVIE_PICTURE_INFO
-        WHERE MOVIE_ID=#{movieId,jdbcType=VARCHAR}
-        ORDER BY CRT_TIME DESC) MPI) MPI1
+            WHERE MPI1.RN BETWEEN 1 AND 6
+        </if>
+        <if test="_databaseId == 'oracle'">
+            SELECT * FROM MOVIE_PICTURE_INFO
+            WHERE MOVIE_ID=#{movieId,jdbcType=VARCHAR}
+            ORDER BY CRT_TIME DESC
+            limit 0 ,6
+        </if>
 
-        WHERE MPI1.RN BETWEEN 1 AND 6
 
     </select>
 

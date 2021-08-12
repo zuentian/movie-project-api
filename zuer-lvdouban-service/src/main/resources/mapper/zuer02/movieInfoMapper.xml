@@ -12,7 +12,7 @@
         <result column="WATCH_AFTER_NUMBER" jdbcType="NUMERIC" property="watchAfterNumber" />
         <result column="WATCH_BEFORE_NUMBER" jdbcType="NUMERIC" property="watchBeforeNumber" />
         <result column="SCORE" jdbcType="VARCHAR" property="score" />
-        <result column="MOVIE_DESCRIPTION" jdbcType="CLOB" property="movieDescription" />
+        <result column="MOVIE_DESCRIPTION" jdbcType="VARCHAR" property="movieDescription" />
         <result column="PERSON_SCORE_COUNT" jdbcType="NUMERIC" property="personScoreCount" />
         <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
         <result column="crt_user" jdbcType="VARCHAR" property="crtUser" />
@@ -34,7 +34,7 @@
         <if test="_databaseId == 'oracle'">
             SELECT TAB.* FROM (
             SELECT ROWNUM RN ,T1.* FROM
-            (SELECT  DISTINCT
+            (SELECT
             MI.ID,
             MI.MOVIE_NAME,
             MI.MOVIE_NAME1,
@@ -128,19 +128,19 @@
             </if>
             </where>
             ORDER BY UPD_TIME DESC
-             limit #{start} , #{end}
+            <bind name="pageStart" value="start-1"></bind>
+            <bind name="pageSize" value="end-start+1"></bind>
+             limit #{pageStart},#{pageSize}
         </if>
 
     </select>
 
     <select id="queryMovieInfoByParamCount" parameterType="java.util.Map" resultType="Integer">
 
-        SELECT  COUNT(DISTINCT MI.ID)
+        SELECT  COUNT(MI.ID)
         FROM MOVIE_INFO MI
 
-        LEFT JOIN MOVIE_COUNTRY  MC ON MI.ID=MC.MOVIE_ID
-        LEFT JOIN MOVIE_TYPE MT ON MI.ID=MT.MOVIE_ID
-        WHERE 1=1
+       <where>
         <if test="name!=null and name!=''">
             ( MI.MOVIE_NAME  = #{name,jdbcType=VARCHAR} OR
             MI.MOVIE_NAME1 = #{name,jdbcType=VARCHAR} OR
@@ -160,12 +160,12 @@
             AND TO_NUMBER(MI.SCORE) &lt;=#{endScore}
         </if>
         <if test="movieType!=null and movieType!=''">
-            AND MT.TYPE =#{movieType}
+            AND EXISTS  (select 1 from MOVIE_TYPE MC where MI.ID=MC.MOVIE_ID  AND MC.TYPE =#{movieType})
         </if>
         <if test="movieCountry!=null and movieCountry!=''">
-            AND MC.COUNTRY_CODE =#{movieCountry}
+            AND EXISTS  (select 1 from MOVIE_COUNTRY MC where MI.ID=MC.MOVIE_ID  AND MC.COUNTRY_CODE =#{movieCountry})
         </if>
-
+       </where>
 
     </select>
 
