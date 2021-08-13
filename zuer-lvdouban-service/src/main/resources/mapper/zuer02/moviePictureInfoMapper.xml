@@ -16,7 +16,7 @@
     </resultMap>
 
     <select id="queryMoviePictureInfoByMovieIdFromSix" parameterType="String" resultMap="BaseResultMap">
-        <if test="_databaseId == 'mysql'">
+        <if test="_databaseId == 'oracle'">
             SELECT * FROM
             (SELECT ROWNUM RN, MPI.* FROM
             (SELECT * FROM MOVIE_PICTURE_INFO
@@ -25,7 +25,7 @@
 
             WHERE MPI1.RN BETWEEN 1 AND 6
         </if>
-        <if test="_databaseId == 'oracle'">
+        <if test="_databaseId == 'mysql'">
             SELECT * FROM MOVIE_PICTURE_INFO
             WHERE MOVIE_ID=#{movieId,jdbcType=VARCHAR}
             ORDER BY CRT_TIME DESC
