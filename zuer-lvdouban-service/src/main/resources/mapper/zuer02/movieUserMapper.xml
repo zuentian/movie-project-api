@@ -42,22 +42,38 @@
     </select>
 
     <select id="queryShortCommandByMovieId" parameterType="String" resultMap="BaseResultMapShortCommand">
-
-        SELECT
-        MU.MOVIE_ID,
-        MU.USER_ID,
-        MU.STATE,
-        TO_NUMBER(MU.SCORE) AS SCORE,
-        MU.SHORT_COMMAND,
-        UI.NAME,
-        UI.AVATAR,
-        MU.WATCH_AFTER_TIME,
-        MU.WATCH_BEFORE_TIME
-        FROM MOVIE_USER MU
-        LEFT JOIN USER_INFO UI ON MU.USER_ID=UI.ID
-        WHERE MOVIE_ID=#{movieId,jdbcType=VARCHAR}
-        AND STATE='2'
-
+        <if test="_databaseId == 'oracle'">
+            SELECT
+            MU.MOVIE_ID,
+            MU.USER_ID,
+            MU.STATE,
+            TO_NUMBER(MU.SCORE) AS SCORE,
+            MU.SHORT_COMMAND,
+            UI.NAME,
+            UI.AVATAR,
+            MU.WATCH_AFTER_TIME,
+            MU.WATCH_BEFORE_TIME
+            FROM MOVIE_USER MU
+            LEFT JOIN USER_INFO UI ON MU.USER_ID=UI.ID
+            WHERE MOVIE_ID=#{movieId,jdbcType=VARCHAR}
+            AND STATE='2'
+        </if>
+        <if test="_databaseId == 'mysql'">
+            SELECT
+            MU.MOVIE_ID,
+            MU.USER_ID,
+            MU.STATE,
+            cast(MU.SCORE as decimal(10, 1)) AS SCORE,
+            MU.SHORT_COMMAND,
+            UI.NAME,
+            UI.AVATAR,
+            MU.WATCH_AFTER_TIME,
+            MU.WATCH_BEFORE_TIME
+            FROM MOVIE_USER MU
+            LEFT JOIN USER_INFO UI ON MU.USER_ID=UI.ID
+            WHERE MOVIE_ID=#{movieId,jdbcType=VARCHAR}
+            AND STATE='2'
+        </if>
     </select>
 
 </mapper>
