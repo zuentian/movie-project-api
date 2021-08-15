@@ -10,7 +10,7 @@ create table MOVIE_INFO
     WATCH_AFTER_NUMBER  VARCHAR(10),
     WATCH_BEFORE_NUMBER VARCHAR(10),
     SCORE               VARCHAR(10),
-    MOVIE_DESCRIPTION   BLOB,
+    MOVIE_DESCRIPTION   TEXT,
     CRT_TIME            datetime(6)  default NULL,
     CRT_USER            VARCHAR(255) default NULL,
     CRT_NAME            VARCHAR(255) default NULL,

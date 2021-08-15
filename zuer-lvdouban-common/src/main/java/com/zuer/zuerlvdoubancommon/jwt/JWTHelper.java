@@ -18,7 +18,7 @@ public class JWTHelper {
      * @return
      * @throws Exception
      */
-    public static String generateToken(IJWTInfo jwtInfo, byte priKey[], int expire) throws Exception {
+    public static String generateToken(IJWTInfo jwtInfo, byte[] priKey, int expire) throws Exception {
         String compactJws = Jwts.builder()
                 .setSubject(jwtInfo.getUniqueName())
                 .claim(CommonConstants.JWT_KEY_USER_ID, jwtInfo.getId())

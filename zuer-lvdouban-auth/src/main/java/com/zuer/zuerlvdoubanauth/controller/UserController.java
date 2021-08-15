@@ -148,7 +148,7 @@ public class UserController {
     public Map<String,Object>  queryUser(@RequestParam Map<String, Object> param) throws Exception{
 
         try{
-            Map<String,Object> map=new HashMap<String, Object>();
+            Map<String,Object> map=new HashMap<String, Object>(16);
             String pageSize=(String)param.get("limit");
             String pageIndex=(String)param.get("page");
             String name =param.get("name")==null?null:(String) param.get("name");
@@ -218,7 +218,7 @@ public class UserController {
     @ResponseBody
     public Map<String,Object> queryUserByGroupId(@PathVariable String groupId) throws Exception {
 
-        Map<String,Object> resultMap=new HashMap<>();
+        Map<String,Object> resultMap=new HashMap<>(16);
         List<User> leaders=userFeignService.queryUserLeaderByGroupId(groupId);
         List<User> members=userFeignService.queryUserMemberByGroupId(groupId);
         resultMap.put("leaders",leaders);

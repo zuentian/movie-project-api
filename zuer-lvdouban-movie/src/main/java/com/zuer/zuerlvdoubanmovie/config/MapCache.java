@@ -33,10 +33,11 @@ public class MapCache {
 
     public static Object getToEmpty(Object key) {
         Object o = cacheMap.get(key);
-        if (o == null)
+        if (o == null) {
             return "";
-        else
+        }else {
             return o;
+        }
     }
 
     public static void remove(Object key) {

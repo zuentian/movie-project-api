@@ -6,7 +6,11 @@ public class LockInterruptiblyRun {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                service.waitMethod();
+                try {
+                    service.waitMethod();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         };
         Thread threadA = new Thread(runnable);

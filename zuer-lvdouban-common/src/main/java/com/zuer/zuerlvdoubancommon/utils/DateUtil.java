@@ -514,7 +514,7 @@ public class DateUtil {
     public static long getAgeByBirthday(String date){
 
         Date birthday = stringToDate(date, "yyyy-MM-dd");
-        long sec = new Date().getTime() - birthday.getTime();
+        long sec = System.currentTimeMillis() - birthday.getTime();
 
         long age = sec/(1000*60*60*24)/365;
 

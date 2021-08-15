@@ -78,7 +78,7 @@ public class CrawlerController {
         if(null != dbLoginParam){
             if(StringUtils.isNotEmpty((String)dbLoginParam.get("account"))&&account.equals(dbLoginParam.get("account"))){
                 Date date = (Date)dbLoginParam.get("time");
-                long time = (new Date().getTime()-date.getTime())/(1000*60);
+                long time = (System.currentTimeMillis()-date.getTime())/(1000*60);
                 if(time<30){
                     logger.info("-->>CrawlerController searchTags() cookies有效，跳过登陆");
                     cookies = (Map<String, String>) dbLoginParam.get("cookies");

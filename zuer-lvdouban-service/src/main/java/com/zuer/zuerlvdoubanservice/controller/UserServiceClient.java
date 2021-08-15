@@ -49,7 +49,8 @@ public class UserServiceClient  {
                                             @RequestParam("pageSize") String pageSize,
                                             @RequestParam("pageIndex") String pageIndex) {
         Example example=new Example(User.class);
-        example.setOrderByClause("UPD_TIME DESC");//实现排序
+        //实现排序
+        example.setOrderByClause("UPD_TIME DESC");
         Example.Criteria criteria = example.createCriteria();
 
         if(map.get("name")!=null){
@@ -58,7 +59,7 @@ public class UserServiceClient  {
         }
         RowBounds rowBounds = RowBoundUtil.getRowBounds(pageSize, pageIndex);
         List<User> lists = userService.selectByExampleAndRowBounds(example, rowBounds);
-        Map<String,Object> resultMap=new HashMap<String, Object>();
+        Map<String,Object> resultMap=new HashMap<String, Object>(16);
         resultMap.put("list",lists);
         int count = userService.selectCountByExample(example);
         resultMap.put("count",count);

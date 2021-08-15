@@ -9,11 +9,10 @@ public class AwaitUninterruptiblyService {
     private Condition condition = lock.newCondition();
 
     public void testMethod(){
+        lock.lock();
         try {
-            lock.lock();
             System.out.println("wait begin");
             condition.await();//如果线程interrupt会报异常
-            //condition.awaitUninterruptibly();
             System.out.println("wait end");
         } catch (InterruptedException e) {
             e.printStackTrace();

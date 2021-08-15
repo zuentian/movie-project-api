@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/AddFeign")
 public class AddFeignClient {
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addFeignClient(){
 
         try {

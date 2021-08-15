@@ -63,7 +63,7 @@ public class DictServiceClient {
 
 
     @RequestMapping(value = "/addDict",method = RequestMethod.POST)
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int addDict(@RequestBody Dict dict){
         int i = dictService.insert(dict);
         return i;

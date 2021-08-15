@@ -8,12 +8,14 @@ public class AwaitUntilService {
     private ReentrantLock lock = new ReentrantLock();
     private Condition condition = lock.newCondition();
     public void waitMethod(){
+        lock.lock();
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.SECOND,10);
-            lock.lock();
+
             System.out.println("wait begin timer="+System.currentTimeMillis());
-            condition.awaitUntil(calendar.getTime());//达到一定时间可以自动唤醒自己
+            //达到一定时间可以自动唤醒自己
+            condition.awaitUntil(calendar.getTime());
             System.out.println("wait end timer="+System.currentTimeMillis());
         } catch (InterruptedException e) {
             e.printStackTrace();

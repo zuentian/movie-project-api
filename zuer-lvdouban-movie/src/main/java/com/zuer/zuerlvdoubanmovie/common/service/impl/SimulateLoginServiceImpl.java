@@ -22,7 +22,7 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
 
     @Autowired
     private CrawlerUrlInfoFeignService crawlerUrlInfoFeignService;
-
+    @Override
     public Connection.Response login(Map<String,String> data,String urlCode) throws Exception {
         logger.info("-->>SimulateLoginServiceImpl login start urlCode=["+urlCode+"]");
         CrawlerUrlInfo crawlerUrlInfo = crawlerUrlInfoFeignService.queryCrawlerUrlInfoByUrlName(urlCode);
@@ -35,8 +35,10 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
 
             try {
                 login = Jsoup.connect(url)
-                        .ignoreContentType(true) // 忽略类型验证
-                        .followRedirects(false) // 禁止重定向
+                        // 忽略类型验证
+                        .ignoreContentType(true)
+                        // 禁止重定向
+                        .followRedirects(false)
                         .postDataCharset("utf-8")
                         .header("Upgrade-Insecure-Requests","1")
                         .header("Accept","application/json")
@@ -48,7 +50,8 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
                         .header("Referer","https://accounts.douban.com/passport/login")
                         .header("Sec-Fetch-Mode","cors")
                         .header("Sec-Fetch-Site","same-origin")
-                        .header("Cookie","bid=SPuyS8ldU9s")//豆瓣登录需要加这个东西，这个东西具体是一个账号对应一个还是会过期，尚不明确。
+                        //豆瓣登录需要加这个东西，这个东西具体是一个账号对应一个还是会过期，尚不明确。
+                        .header("Cookie","bid=SPuyS8ldU9s")
                         .data(data)
                         .method(Connection.Method.POST)
                         .execute();
@@ -74,8 +77,10 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
             Connection.Response response = null;
             if(cookies==null){
                 response = Jsoup.connect(url)
-                        .ignoreContentType(true) // 忽略类型验证
-                        .followRedirects(false) // 禁止重定向
+                        // 忽略类型验证
+                        .ignoreContentType(true)
+                        // 禁止重定向
+                        .followRedirects(false)
                         .postDataCharset("utf-8")
                         .header("Upgrade-Insecure-Requests","1")
                         .header("Accept","application/json")
@@ -88,8 +93,10 @@ public class SimulateLoginServiceImpl implements SimulateLoginService {
 
             }else {
                 response = Jsoup.connect(url)
-                        .ignoreContentType(true) // 忽略类型验证
-                        .followRedirects(false) // 禁止重定向
+                        // 忽略类型验证
+                        .ignoreContentType(true)
+                        // 禁止重定向
+                        .followRedirects(false)
                         .postDataCharset("utf-8")
                         .header("Upgrade-Insecure-Requests","1")
                         .header("Accept","application/json")
