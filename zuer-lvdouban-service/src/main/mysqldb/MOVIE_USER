@@ -5,7 +5,7 @@ CREATE TABLE MOVIE_USER
     MOVIE_ID      VARCHAR(36),
     USER_ID       VARCHAR(36),
     SCORE         VARCHAR(2),
-    SHORT_COMMAND BLOB,
+    SHORT_COMMAND TEXT,
     WATCH_AFTER_TIME    datetime(6) default NULL  COMMENT ' 看过的时间',
     WATCH_BEFORE_TIME     datetime(6)  default NULL  COMMENT '想看的时间',
     STATE         VARCHAR(2) COMMENT ' (1-"想看"、2-"看过"、3-"在看")',
