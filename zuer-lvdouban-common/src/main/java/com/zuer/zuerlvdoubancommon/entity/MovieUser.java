@@ -12,12 +12,14 @@ import java.util.Date;
 @Table(name = "MOVIE_USER")
 public class MovieUser {
 
-    @Id
-    private String id;
+    /*@Id
+    private String id;*/
 
+    @Id
     @Column(name = "MOVIE_ID")
     private String movieId;
-
+    
+    @Id
     @Column(name = "USER_ID")
     private String userId;
 

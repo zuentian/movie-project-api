@@ -28,7 +28,6 @@ public class MovieUserController {
     public void insertMovieUser(@RequestParam Map<String, Object> param) throws Exception {
 
         MovieUser movieUser = EntityUtils.mapToEntity(param, MovieUser.class);
-        movieUser.setId(UUID.randomUUID().toString());
         EntityUtils.setCreatAndUpdatInfo(movieUser);
         if ("1".equals(movieUser.getState())) {
             movieUser.setWatchBeforeTime(new Date());

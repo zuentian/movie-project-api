@@ -1,8 +1,6 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
-import com.zuer.zuerlvdoubancommon.entity.MovieInfo;
 import com.zuer.zuerlvdoubancommon.entity.MovieUser;
-import com.zuer.zuerlvdoubancommon.vo.DictValue;
 import com.zuer.zuerlvdoubancommon.vo.MovieScoreSection;
 import com.zuer.zuerlvdoubanmovie.feginservice.MovieInfoFeignService;
 import com.zuer.zuerlvdoubanmovie.feginservice.MovieUserFeignService;
@@ -15,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @EnableAutoConfiguration
 @RestController
@@ -35,14 +31,14 @@ public class MovieCalculateScoreController {
     //计算想看人数和看过人数
     public void calculateWatchCount(String movieId){
 
-        int watchAfterNumber=movieUserFeignService.queryMovieUserCountByMovieIdFromState(movieId,"2");
+        /*int watchAfterNumber=movieUserFeignService.queryMovieUserCountByMovieIdFromState(movieId,"2");
         int watchBeforeNumber=movieUserFeignService.queryMovieUserCountByMovieIdFromState(movieId,"1");
         System.out.println("movieId["+movieId+"]看过人数watchAfterNumber["+watchAfterNumber+"]想看人数watchBeforeNumber["+watchBeforeNumber+"]");
         MovieInfo movieInfo=new MovieInfo();
         movieInfo.setId(movieId);
         movieInfo.setWatchAfterNumber(watchAfterNumber);
         movieInfo.setWatchBeforeNumber(watchBeforeNumber);
-        movieInfoFeignService.updateMovieInfoById(movieInfo);
+        movieInfoFeignService.updateMovieInfoById(movieInfo);*/
 
     }
 
