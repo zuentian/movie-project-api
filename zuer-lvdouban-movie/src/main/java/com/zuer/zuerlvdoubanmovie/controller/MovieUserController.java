@@ -1,16 +1,22 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
 import com.zuer.zuerlvdoubancommon.entity.MovieUser;
+import com.zuer.zuerlvdoubancommon.entity.MovieUserRecord;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.vo.MovieScoreSection;
 import com.zuer.zuerlvdoubancommon.vo.MovieUserCommand;
 import com.zuer.zuerlvdoubanmovie.feginservice.MovieUserFeignService;
+import com.zuer.zuerlvdoubanmovie.service.MovieUserRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @EnableAutoConfiguration
 @RequestMapping(value = "/MovieUserController")
@@ -37,7 +43,6 @@ public class MovieUserController {
         }
         int i = movieUserFeignService.insertMovieUser(movieUser);
         if (i > 0) {
-
             //重新为该电影计算想看人数和看过人数
             movieCalculateScoreController.calculateWatchCount(movieUser.getMovieId());
             //重新为该电影计算评分
@@ -118,4 +123,16 @@ public class MovieUserController {
     }
 
 
+    @Resource
+    private MovieUserRecordService movieUserRecordService;
+    /**
+     * 用户关联电影的操作
+     * @param param
+     * @throws Exception
+     */
+    @RequestMapping(value = "/insertMovieUserInfo", method = RequestMethod.POST)
+    public void insertMovieUserInfo(@RequestParam Map<String, Object> param) throws Exception {
+        MovieUserRecord movieUserRecord = EntityUtils.mapToEntity(param, MovieUserRecord.class);
+        movieUserRecordService.insertMovieUserRecord(movieUserRecord);
+    }
 }
