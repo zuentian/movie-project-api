@@ -17,7 +17,7 @@ import java.util.Date;
 @Table(name="MOVIE_USER_RECORD")
 public class MovieUserRecord {
     @Id
-    private String id;
+    private int id;
 
     @Column
     private String movieId;
@@ -27,6 +27,9 @@ public class MovieUserRecord {
 
     @Column
     private String state;
+
+    @Column
+    private double score;
 
     @Column
     private Date crtTime;

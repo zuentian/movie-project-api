@@ -9,29 +9,39 @@ import com.zuer.zuerlvdoubanmovie.thread.service.ExecutorBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
+/**
+ * @author zuer
+ */
 @Service("ExecutorBuilderService")
 public class ExecutorBuilderServiceImpl implements ExecutorBuilderService {
 
-    @Autowired
+    @Resource
     private ThreadPropertiesInfoFeignService threadPropertiesInfoFeignService;
 
     @Override
     public ThreadPoolPriorityExecutor createPriorityExecutorInstance(String type) {
-        ThreadPropertiesInfo threadPropertiesInfo = threadPropertiesInfoFeignService.queryThreadPropertiesInfoByType(type);
+        ThreadPropertiesInfo threadPropertiesInfo = null;
+        try {
+            threadPropertiesInfo = threadPropertiesInfoFeignService.queryThreadPropertiesInfoByType(type);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ExecutorFactory.create(setThreadProperties(threadPropertiesInfo));
+    }
+
+    private ThreadProperties setThreadProperties(ThreadPropertiesInfo threadPropertiesInfo) {
         ThreadProperties threadProperties = new ThreadProperties();
         threadProperties.setCorePoolSize(threadPropertiesInfo == null?10:threadPropertiesInfo.getCorePoolSize());
         threadProperties.setMaxiPoolSize(threadPropertiesInfo == null?10:threadPropertiesInfo.getMaxPoolSize());
         threadProperties.setQueueCapacity(threadPropertiesInfo == null?60:threadPropertiesInfo.getQueueCapacity());
-        return ExecutorFactory.create(threadProperties);
+        return threadProperties;
     }
 
     @Override
     public synchronized void updateExecutor(ThreadPoolPriorityExecutor executor, String type) {
         ThreadPropertiesInfo threadPropertiesInfo = threadPropertiesInfoFeignService.queryThreadPropertiesInfoByType(type);
-        ThreadProperties threadProperties = new ThreadProperties();
-        threadProperties.setCorePoolSize(threadPropertiesInfo == null?10:threadPropertiesInfo.getCorePoolSize());
-        threadProperties.setMaxiPoolSize(threadPropertiesInfo == null?10:threadPropertiesInfo.getMaxPoolSize());
-        threadProperties.setQueueCapacity(threadPropertiesInfo == null?60:threadPropertiesInfo.getQueueCapacity());
-        ExecutorFactory.update(executor,threadProperties);
+        ExecutorFactory.update(executor,setThreadProperties(threadPropertiesInfo));
     }
 }
