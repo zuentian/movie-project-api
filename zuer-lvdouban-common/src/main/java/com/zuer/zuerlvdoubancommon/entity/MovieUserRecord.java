@@ -25,9 +25,15 @@ public class MovieUserRecord {
     @Column
     private String userId;
 
+    /**
+     * 1-想看 2-看过
+     */
     @Column
     private String state;
 
+    /**
+     * 评分
+     */
     @Column
     private double score;
     /**
