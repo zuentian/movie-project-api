@@ -30,6 +30,11 @@ public class MovieUserRecord {
 
     @Column
     private double score;
+    /**
+     * 短评
+     */
+    @Column
+    private String shortCommand;
 
     @Column
     private Date crtTime;

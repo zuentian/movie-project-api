@@ -6,7 +6,6 @@ import com.zuer.zuerlvdoubanmovie.thread.common.ExecutorFactory;
 import com.zuer.zuerlvdoubanmovie.thread.common.ThreadPoolPriorityExecutor;
 import com.zuer.zuerlvdoubanmovie.thread.entity.ThreadProperties;
 import com.zuer.zuerlvdoubanmovie.thread.service.ExecutorBuilderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

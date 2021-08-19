@@ -8,7 +8,6 @@ import com.zuer.zuerlvdoubancommon.vo.MovieUserCommand;
 import com.zuer.zuerlvdoubanmovie.feginservice.MovieUserFeignService;
 import com.zuer.zuerlvdoubanmovie.service.MovieUserRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -124,9 +123,7 @@ public class MovieUserController {
     }
 
 
-   //@Autowired
-    //@Qualifier("MovieUserRecordService")
-     @Resource(name = "MovieUserRecordService")
+    @Resource
     private MovieUserRecordService movieUserRecordService;
     /**
      * 用户关联电影的操作
@@ -135,7 +132,6 @@ public class MovieUserController {
      */
     @RequestMapping(value = "/insertMovieUserInfo", method = RequestMethod.POST)
     public void insertMovieUserInfo(@RequestBody MovieUserRecord movieUserRecord) throws Exception {
-        //MovieUserRecord movieUserRecord = EntityUtils.mapToEntity(param, MovieUserRecord.class);
         movieUserRecordService.insertMovieUserRecord(movieUserRecord);
     }
 }
