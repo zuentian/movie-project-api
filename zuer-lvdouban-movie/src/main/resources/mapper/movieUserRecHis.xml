@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zuer.zuerlvdoubanmovie.dao.MovieUserRecHisDao">
+
+    <insert id="insertByMovieUserRecord" parameterType="java.lang.String">
+        INSERT INTO
+            MOVIE_USER_REC_HIS
+        (MOVIE_ID,USER_ID,SCORE,SHORT_COMMAND,MARK_TIME)
+        SELECT
+               B.MOVIE_ID,B.USER_ID,B.STATE,B.SCORE,B.SHORT_COMMAND,B.CRT_TIME
+        FROM MOVIE_USER_RECORD B
+        WHERE
+            B.MOVIE_ID = #{movieId}
+        AND B.USER_ID = #{userId}
+    </insert>
+</mapper>
