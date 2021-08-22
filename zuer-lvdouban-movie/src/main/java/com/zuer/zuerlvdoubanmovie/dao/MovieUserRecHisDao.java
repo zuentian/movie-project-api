@@ -14,6 +14,9 @@ public interface MovieUserRecHisDao extends Mapper<MovieUserRecHis> {
      * 将Movie_User_Record的数据落到历史表
      * @param movieId
      * @param userId
+     * @param day
      */
-    void insertByMovieUserRecord(@Param("movieId") String movieId, @Param("userId")String userId);
+    void insertByMovieUserRecordAndDay(@Param("movieId") String movieId,
+                                       @Param("userId")String userId,
+                                       @Param("day")int day);
 }

@@ -25,13 +25,15 @@ public class MovieUserRecordServiceImpl implements MovieUserRecordService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void insertMovieUserRecord(MovieUserRecord movieUserRecord) {
-        //先把当前信息落入历史表
-        movieUserRecHisDao.insertByMovieUserRecord(movieUserRecord.getMovieId(),movieUserRecord.getUserId());
-        //删除用户当前信息
+        //先把当前信息落入历史表，当天的不用落入记录历史表
+        movieUserRecHisDao.insertByMovieUserRecordAndDay(
+                movieUserRecord.getMovieId(),
+                movieUserRecord.getUserId(),
+                1);
+        //删除用户的电影当前信息，并将现在的信息落入表中
         Example ex = new Example(MovieUserRecord.class);
         ex.createCriteria().andEqualTo("userId",movieUserRecord.getUserId());
         movieUserRecordDao.deleteByExample(ex);
         movieUserRecordDao.insertSelective(movieUserRecord);
-        //movieUserRecordDao
     }
 }
