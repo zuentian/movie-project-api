@@ -35,7 +35,7 @@ public class MovieUserRecord {
      * 评分
      */
     @Column
-    private double score;
+    private Double score;
     /**
      * 短评
      */

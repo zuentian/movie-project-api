@@ -1,4 +1,4 @@
-movie_user_rec_his
+create table  movie_user_rec_his
 (
     ID            int auto_increment
         primary key,
@@ -10,4 +10,4 @@ movie_user_rec_his
     CRT_TIME      datetime      default CURRENT_TIMESTAMP null,
     SHORT_COMMAND text                                    null comment '短评'
 )
-    comment '用户和电影关联记录表';
+    comment '用户和电影关联记录历史表';

@@ -32,7 +32,7 @@ public class MovieUserRecHis {
      * 评分
      */
     @Column
-    private double score;
+    private Double score;
     /**
      * 短评
      */
