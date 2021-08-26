@@ -29,21 +29,18 @@ public class AnalysisMovieUserCountImpl implements AnalysisMovieUserCount {
     /**
      * 计算用户表里的数据，根据电影计量表的更新时间，如果更新时间超过十五分钟才要重新计算
      * @param movieId
-     * @param type
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void change(String movieId , String type) {
+    public void change(String movieId) {
         logger.info("AnalysisMovieUserCountImpl change() 计算该电影的想看和看过的数量 start " +
-                "state=[{}] movieId=[{}]",type,movieId);
-        MovieUserCountData data = movieUserCountDataService.queryMovieUserCountDataByMovieId(movieId,type);
+                "movieId=[{}]",movieId);
+        MovieUserCountData data = movieUserCountDataService.queryMovieUserCountDataByMovieId(movieId);
         if(data == null){
-            movieUserCountDataService.insertForMovieUser(movieId,type);
+            movieUserCountDataService.insertCountByMovieId(movieId);
         } else {
-            Date updDate = data.getUpdDate();
-            long date_T = System.currentTimeMillis() - updDate.getTime();
-            if(date_T >= UPD_DATE_MAX){
-                movieUserCountDataService.updateForMovieUser(movieId,type);
+            if(UPD_DATE_MAX >= data.getUpdDate().getTime()){
+                movieUserCountDataService.updateCountByMovieId(movieId);
             }
         }
         //考虑计算更新会比较慢，此处阻塞15秒
@@ -53,6 +50,6 @@ public class AnalysisMovieUserCountImpl implements AnalysisMovieUserCount {
             e.printStackTrace();
         }
         logger.info("AnalysisMovieUserCountImpl change() 计算该电影的想看和看过的数量 end " +
-                "state=[{}] movieId=[{}]",type,movieId);
+                "movieId=[{}]",movieId);
     }
 }

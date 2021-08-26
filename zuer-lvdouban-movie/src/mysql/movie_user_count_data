@@ -1,7 +1,7 @@
 CREATE TABLE `movie_user_count_data` (
   `MOVIE_ID` varchar(36) DEFAULT NULL,
-  `TYPE` varchar(2) DEFAULT NULL COMMENT '计数类型',
-  `COUNT` double DEFAULT '0' COMMENT '计数的数量',
+  `BEFORE_WATCH_CT` double DEFAULT '0' COMMENT '想看的人数',
+  `AFTER_WATCH_CT` double DEFAULT '0' COMMENT '看过的人数',
   `UPD_DATE` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '计数的更新时间',
-  UNIQUE KEY `MOVIE_USER_COUNT_DATA_pk` (`MOVIE_ID`,`TYPE`)
+  UNIQUE KEY `MOVIE_USER_COUNT_DATA_pk` (`MOVIE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='电影和用户关联计数表'

@@ -152,7 +152,7 @@ public class MovieUserController {
                 executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        analysisMovieUserCount.change(movieUserRecord.getMovieId(),movieUserRecord.getState());
+                        analysisMovieUserCount.change(movieUserRecord.getMovieId());
                     }
                 });
             }

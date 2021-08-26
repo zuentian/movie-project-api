@@ -20,16 +20,15 @@ public class MovieUserCountData {
     @Column(name = "MOVIE_ID")
     private String movieId;
     /**
-     * 计数的类型
+     * 想看的人数
      */
-    @Id
-    @Column
-    private String type;
+    @Column(name = "BEFORE_WATCH_CT")
+    private Double beforeWatchCt;
     /**
-     * 计数的数量
+     * 看过的人数
      */
-    @Column
-    private Double count;
+    @Column(name = "AFTER_WATCH_CT")
+    private Double afterWatchCt;
     /**
      * 计数的更新时间
      */

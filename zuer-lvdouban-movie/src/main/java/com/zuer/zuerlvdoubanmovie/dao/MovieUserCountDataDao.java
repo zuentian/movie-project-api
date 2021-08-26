@@ -11,11 +11,14 @@ import tk.mybatis.mapper.common.Mapper;
      */
     public interface MovieUserCountDataDao extends Mapper<MovieUserCountData> {
     /**
-     * 计算电影关于用户的数量 新增
+     * 新增观影的人数
      * @param movieId
-     * @param type
      */
-    void insertForMovieUser(@Param("movieId") String movieId, @Param("type") String type);
+    void insertCountByMovieId(@Param("movieId") String movieId);
+    /**
+     * 更新观影的人数
+     * @param movieId
+     */
+    void updateCountByMovieId(@Param("movieId") String movieId);
 
-    void updateForMovieUser(@Param("movieId") String movieId, @Param("type") String type);
-}
+    }

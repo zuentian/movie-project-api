@@ -16,21 +16,19 @@ import javax.annotation.Resource;
 public class MovieUserCountDataServiceImpl implements MovieUserCountDataService {
     @Resource
     private MovieUserCountDataDao movieUserCountDataDao;
+
     @Override
-    public MovieUserCountData queryMovieUserCountDataByMovieId(String movieId, String type) {
-        MovieUserCountData data = new MovieUserCountData();
-        data.setMovieId(movieId);
-        data.setType(type);
-        return movieUserCountDataDao.selectByPrimaryKey(data);
+    public void updateCountByMovieId(String movieId) {
+        movieUserCountDataDao.updateCountByMovieId(movieId);
     }
 
     @Override
-    public void insertForMovieUser(String movieId, String type) {
-        movieUserCountDataDao.insertForMovieUser(movieId,type);
+    public MovieUserCountData queryMovieUserCountDataByMovieId(String movieId) {
+        return movieUserCountDataDao.selectByPrimaryKey(movieId);
     }
 
     @Override
-    public void updateForMovieUser(String movieId, String type) {
-        movieUserCountDataDao.updateForMovieUser(movieId,type);
+    public void insertCountByMovieId(String movieId) {
+        movieUserCountDataDao.insertCountByMovieId(movieId);
     }
 }
