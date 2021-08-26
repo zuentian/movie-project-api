@@ -9,7 +9,8 @@ public interface AnalysisMovieUserCount{
 
     /**
      * 更改用户和电影的观影量信息
-     * @param state
+     * @param movieId
+     * @param type
      */
-    public void change(String state);
+    public void change(String movieId , String type);
 }
