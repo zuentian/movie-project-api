@@ -13,6 +13,6 @@
         WHERE
             B.MOVIE_ID = #{movieId}
         AND B.USER_ID = #{userId}
-        AND B.CRT_TIME &lt;= NOW()-#{day}
+        AND DATEDIFF(NOW(),B.CRT_TIME) &gt;= #{day}
     </insert>
 </mapper>

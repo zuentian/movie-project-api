@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**
@@ -46,4 +47,9 @@ public class MovieUserRecord {
     private Date crtTime;
 
 
+    /**
+     * 临时增加
+     */
+    @Transient
+    private String movieType;
 }
