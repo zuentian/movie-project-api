@@ -6,6 +6,7 @@ import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.vo.MovieScoreSection;
 import com.zuer.zuerlvdoubancommon.vo.MovieUserCommand;
 import com.zuer.zuerlvdoubanmovie.executor.AnalysisMovieUserCount;
+import com.zuer.zuerlvdoubanmovie.executor.AnalysisUserMovieTypeCount;
 import com.zuer.zuerlvdoubanmovie.feginservice.MovieUserFeignService;
 import com.zuer.zuerlvdoubanmovie.service.MovieUserRecordService;
 import org.slf4j.Logger;
@@ -136,6 +137,9 @@ public class MovieUserController {
     private MovieUserRecordService movieUserRecordService;
     @Resource
     private AnalysisMovieUserCount analysisMovieUserCount;
+    @Resource
+    private AnalysisUserMovieTypeCount analysisUserMovieTypeCount;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 用户关联电影的操作
@@ -146,13 +150,22 @@ public class MovieUserController {
     public void insertMovieUserInfo(@RequestBody MovieUserRecord movieUserRecord) throws Exception {
         logger.info("用户更新电影记录业务 start");
         movieUserRecordService.insertMovieUserRecord(movieUserRecord);
+        //模拟处理时间有3秒
+        TimeUnit.SECONDS.sleep(3);
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                executor.execute(new Runnable() {
+                /*executor.execute(new Runnable() {
                     @Override
                     public void run() {
                         analysisMovieUserCount.change(movieUserRecord.getMovieId(),movieUserRecord.getState());
+                    }
+                });*/
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        analysisUserMovieTypeCount.addMovieTypeCount(movieUserRecord.getUserId(),
+                                movieUserRecord.getMovieType());
                     }
                 });
             }
