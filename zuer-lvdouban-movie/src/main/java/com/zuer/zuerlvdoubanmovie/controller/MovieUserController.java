@@ -1,8 +1,10 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zuer.zuerlvdoubancommon.entity.MovieUser;
 import com.zuer.zuerlvdoubancommon.entity.MovieUserRecord;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
+import com.zuer.zuerlvdoubancommon.utils.HttpClientUtils;
 import com.zuer.zuerlvdoubancommon.vo.MovieScoreSection;
 import com.zuer.zuerlvdoubancommon.vo.MovieUserCommand;
 import com.zuer.zuerlvdoubanmovie.executor.AnalysisMovieUserCount;
@@ -181,11 +183,41 @@ public class MovieUserController {
             new ThreadFactory() {
                 @Override
                 public Thread newThread(Runnable r) {
-                    System.out.println("线程"+r.hashCode()+"创建");
+                    System.out.println("线程" + r.hashCode() + "创建");
                     //线程命名
-                    Thread th = new Thread(r,"threadPool"+r.hashCode());
+                    Thread th = new Thread(r, "threadPool" + r.hashCode());
                     return th;
                 }
             },
             new ThreadPoolExecutor.AbortPolicy());
+
+    public static void main(String[] args) {
+        String url = "http://localhost:9994/MovieUserController/insertMovieUserInfo";
+
+        int i = 0;
+        for ( ; i < 10; i++) {
+            final int a = i;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                JSONObject object = new JSONObject();
+                object.put("movieId","111");
+                object.put("userId","3321N"+a);
+                object.put("state","1");
+                object.put("score","5");
+                object.put("movieType","0001");
+                object.put("shortCommand","------"+a);
+                String result =  HttpClientUtils.doPost(url,object.toJSONString());
+                System.out.println();
+                }
+            };
+            Thread thread  = new Thread(runnable);
+            thread.start();
+        }
+    }
 }
+
+
+
+
+
