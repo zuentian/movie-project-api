@@ -9,4 +9,5 @@ import tk.mybatis.mapper.common.Mapper;
  * @date 2021/8/18 15:13
  */
 public interface MovieUserRecordDao  extends Mapper<MovieUserRecord> {
+    void replaceIntoMovieUserRecord(MovieUserRecord movieUserRecord);
 }

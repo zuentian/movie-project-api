@@ -35,7 +35,6 @@ public class MovieUserRecordServiceImpl implements MovieUserRecordService {
         ex.createCriteria().andEqualTo("userId",movieUserRecord.getUserId());
         ex.createCriteria().andEqualTo("movieId",movieUserRecord.getMovieId());
         int count = movieUserRecordDao.selectCountByExample(ex);
-        logger.info("selectCountByExample count=[{}]",count);
         if(count>0){
             /**
              * 特别注明，
@@ -49,14 +48,12 @@ public class MovieUserRecordServiceImpl implements MovieUserRecordService {
                     1);
             movieUserRecordDao.updateByPrimaryKeySelective(movieUserRecord);
         }else{
-            logger.info("insertSelective start");
             try {
                 TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            movieUserRecordDao.insertSelective(movieUserRecord);
-            logger.info("insertSelective end");
+            movieUserRecordDao.replaceIntoMovieUserRecord(movieUserRecord);
         }
         logger.info("insertByMovieUserRecordAndDay end");
     }

@@ -1,7 +1,7 @@
 package com.zuer.zuerlvdoubanmovie.executor.impl;
 
 import com.zuer.zuerlvdoubancommon.entity.MovieUserCountData;
-import com.zuer.zuerlvdoubanmovie.executor.AnalysisMovieUserCount;
+import com.zuer.zuerlvdoubanmovie.executor.AnalysisMovieData;
 import com.zuer.zuerlvdoubanmovie.service.MovieUserCountDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/8/24 16:55
  */
 @Service
-public class AnalysisMovieUserCountImpl implements AnalysisMovieUserCount {
+public class AnalysisMovieDataImpl implements AnalysisMovieData {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -32,7 +31,7 @@ public class AnalysisMovieUserCountImpl implements AnalysisMovieUserCount {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void change(String movieId) {
+    public void changeUserId(String movieId) {
         logger.info("AnalysisMovieUserCountImpl change() 计算该电影的想看和看过的数量 start " +
                 "movieId=[{}]",movieId);
         MovieUserCountData data = movieUserCountDataService.queryMovieUserCountDataByMovieId(movieId);

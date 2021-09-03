@@ -5,11 +5,11 @@ package com.zuer.zuerlvdoubanmovie.executor;
  * @version 1.0
  * @date 2021/8/24 16:52
  */
-public interface AnalysisMovieUserCount{
+public interface AnalysisMovieData{
 
     /**
-     * 更改用户和电影的观影量信息
+     * 更改电影的用户数量
      * @param movieId
      */
-    public void change(String movieId);
+    public void changeUserId(String movieId);
 }

@@ -7,7 +7,7 @@ import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
 import com.zuer.zuerlvdoubancommon.utils.HttpClientUtils;
 import com.zuer.zuerlvdoubancommon.vo.MovieScoreSection;
 import com.zuer.zuerlvdoubancommon.vo.MovieUserCommand;
-import com.zuer.zuerlvdoubanmovie.executor.AnalysisMovieUserCount;
+import com.zuer.zuerlvdoubanmovie.executor.AnalysisMovieData;
 import com.zuer.zuerlvdoubanmovie.executor.AnalysisUserMovieTypeCount;
 import com.zuer.zuerlvdoubanmovie.feginservice.MovieUserFeignService;
 import com.zuer.zuerlvdoubanmovie.service.MovieUserRecordService;
@@ -138,7 +138,7 @@ public class MovieUserController {
     @Resource
     private MovieUserRecordService movieUserRecordService;
     @Resource
-    private AnalysisMovieUserCount analysisMovieUserCount;
+    private AnalysisMovieData analysisMovieData;
     @Resource
     private AnalysisUserMovieTypeCount analysisUserMovieTypeCount;
 
@@ -157,19 +157,20 @@ public class MovieUserController {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                /*executor.execute(new Runnable() {
+                /*
+                executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        analysisMovieUserCount.change(movieUserRecord.getMovieId());
+                        analysisMovieData.changeUserId(movieUserRecord.getMovieId());
                     }
                 });*/
-                executor.execute(new Runnable() {
+                /*executor.execute(new Runnable() {
                     @Override
                     public void run() {
                         analysisUserMovieTypeCount.addMovieTypeCount(movieUserRecord.getUserId(),
                                 movieUserRecord.getMovieType());
                     }
-                });
+                });*/
             }
         });
         logger.info("用户更新电影记录业务 end");
@@ -202,7 +203,7 @@ public class MovieUserController {
             public void run() {
                 JSONObject object = new JSONObject();
                 object.put("movieId","111");
-                object.put("userId","3321N"+a);
+                object.put("userId","3321N");
                 object.put("state","1");
                 object.put("score","7");
                 object.put("movieType","0001");
