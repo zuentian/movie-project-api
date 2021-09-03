@@ -13,6 +13,9 @@
         WHERE
             B.MOVIE_ID = #{movieId}
         AND B.USER_ID = #{userId}
-        AND DATEDIFF(NOW(),B.CRT_TIME) &gt;= #{day}
+        <if test="day != null">
+            AND DATEDIFF(NOW(),B.CRT_TIME) &gt;= #{day}
+        </if>
+
     </insert>
 </mapper>

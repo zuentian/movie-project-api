@@ -17,12 +17,12 @@ import java.util.Date;
 @Data
 @Table(name="MOVIE_USER_RECORD")
 public class MovieUserRecord {
-    @Id
-    private int id;
 
+    @Id
     @Column
     private String movieId;
 
+    @Id
     @Column
     private String userId;
 
@@ -31,6 +31,7 @@ public class MovieUserRecord {
      */
     @Column
     private String state;
+
 
     /**
      * 评分

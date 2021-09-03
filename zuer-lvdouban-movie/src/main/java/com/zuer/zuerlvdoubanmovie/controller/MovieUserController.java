@@ -194,8 +194,8 @@ public class MovieUserController {
     public static void main(String[] args) {
         String url = "http://localhost:9994/MovieUserController/insertMovieUserInfo";
 
-        int i = 0;
-        for ( ; i < 10; i++) {
+        int i = 4;
+        for ( ; i < 15; i++) {
             final int a = i;
         Runnable runnable = new Runnable() {
             @Override
@@ -204,16 +204,17 @@ public class MovieUserController {
                 object.put("movieId","111");
                 object.put("userId","3321N"+a);
                 object.put("state","1");
-                object.put("score","5");
+                object.put("score","7");
                 object.put("movieType","0001");
                 object.put("shortCommand","------"+a);
                 String result =  HttpClientUtils.doPost(url,object.toJSONString());
-                System.out.println();
+                System.out.println(object.toJSONString());
                 }
             };
             Thread thread  = new Thread(runnable);
             thread.start();
         }
+
     }
 }
 

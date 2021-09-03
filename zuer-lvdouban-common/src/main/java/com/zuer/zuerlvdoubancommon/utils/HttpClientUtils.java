@@ -25,6 +25,7 @@ public class HttpClientUtils {
             connection.setDoOutput(true);
             connection.setUseCaches(false);
             connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            connection.setRequestProperty("connection","keep-alive");
             connection.connect();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(connection.getOutputStream(), "UTF-8"));

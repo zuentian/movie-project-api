@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Zuer
@@ -29,25 +30,35 @@ public class MovieUserRecordServiceImpl implements MovieUserRecordService {
     @Transactional(rollbackFor = Exception.class)
     public void insertMovieUserRecord(MovieUserRecord movieUserRecord) {
 
-        //先把当前信息落入历史表，当天的不用落入记录历史表
         logger.info("insertByMovieUserRecordAndDay start");
-        movieUserRecHisDao.insertByMovieUserRecordAndDay(
-                movieUserRecord.getMovieId(),
-                movieUserRecord.getUserId(),
-                1);
-
-        //删除用户的电影当前信息，并将现在的信息落入表中
-        logger.info("insertByMovieUserRecordAndDay end");
-
-        logger.info("deleteByExample start");
         Example ex = new Example(MovieUserRecord.class);
         ex.createCriteria().andEqualTo("userId",movieUserRecord.getUserId());
-        movieUserRecordDao.deleteByExample(ex);
-        logger.info("deleteByExample end");
-        logger.info("insertSelective start");
-        movieUserRecordDao.insertSelective(movieUserRecord);
-        logger.info("insertSelective end");
-
+        ex.createCriteria().andEqualTo("movieId",movieUserRecord.getMovieId());
+        int count = movieUserRecordDao.selectCountByExample(ex);
+        logger.info("selectCountByExample count=[{}]",count);
+        if(count>0){
+            /**
+             * 特别注明，
+             * mysql 中 insert into A select * from B 会导致B表全表加锁，
+             * 就算是在后面加上 where 条件并且用到了一些特殊字段，如果B表里没有一条满足的数据，仍然不会只锁固定行数，从而导致全表加锁
+             * 如果这个时候B表有其他的插入语句进来，会导致死锁
+             */
+            movieUserRecHisDao.insertByMovieUserRecordAndDay(
+                    movieUserRecord.getMovieId(),
+                    movieUserRecord.getUserId(),
+                    1);
+            movieUserRecordDao.updateByPrimaryKeySelective(movieUserRecord);
+        }else{
+            logger.info("insertSelective start");
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            movieUserRecordDao.insertSelective(movieUserRecord);
+            logger.info("insertSelective end");
+        }
+        logger.info("insertByMovieUserRecordAndDay end");
     }
 
 }

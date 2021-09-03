@@ -18,5 +18,5 @@ public interface MovieUserRecHisDao extends Mapper<MovieUserRecHis> {
      */
     void insertByMovieUserRecordAndDay(@Param("movieId") String movieId,
                                        @Param("userId")String userId,
-                                       @Param("day")int day);
+                                       @Param("day")Integer day);
 }

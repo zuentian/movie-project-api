@@ -1,10 +1,9 @@
 CREATE TABLE `movie_user_record` (
-                                     `ID` int NOT NULL AUTO_INCREMENT,
                                      `MOVIE_ID` varchar(36) DEFAULT NULL,
                                      `USER_ID` varchar(36) DEFAULT NULL,
                                      `STATE` varchar(2) DEFAULT NULL COMMENT '1-想看 2-看过',
                                      `SCORE` decimal(2,1) DEFAULT '0.0' COMMENT '评分',
-                                     `CRT_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
+                                     `CRT_TIME` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                      `SHORT_COMMAND` text COMMENT '短评',
-                                     PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COMMENT='用户和电影关联记录表'
+                                     UNIQUE KEY `movie_user_record_pk` (`MOVIE_ID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='用户和电影关联记录表'
