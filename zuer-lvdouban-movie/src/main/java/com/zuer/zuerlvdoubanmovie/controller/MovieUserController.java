@@ -1,10 +1,8 @@
 package com.zuer.zuerlvdoubanmovie.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.zuer.zuerlvdoubancommon.entity.MovieUser;
 import com.zuer.zuerlvdoubancommon.entity.MovieUserRecord;
 import com.zuer.zuerlvdoubancommon.utils.EntityUtils;
-import com.zuer.zuerlvdoubancommon.utils.HttpClientUtils;
 import com.zuer.zuerlvdoubancommon.vo.MovieScoreSection;
 import com.zuer.zuerlvdoubancommon.vo.MovieUserCommand;
 import com.zuer.zuerlvdoubanmovie.executor.AnalysisMovieData;
@@ -157,13 +155,15 @@ public class MovieUserController {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                /*
+
                 executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        analysisMovieData.changeUserId(movieUserRecord.getMovieId());
+                        analysisMovieData.changeUserId(movieUserRecord.getMovieId(),
+                                movieUserRecord.getUserId(),
+                                movieUserRecord.getState());
                     }
-                });*/
+                });
                 /*executor.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -192,8 +192,8 @@ public class MovieUserController {
             },
             new ThreadPoolExecutor.AbortPolicy());
 
-    public static void main(String[] args) {
-        String url = "http://localhost:9994/MovieUserController/insertMovieUserInfo";
+    public static void main(String[] args) throws InterruptedException {
+        /*String url = "http://localhost:9994/MovieUserController/insertMovieUserInfo";
 
         int i = 4;
         for ( ; i < 15; i++) {
@@ -214,12 +214,17 @@ public class MovieUserController {
             };
             Thread thread  = new Thread(runnable);
             thread.start();
-        }
+        }*/
+
+
+
 
     }
+
+
+
+
 }
-
-
 
 
 

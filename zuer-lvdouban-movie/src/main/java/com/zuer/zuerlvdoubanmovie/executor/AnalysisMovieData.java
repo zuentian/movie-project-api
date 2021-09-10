@@ -10,6 +10,8 @@ public interface AnalysisMovieData{
     /**
      * 更改电影的用户数量
      * @param movieId
+     * @param userId
+     * @param state
      */
-    public void changeUserId(String movieId);
+    public void changeUserId(String movieId,String userId,String state);
 }

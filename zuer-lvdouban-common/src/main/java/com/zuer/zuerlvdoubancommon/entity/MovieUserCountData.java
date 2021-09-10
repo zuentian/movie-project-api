@@ -23,12 +23,12 @@ public class MovieUserCountData {
      * 想看的人数
      */
     @Column(name = "BEFORE_WATCH_CT")
-    private Double beforeWatchCt;
+    private Integer beforeWatchCt;
     /**
      * 看过的人数
      */
     @Column(name = "AFTER_WATCH_CT")
-    private Double afterWatchCt;
+    private Integer afterWatchCt;
     /**
      * 计数的更新时间
      */
