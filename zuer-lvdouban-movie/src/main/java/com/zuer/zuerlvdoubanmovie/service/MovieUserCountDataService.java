@@ -1,7 +1,5 @@
 package com.zuer.zuerlvdoubanmovie.service;
 
-import com.zuer.zuerlvdoubancommon.entity.MovieUserCountData;
-
 /**
  * @author Zuer
  * @version 1.0
@@ -10,20 +8,8 @@ import com.zuer.zuerlvdoubancommon.entity.MovieUserCountData;
 public interface MovieUserCountDataService {
 
     /**
-     * 更新观影的人数
+     * 计算电影的用户观影量
      * @param movieId
      */
-    void updateCountByMovieId(String movieId);
-
-    /**
-     * 查询观影人数 条件movieId
-     * @param movieId
-     * @return
-     */
-    MovieUserCountData queryMovieUserCountDataByMovieId(String movieId);
-    /**
-     * 新增观影的人数
-     * @param movieId
-     */
-    void insertCountByMovieId(String movieId);
+    void replaceIntoMovieUserCountData(String movieId);
 }

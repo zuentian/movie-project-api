@@ -10,8 +10,8 @@ import lombok.Getter;
 @Getter
 public enum RedisKeys {
 
-    USER_WATCH_STATE("user_watch_state","用户标记电影状态"),
-    USER_WATCH_COUNT_VO("user_watch_count_vo","电影数量统计");
+    MOVIE_USER_WATCH_COUNT("user_watch_count_vo","电影观影用户统计")
+    ;
     
     private String code;
     private String name;

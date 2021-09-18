@@ -1,14 +1,17 @@
 package com.zuer.zuerlvdoubanmovie.executor.impl;
 
 import com.zuer.zuerlvdoubancommon.constants.RedisKeys;
+import com.zuer.zuerlvdoubanmovie.config.RedisLock;
 import com.zuer.zuerlvdoubanmovie.executor.AnalysisMovieData;
 import com.zuer.zuerlvdoubanmovie.service.MovieUserCountDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
+import java.util.UUID;
 
 /**
  * @author Zuer
@@ -23,8 +26,9 @@ public class AnalysisMovieDataImpl implements AnalysisMovieData {
     @Resource
     private MovieUserCountDataService movieUserCountDataService;
 
-    //@Resource
-    //private RedisTemplate<String,Object> template;
+    @Resource
+    private JedisPool jedisPool;
+
 
     /**
      * 计算用户表里的数据
@@ -37,24 +41,16 @@ public class AnalysisMovieDataImpl implements AnalysisMovieData {
     public void changeUserId(String movieId,String userId,String state) {
         logger.info("AnalysisMovieUserCountImpl change() 计算该电影的想看和看过的数量 start " +
                 "movieId=[{}]",movieId);
-        String key = RedisKeys.USER_WATCH_STATE.getCode().concat(movieId);
-        //this.loadCountByMovieId(movieId);
-        //if(!template.hasKey(key)){
-            
-        //}
+        String key = RedisKeys.MOVIE_USER_WATCH_COUNT.getCode().concat(movieId);
+        RedisLock tool = new RedisLock(jedisPool);
+        String id = UUID.randomUUID().toString();
+        try {
+            tool.lock(id,key);
+            movieUserCountDataService.replaceIntoMovieUserCountData(movieId);
+        } finally {
+            tool.unlock(id,key);
+        }
         logger.info("AnalysisMovieUserCountImpl change() 计算该电影的想看和看过的数量 end " +
                 "movieId=[{}]",movieId);
     }
-
-    /*public void loadCountByMovieId(String movieId){
-        String key = RedisKeys.USER_WATCH_COUNT_VO.getCode().concat(movieId);
-        MovieUserCountData movieUserCountData = null;
-        if(!template.hasKey(key)){
-            movieUserCountData = movieUserCountDataService.queryMovieUserCountDataByMovieId(movieId);
-            Map<String,Integer> movieUserCountDataMap = new HashMap<String, Integer>(16) ;
-            movieUserCountDataMap.put("beforeWatchCt",movieUserCountData.getBeforeWatchCt());
-            movieUserCountDataMap.put("afterWatchCt",movieUserCountData.getAfterWatchCt());
-            template.opsForHash().putAll(key,movieUserCountDataMap);
-        }
-    }*/
 }

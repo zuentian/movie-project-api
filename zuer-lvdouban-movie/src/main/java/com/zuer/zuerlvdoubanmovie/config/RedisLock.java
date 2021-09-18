@@ -20,6 +20,7 @@ public class RedisLock {
      */
     protected  long internalLockLeaseTime = 30000;
     private long timeout = 999999;
+    private String UNLOCK_RESULT_STATUS = "1";
     //该方式是jedis高版本的写法，但是高版本和redis版本冲突，启动会报错
     //SetParams params = SetParams.setParams().nx().px(internalLockLeaseTime);
 
@@ -61,7 +62,7 @@ public class RedisLock {
 
         try {
             Object result = jedis.eval(script, Collections.singletonList(lockKey),Collections.singletonList(id));
-            if("1".equals(result.toString())){
+            if(UNLOCK_RESULT_STATUS.equals(result.toString())){
                 return true;
             }
             return false;

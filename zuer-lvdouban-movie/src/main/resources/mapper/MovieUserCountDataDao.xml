@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zuer.zuerlvdoubanmovie.dao.MovieUserCountDataDao">
+
+
+    <insert id="replaceIntoMovieUserCountData" parameterType="java.lang.String">
+        INSERT INTO MOVIE_USER_COUNT_DATA
+            (MOVIE_ID,BEFORE_WATCH_CT,AFTER_WATCH_CT,UPD_DATE)
+        VALUES
+            (#{movieId},
+                SELECT COUNT(MOVIE_ID) FROM MOVIE_USER_RECORD WHERE MOVIE_ID = #{movieId} AND STATE='1',
+                SELECT COUNT(MOVIE_ID) FROM MOVIE_USER_RECORD WHERE MOVIE_ID = #{movieId} AND STATE='2',
+             NOW()
+            )
+    </insert>
+</mapper>
